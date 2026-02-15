@@ -6,5 +6,10 @@
 	"experimentalSortImports": {
 		"newlinesBetween": false
 	},
+	"ignorePatterns": [
+		"**/src/routeTree.gen.ts",
+		"**/convex/_generated/**",
+		"**/bun.lock"
+	],
 	"experimentalTailwindcss": {}
 }
