@@ -1,13 +1,43 @@
-/// <reference types="vite/client" />
+import type { ConvexQueryClient } from "@convex-dev/react-query";
 import type { ReactNode } from "react";
+/// <reference types="vite/client" />
+import { ConvexBetterAuthProvider } from "@convex-dev/better-auth/react";
+import { QueryClient } from "@tanstack/react-query";
 import {
-	Outlet,
-	createRootRoute,
 	HeadContent,
+	Outlet,
 	Scripts,
+	createRootRouteWithContext,
+	useRouteContext,
 } from "@tanstack/react-router";
+import { createServerFn } from "@tanstack/react-start";
+import { authClient } from "~/lib/auth-client";
+import { getToken } from "~/lib/auth-server";
 
-export const Route = createRootRoute({
+const getAuth = createServerFn({ method: "GET" }).handler(async () => {
+	return await getToken();
+});
+
+export const Route = createRootRouteWithContext<{
+	queryClient: QueryClient;
+	convexQueryClient: ConvexQueryClient;
+}>()({
+	beforeLoad: async (ctx) => {
+		const token = await getAuth();
+
+		// all queries, mutations and actions through TanStack Query will be
+		// authenticated during SSR if we have a valid token
+		if (token) {
+			// During SSR only (the only time serverHttpClient exists),
+			// set the auth token to make HTTP queries with.
+			ctx.context.convexQueryClient.serverHttpClient?.setAuth(token);
+		}
+
+		return {
+			isAuthenticated: !!token,
+			token,
+		};
+	},
 	head: () => ({
 		meta: [
 			{
@@ -26,10 +56,17 @@ export const Route = createRootRoute({
 });
 
 function RootComponent() {
+	const context = useRouteContext({ from: Route.id });
 	return (
-		<RootDocument>
-			<Outlet />
-		</RootDocument>
+		<ConvexBetterAuthProvider
+			client={context.convexQueryClient.convexClient}
+			authClient={authClient}
+			initialToken={context.token}
+		>
+			<RootDocument>
+				<Outlet />
+			</RootDocument>
+		</ConvexBetterAuthProvider>
 	);
 }
 
