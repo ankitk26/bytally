@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import GroupsList from "~/components/groups-list";
 import { authClient } from "~/lib/auth-client";
 
 export const Route = createFileRoute("/_protected/")({
@@ -20,11 +21,14 @@ function RouteComponent() {
 
 	return (
 		<div>
-			This is protected route
-			<p>Welcome {auth.email}</p>
-			<button type="button" onClick={handleSignOut}>
-				Log out
-			</button>
+			<div className="flex items-center gap-4">
+				<p>Welcome {auth.email}</p>
+				<button type="button" onClick={handleSignOut}>
+					Log out
+				</button>
+			</div>
+
+			<GroupsList />
 		</div>
 	);
 }

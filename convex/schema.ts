@@ -8,4 +8,17 @@ export default defineSchema({
 		username: v.string(),
 		updatedTime: v.number(),
 	}).index("by_auth", ["authId"]),
+
+	groups: defineTable({
+		adminId: v.id("users"),
+		name: v.string(),
+		description: v.optional(v.string()),
+		updatedTime: v.number(),
+		coverImageUrl: v.string(),
+	}).index("by_admin", ["adminId"]),
+
+	groupMembers: defineTable({
+		memberId: v.id("users"),
+		groupId: v.id("groups"),
+	}).index("by_member", ["memberId"]),
 });
