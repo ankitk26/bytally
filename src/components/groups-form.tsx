@@ -2,6 +2,10 @@ import { useConvexMutation } from "@convex-dev/react-query";
 import { useMutation } from "@tanstack/react-query";
 import { api } from "convex/_generated/api";
 import { useState } from "react";
+import { Button } from "~/components/ui/button";
+import { Input } from "~/components/ui/input";
+import { Label } from "~/components/ui/label";
+import { Textarea } from "~/components/ui/textarea";
 
 export default function GroupsForm() {
 	const [name, setName] = useState("");
@@ -36,50 +40,45 @@ export default function GroupsForm() {
 			</h2>
 
 			<form onSubmit={handleSubmit} className="space-y-4">
-				<div>
-					<label
-						htmlFor="name"
-						className="text-muted-foreground mb-1.5 block text-xs"
-					>
+				<div className="space-y-1.5">
+					<Label htmlFor="name" className="text-muted-foreground text-xs">
 						Name
-					</label>
-					<input
+					</Label>
+					<Input
 						id="name"
 						name="name"
 						type="text"
 						value={name}
 						onChange={(e) => setName(e.target.value)}
 						placeholder="Marketing Team"
-						className="border-border text-foreground placeholder:text-muted-foreground/50 focus:border-foreground w-full border-b bg-transparent py-1.5 text-sm transition-colors focus:outline-none"
 						required
 					/>
 				</div>
 
-				<div>
-					<label
+				<div className="space-y-1.5">
+					<Label
 						htmlFor="description"
-						className="text-muted-foreground mb-1.5 block text-xs"
+						className="text-muted-foreground text-xs"
 					>
 						Description <span className="opacity-50">(optional)</span>
-					</label>
-					<textarea
+					</Label>
+					<Textarea
 						id="description"
 						name="description"
 						value={description}
 						onChange={(e) => setDescription(e.target.value)}
 						placeholder="What's this group about?"
 						rows={2}
-						className="border-border text-foreground placeholder:text-muted-foreground/50 focus:border-foreground w-full resize-none border-b bg-transparent py-1.5 text-sm transition-colors focus:outline-none"
 					/>
 				</div>
 
-				<button
+				<Button
 					type="submit"
 					disabled={isPending || !name.trim()}
-					className="bg-foreground text-background w-full py-2 text-sm font-medium transition-opacity hover:opacity-80 disabled:opacity-40"
+					className="w-full"
 				>
 					{isPending ? "Creating..." : "Create"}
-				</button>
+				</Button>
 			</form>
 		</div>
 	);

@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { Button } from "~/components/ui/button";
 import { authClient } from "~/lib/auth-client";
 
 export const Route = createFileRoute("/login")({
@@ -52,11 +53,7 @@ function RouteComponent() {
 						</p>
 					</div>
 
-					<button
-						type="button"
-						onClick={handleLogin}
-						className="bg-foreground text-background flex w-full items-center justify-center gap-2.5 rounded px-4 py-2.5 text-sm font-medium transition-opacity hover:opacity-80 active:opacity-70"
-					>
+					<Button onClick={handleLogin} className="w-full gap-2.5" size="lg">
 						<svg className="h-4 w-4" viewBox="0 0 24 24" fill="none">
 							<path
 								d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
@@ -76,7 +73,7 @@ function RouteComponent() {
 							/>
 						</svg>
 						Continue with Google
-					</button>
+					</Button>
 
 					<p className="text-muted-foreground mt-4 text-center text-xs">
 						By continuing, you agree to our{" "}
