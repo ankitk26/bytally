@@ -6,5 +6,6 @@ export default defineSchema({
 		email: v.string(),
 		authId: v.string(),
 		username: v.string(),
+		updatedTime: v.number(),
 	}).index("by_auth", ["authId"]),
 });

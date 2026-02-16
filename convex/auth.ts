@@ -19,7 +19,8 @@ export const authComponent = createClient<DataModel>(components.betterAuth, {
 				await ctx.db.insert("users", {
 					authId: doc._id,
 					email: doc.email,
-					username: doc.email,
+					username: doc.email.split("@")[0],
+					updatedTime: Date.now(),
 				});
 			},
 			onUpdate: async (ctx, newDoc) => {
@@ -33,6 +34,7 @@ export const authComponent = createClient<DataModel>(components.betterAuth, {
 
 				await ctx.db.patch(user._id, {
 					email: newDoc.email,
+					updatedTime: Date.now(),
 				});
 			},
 		},
