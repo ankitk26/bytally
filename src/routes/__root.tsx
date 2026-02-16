@@ -1,6 +1,6 @@
+/// <reference types="vite/client" />
 import type { ConvexQueryClient } from "@convex-dev/react-query";
 import type { ReactNode } from "react";
-/// <reference types="vite/client" />
 import { ConvexBetterAuthProvider } from "@convex-dev/better-auth/react";
 import { QueryClient } from "@tanstack/react-query";
 import {

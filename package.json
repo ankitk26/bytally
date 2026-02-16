@@ -6,8 +6,8 @@
 		"build": "vite build",
 		"lint": "oxlint",
 		"lint:fix": "oxlint --fix",
-		"format": "oxfmt",
-		"format:write": "oxfmt --write"
+		"fmt": "oxfmt",
+		"fmt:write": "oxfmt --write"
 	},
 	"dependencies": {
 		"@convex-dev/better-auth": "^0.10.10",

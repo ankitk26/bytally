@@ -10,6 +10,7 @@ import authConfig from "./auth.config";
 const siteUrl = process.env.SITE_URL!;
 
 const authFunctions: AuthFunctions = internal.auth;
+
 export const authComponent = createClient<DataModel>(components.betterAuth, {
 	authFunctions,
 	triggers: {

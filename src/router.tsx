@@ -1,9 +1,7 @@
 import { ConvexQueryClient } from "@convex-dev/react-query";
 import { notifyManager, QueryClient } from "@tanstack/react-query";
 import { createRouter } from "@tanstack/react-router";
-// You may need to install this package if you haven't already
 import { setupRouterSsrQueryIntegration } from "@tanstack/react-router-ssr-query";
-import { ConvexProvider } from "convex/react";
 import { routeTree } from "./routeTree.gen";
 
 export function getRouter() {
@@ -27,7 +25,9 @@ export function getRouter() {
 			},
 		},
 	});
+
 	convexQueryClient.connect(queryClient);
+
 	const router = createRouter({
 		routeTree,
 		defaultPreload: "intent",
@@ -35,11 +35,6 @@ export function getRouter() {
 		scrollRestoration: true,
 		defaultErrorComponent: (err) => <p>{err.error.stack}</p>,
 		defaultNotFoundComponent: () => <p>not found</p>,
-		Wrap: ({ children }) => (
-			<ConvexProvider client={convexQueryClient.convexClient}>
-				{children}
-			</ConvexProvider>
-		),
 	});
 
 	setupRouterSsrQueryIntegration({
