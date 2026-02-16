@@ -1,6 +1,9 @@
 import { convexQuery } from "@convex-dev/react-query";
+import { ArrowUpRight01Icon } from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 import { useQuery } from "@tanstack/react-query";
 import { api } from "convex/_generated/api";
+import { Skeleton } from "./ui/skeleton";
 
 export default function GroupsList() {
 	const { data, isPending } = useQuery(convexQuery(api.groups.getAllGroups));
@@ -9,12 +12,12 @@ export default function GroupsList() {
 		return (
 			<div className="divide-border border-border divide-y border-y">
 				{[1, 2, 3].map((i) => (
-					<div key={i} className="animate-pulse py-4">
+					<div key={i} className="py-4">
 						<div className="flex items-center gap-3">
-							<div className="bg-muted h-8 w-8 rounded" />
+							<Skeleton className="h-8 w-8" />
 							<div className="flex-1">
-								<div className="bg-muted mb-1.5 h-3.5 w-28 rounded" />
-								<div className="bg-muted h-3 w-48 rounded" />
+								<Skeleton className="mb-1.5 h-3.5 w-28" />
+								<Skeleton className="h-3 w-48" />
 							</div>
 						</div>
 					</div>
@@ -56,19 +59,11 @@ export default function GroupsList() {
 							</p>
 						)}
 					</div>
-					<svg
+					<HugeiconsIcon
+						icon={ArrowUpRight01Icon}
 						className="text-muted-foreground mt-0.5 h-3.5 w-3.5 opacity-0 transition-opacity group-hover:opacity-100"
-						fill="none"
-						viewBox="0 0 24 24"
-						stroke="currentColor"
 						strokeWidth={2}
-					>
-						<path
-							strokeLinecap="round"
-							strokeLinejoin="round"
-							d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25"
-						/>
-					</svg>
+					/>
 				</article>
 			))}
 		</div>
