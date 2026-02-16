@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import GroupsForm from "~/components/groups-form";
 import GroupsList from "~/components/groups-list";
 import { authClient } from "~/lib/auth-client";
 
@@ -29,6 +30,7 @@ function RouteComponent() {
 			</div>
 
 			<GroupsList />
+			<GroupsForm />
 		</div>
 	);
 }
