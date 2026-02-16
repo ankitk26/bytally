@@ -13,6 +13,7 @@ import {
 import { createServerFn } from "@tanstack/react-start";
 import { authClient } from "~/lib/auth-client";
 import { getToken } from "~/lib/auth-server";
+import appCss from "../styles.css?url";
 
 const getAuth = createServerFn({ method: "GET" }).handler(async () => {
 	return await getToken();
@@ -51,6 +52,7 @@ export const Route = createRootRouteWithContext<{
 				title: "bitally",
 			},
 		],
+		links: [{ rel: "stylesheet", href: appCss }],
 	}),
 	component: RootComponent,
 });
