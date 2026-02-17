@@ -1,16 +1,14 @@
 import { convexQuery } from "@convex-dev/react-query";
-import { Add01Icon } from "@hugeicons/core-free-icons";
-import { HugeiconsIcon } from "@hugeicons/react";
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { api } from "convex/_generated/api";
 import { Id } from "convex/_generated/dataModel";
 import { AddExpenseDialog } from "~/components/add-expense-dialog";
+import EditGroupMembersButton from "~/components/edit-group-members-button";
 import { ExpensesList } from "~/components/expenses-list";
 import GroupHeader from "~/components/group-header";
 import { GroupMembersList } from "~/components/group-members-list";
 import GroupsPageSkeleton from "~/components/groups-page-skeleton";
-import { Button } from "~/components/ui/button";
 
 export const Route = createFileRoute("/_protected/groups/$groupId")({
 	component: RouteComponent,
@@ -61,13 +59,7 @@ function RouteComponent() {
 					<div className="lg:col-span-1">
 						<div className="mb-4 flex items-center justify-between">
 							<h2 className="text-foreground font-serif text-lg">Members</h2>
-							<Button size="icon-xs" variant="outline">
-								<HugeiconsIcon
-									icon={Add01Icon}
-									className="h-3.5 w-3.5"
-									strokeWidth={2}
-								/>
-							</Button>
+							<EditGroupMembersButton groupId={groupId} />
 						</div>
 						{members && <GroupMembersList members={members} />}
 					</div>
