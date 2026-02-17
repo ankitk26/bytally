@@ -7,6 +7,7 @@ interface Expense {
 	description?: string;
 	amount: number;
 	paidBy: string;
+	paidByEmail: string;
 	expenseTime: number;
 }
 
@@ -41,10 +42,10 @@ export function ExpensesList({ expenses }: ExpensesListProps) {
 						</div>
 						<div className="mt-1 flex items-center gap-1.5">
 							<div className="bg-muted flex h-4 w-4 items-center justify-center rounded text-[10px] leading-none font-medium">
-								{expense.paidBy.charAt(0).toUpperCase()}
+								{expense.paidByEmail.charAt(0).toUpperCase()}
 							</div>
 							<span className="text-muted-foreground text-xs">
-								{expense.paidBy}
+								{expense.paidByEmail}
 							</span>
 						</div>
 					</div>

@@ -1,7 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import GroupsForm from "~/components/groups-form";
 import GroupsList from "~/components/groups-list";
-import Header from "~/components/header";
 
 export const Route = createFileRoute("/_protected/")({
 	component: RouteComponent,

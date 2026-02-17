@@ -1,10 +1,11 @@
 import { convexQuery } from "@convex-dev/react-query";
-import { Invoice01Icon, Add01Icon } from "@hugeicons/core-free-icons";
+import { Add01Icon, Invoice01Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { api } from "convex/_generated/api";
 import { Id } from "convex/_generated/dataModel";
+import { AddExpenseDialog } from "~/components/add-expense-dialog";
 import { ExpensesList } from "~/components/expenses-list";
 import { GroupMembersList } from "~/components/group-members-list";
 import GroupsPageSkeleton from "~/components/groups-page-skeleton";
@@ -85,14 +86,7 @@ function RouteComponent() {
 					<div className="lg:col-span-3">
 						<div className="mb-4 flex items-center justify-between">
 							<h2 className="text-foreground font-serif text-lg">Expenses</h2>
-							<Button size="sm" variant="outline">
-								<HugeiconsIcon
-									icon={Add01Icon}
-									className="mr-1.5 h-3.5 w-3.5"
-									strokeWidth={2}
-								/>
-								Add expense
-							</Button>
+							{members && <AddExpenseDialog members={members} />}
 						</div>
 						{expenses && <ExpensesList expenses={expenses} />}
 					</div>
