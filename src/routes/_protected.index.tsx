@@ -10,8 +10,6 @@ export const Route = createFileRoute("/_protected/")({
 function RouteComponent() {
 	return (
 		<div className="bg-background min-h-screen">
-			<Header />
-
 			{/* Main */}
 			<main className="mx-auto max-w-6xl px-6 py-8">
 				{/* Page Title */}

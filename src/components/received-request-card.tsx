@@ -9,7 +9,7 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import { useMutation } from "@tanstack/react-query";
 import { api } from "convex/_generated/api";
 import { FunctionReturnType } from "convex/server";
-import { formatRequestDate } from "~/lib/format-date";
+import { formatDate } from "~/lib/format-date";
 import RequestStatusBadge from "./request-status-badge";
 import { Button } from "./ui/button";
 
@@ -45,7 +45,7 @@ export default function ReceivedRequestCard({ request, index }: Props) {
 					{request.initiator.email}
 				</h3>
 				<p className="text-muted-foreground mt-0.5 text-xs">
-					{formatRequestDate(request._creationTime)}
+					{formatDate(request._creationTime)}
 				</p>
 			</div>
 			<div className="flex items-center gap-2">

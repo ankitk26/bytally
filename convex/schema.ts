@@ -22,7 +22,9 @@ export default defineSchema({
 	groupMembers: defineTable({
 		memberId: v.id("users"),
 		groupId: v.id("groups"),
-	}).index("by_member", ["memberId"]),
+	})
+		.index("by_group_and_member", ["groupId", "memberId"])
+		.index("by_member", ["memberId"]),
 
 	requests: defineTable({
 		initiatorId: v.id("users"),
@@ -44,4 +46,16 @@ export default defineSchema({
 		.index("by_user", ["userId1", "userId2"])
 		.index("by_user1", ["userId1"])
 		.index("by_user2", ["userId2"]),
+
+	expenses: defineTable({
+		groupId: v.id("groups"),
+		paidBy: v.id("users"),
+		updatedTime: v.number(),
+		expenseTime: v.number(),
+		title: v.string(),
+		description: v.optional(v.string()),
+		amount: v.number(),
+	})
+		.index("by_group", ["groupId"])
+		.index("by_group_and_expense_time", ["groupId", "expenseTime"]),
 });

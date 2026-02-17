@@ -9,7 +9,9 @@
  */
 
 import type * as auth from "../auth.js";
+import type * as expenses from "../expenses.js";
 import type * as friends from "../friends.js";
+import type * as groupMembers from "../groupMembers.js";
 import type * as groups from "../groups.js";
 import type * as http from "../http.js";
 import type * as model_users from "../model/users.js";
@@ -23,7 +25,9 @@ import type {
 
 declare const fullApi: ApiFromModules<{
   auth: typeof auth;
+  expenses: typeof expenses;
   friends: typeof friends;
+  groupMembers: typeof groupMembers;
   groups: typeof groups;
   http: typeof http;
   "model/users": typeof model_users;

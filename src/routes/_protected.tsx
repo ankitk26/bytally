@@ -1,5 +1,6 @@
 import { Outlet } from "@tanstack/react-router";
 import { createFileRoute, redirect } from "@tanstack/react-router";
+import Header from "~/components/header";
 import { getAuthUser } from "~/server-fns/get-auth";
 
 export const Route = createFileRoute("/_protected")({
@@ -19,5 +20,10 @@ export const Route = createFileRoute("/_protected")({
 });
 
 function RouteComponent() {
-	return <Outlet />;
+	return (
+		<>
+			<Header />
+			<Outlet />
+		</>
+	);
 }

@@ -2,6 +2,35 @@ import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
 import { getAuthUserIdOrThrow } from "./model/users";
 
+export const getById = query({
+	args: {
+		groupId: v.id("groups"),
+	},
+	handler: async (ctx, args) => {
+		const authUser = await getAuthUserIdOrThrow(ctx);
+		const group = await ctx.db.get(args.groupId);
+
+		if (!group) {
+			throw new Error("invalid_request");
+		}
+
+		const isGroupMember = await ctx.db
+			.query("groupMembers")
+			.withIndex("by_group_and_member", (q) =>
+				q.eq("groupId", args.groupId).eq("memberId", authUser._id),
+			)
+			.first();
+
+		if (!isGroupMember) {
+			throw new Error("invalid_request");
+		}
+
+		const admin = await ctx.db.get("users", group.adminId);
+
+		return { ...group, admin };
+	},
+});
+
 export const getAllGroups = query({
 	handler: async (ctx) => {
 		const authUser = await getAuthUserIdOrThrow(ctx);

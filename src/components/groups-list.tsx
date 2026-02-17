@@ -2,6 +2,7 @@ import { convexQuery } from "@convex-dev/react-query";
 import { ArrowUpRight01Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { useQuery } from "@tanstack/react-query";
+import { Link } from "@tanstack/react-router";
 import { api } from "convex/_generated/api";
 import { Skeleton } from "./ui/skeleton";
 
@@ -42,8 +43,10 @@ export default function GroupsList() {
 	return (
 		<div className="divide-border border-border divide-y border-y">
 			{data?.map((group, index) => (
-				<article
+				<Link
 					key={group._id}
+					to="/groups/$groupId"
+					params={{ groupId: group._id }}
 					className="group flex cursor-pointer items-start gap-3 py-4"
 				>
 					<span className="text-muted-foreground w-5 pt-0.5 text-xs tabular-nums">
@@ -64,7 +67,7 @@ export default function GroupsList() {
 						className="text-muted-foreground mt-0.5 h-3.5 w-3.5 opacity-0 transition-opacity group-hover:opacity-100"
 						strokeWidth={2}
 					/>
-				</article>
+				</Link>
 			))}
 		</div>
 	);
