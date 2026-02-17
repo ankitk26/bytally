@@ -7,7 +7,9 @@ export default defineSchema({
 		authId: v.string(),
 		username: v.string(),
 		updatedTime: v.number(),
-	}).index("by_auth", ["authId"]),
+	})
+		.index("by_auth", ["authId"])
+		.index("by_email", ["email"]),
 
 	groups: defineTable({
 		adminId: v.id("users"),
@@ -25,7 +27,6 @@ export default defineSchema({
 	requests: defineTable({
 		initiatorId: v.id("users"),
 		receiverId: v.id("users"),
-		requestTime: v.number(),
 		status: v.union(
 			v.literal("pending"),
 			v.literal("accepted"),
@@ -35,4 +36,12 @@ export default defineSchema({
 	})
 		.index("by_initiator", ["initiatorId"])
 		.index("by_receiver", ["receiverId"]),
+
+	friends: defineTable({
+		userId1: v.id("users"),
+		userId2: v.id("users"),
+	})
+		.index("by_user", ["userId1", "userId2"])
+		.index("by_user1", ["userId1"])
+		.index("by_user2", ["userId2"]),
 });

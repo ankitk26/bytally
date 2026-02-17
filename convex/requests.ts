@@ -92,8 +92,56 @@ export const updateRequestStatus = mutation({
 			throw new Error("invalid request");
 		}
 
+		const oldStatus = request.status;
+
 		await ctx.db.patch(request._id, {
 			status: args.updatedStatus,
+			updatedTime: Date.now(),
+		});
+
+		const [userId1, userId2] =
+			request.initiatorId < request.receiverId
+				? [request.initiatorId, request.receiverId]
+				: [request.receiverId, request.initiatorId];
+
+		const alreadyFriends = await ctx.db
+			.query("friends")
+			.withIndex("by_user", (q) =>
+				q.eq("userId1", userId1).eq("userId2", userId2),
+			)
+			.first();
+
+		// Create friendship if now accepted and doesn't exist
+		if (args.updatedStatus === "accepted" && !alreadyFriends) {
+			await ctx.db.insert("friends", { userId1, userId2 });
+		}
+
+		// Remove friendship if was previously accepted
+		if (oldStatus === "accepted" && alreadyFriends) {
+			await ctx.db.delete(alreadyFriends._id);
+		}
+	},
+});
+
+export const createRequest = mutation({
+	args: {
+		receiverEmail: v.string(),
+	},
+	handler: async (ctx, args) => {
+		const authUser = await getAuthUserIdOrThrow(ctx);
+
+		const receiver = await ctx.db
+			.query("users")
+			.withIndex("by_email", (q) => q.eq("email", args.receiverEmail))
+			.first();
+		if (!receiver) {
+			throw new Error("user_not_found");
+		}
+
+		await ctx.db.insert("requests", {
+			receiverId: receiver._id,
+			initiatorId: authUser._id,
+			status: "pending",
 			updatedTime: Date.now(),
 		});
 	},
