@@ -46,12 +46,25 @@ export const create = mutation({
 	handler: async (ctx, args) => {
 		const authUser = await getAuthUserIdOrThrow(ctx);
 
-		await ctx.db.insert("groups", {
+		const newGroupId = await ctx.db.insert("groups", {
 			adminId: authUser._id,
 			coverImageUrl: "",
 			name: args.name,
 			updatedTime: Date.now(),
 			description: args.description,
+		});
+
+		for (const memberId of args.groupMembers) {
+			await ctx.db.insert("groupMembers", {
+				groupId: newGroupId,
+				memberId,
+			});
+		}
+
+		// add admin also as a member
+		await ctx.db.insert("groupMembers", {
+			groupId: newGroupId,
+			memberId: authUser._id,
 		});
 	},
 });
