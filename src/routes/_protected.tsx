@@ -1,8 +1,6 @@
-import { Outlet } from "@tanstack/react-router";
-import { createFileRoute, redirect } from "@tanstack/react-router";
+import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
 import Header from "~/components/header";
 import { authUserQuery } from "~/queries/auth-user-query";
-import { getAuthUser } from "~/server-fns/get-auth";
 
 export const Route = createFileRoute("/_protected")({
 	beforeLoad: async ({ context }) => {

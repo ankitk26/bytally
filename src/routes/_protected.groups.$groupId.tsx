@@ -4,6 +4,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { api } from "convex/_generated/api";
 import { Id } from "convex/_generated/dataModel";
 import { AddExpenseDialog } from "~/components/add-expense-dialog";
+import EditGroupButton from "~/components/edit-group-button";
 import EditGroupMembersButton from "~/components/edit-group-members-button";
 import { ExpensesList } from "~/components/expenses-list";
 import GroupHeader from "~/components/group-header";
@@ -42,7 +43,14 @@ function RouteComponent() {
 		<div className="min-h-screen">
 			<main className="mx-auto max-w-6xl px-6 py-8">
 				{/* Group Header Section */}
-				<GroupHeader group={group} />
+				<div className="mb-8 flex items-start justify-between">
+					<GroupHeader group={group} />
+					<EditGroupButton
+						groupId={groupId}
+						groupName={group.name}
+						groupDescription={group.description}
+					/>
+				</div>
 
 				{/* Two Column Layout */}
 				<div className="grid grid-cols-1 gap-8 lg:grid-cols-4">

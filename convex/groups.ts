@@ -97,3 +97,74 @@ export const create = mutation({
 		});
 	},
 });
+
+export const update = mutation({
+	args: {
+		groupId: v.id("groups"),
+		name: v.optional(v.string()),
+		description: v.optional(v.string()),
+		coverImageUrl: v.optional(v.string()),
+	},
+	handler: async (ctx, args) => {
+		const authUser = await getAuthUserIdOrThrow(ctx);
+		const group = await ctx.db.get(args.groupId);
+
+		if (!group) {
+			throw new Error("Group not found");
+		}
+
+		if (group.adminId !== authUser._id) {
+			throw new Error("Only the group admin can update the group");
+		}
+
+		await ctx.db.patch(args.groupId, {
+			...(args.name !== undefined && { name: args.name }),
+			...(args.description !== undefined && { description: args.description }),
+			...(args.coverImageUrl !== undefined && {
+				coverImageUrl: args.coverImageUrl,
+			}),
+			updatedTime: Date.now(),
+		});
+	},
+});
+
+export const deleteGroup = mutation({
+	args: {
+		groupId: v.id("groups"),
+	},
+	handler: async (ctx, args) => {
+		const authUser = await getAuthUserIdOrThrow(ctx);
+		const group = await ctx.db.get(args.groupId);
+
+		if (!group) {
+			throw new Error("Group not found");
+		}
+
+		if (group.adminId !== authUser._id) {
+			throw new Error("Only the group admin can delete the group");
+		}
+
+		// Delete all group members first
+		const groupMembers = await ctx.db
+			.query("groupMembers")
+			.withIndex("by_group_and_member", (q) => q.eq("groupId", args.groupId))
+			.collect();
+
+		for (const member of groupMembers) {
+			await ctx.db.delete(member._id);
+		}
+
+		// Delete all expenses associated with the group
+		const expenses = await ctx.db
+			.query("expenses")
+			.withIndex("by_group", (q) => q.eq("groupId", args.groupId))
+			.collect();
+
+		for (const expense of expenses) {
+			await ctx.db.delete(expense._id);
+		}
+
+		// Delete the group
+		await ctx.db.delete(args.groupId);
+	},
+});
