@@ -21,4 +21,16 @@ export default defineSchema({
 		memberId: v.id("users"),
 		groupId: v.id("groups"),
 	}).index("by_member", ["memberId"]),
+
+	friendRequests: defineTable({
+		initiatorId: v.id("users"),
+		receiverId: v.id("users"),
+		requestTime: v.number(),
+		status: v.union(
+			v.literal("pending"),
+			v.literal("accepted"),
+			v.literal("rejected"),
+		),
+		updatedTime: v.number(),
+	}),
 });
