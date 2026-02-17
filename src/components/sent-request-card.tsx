@@ -1,14 +1,14 @@
 import { api } from "convex/_generated/api";
 import { FunctionReturnType } from "convex/server";
 import { formatRequestDate } from "~/lib/format-date";
-import { RequestStatusBadge } from "./request-status-badge";
+import RequestStatusBadge from "./request-status-badge";
 
 interface Props {
 	request: FunctionReturnType<typeof api.requests.getSentRequests>[0];
 	index: number;
 }
 
-export function SentRequestCard({ request, index }: Props) {
+export default function SentRequestCard({ request, index }: Props) {
 	return (
 		<article className="group flex items-center gap-3 py-4">
 			<span className="text-muted-foreground w-5 text-xs tabular-nums">

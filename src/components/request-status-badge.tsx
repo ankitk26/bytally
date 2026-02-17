@@ -1,8 +1,10 @@
+import { RequestStatus } from "~/types";
+
 interface Props {
-	status: "pending" | "accepted" | "rejected";
+	status: RequestStatus;
 }
 
-export function RequestStatusBadge({ status }: Props) {
+export default function RequestStatusBadge({ status }: Props) {
 	const styles = {
 		pending: "bg-muted text-muted-foreground",
 		accepted: "bg-primary/10 text-primary",

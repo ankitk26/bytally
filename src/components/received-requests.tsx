@@ -2,11 +2,11 @@ import { convexQuery } from "@convex-dev/react-query";
 import { InboxIcon } from "@hugeicons/core-free-icons";
 import { useQuery } from "@tanstack/react-query";
 import { api } from "convex/_generated/api";
-import { ReceivedRequestCard } from "./received-request-card";
-import { RequestEmptyState } from "./request-empty-state";
-import { RequestSkeleton } from "./request-skeleton";
+import ReceivedRequestCard from "./received-request-card";
+import RequestEmptyState from "./request-empty-state";
+import RequestSkeleton from "./request-skeleton";
 
-export function ReceivedRequests() {
+export default function ReceivedRequests() {
 	const { data: requests, isPending } = useQuery(
 		convexQuery(api.requests.getReceivedRequests),
 	);

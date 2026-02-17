@@ -9,7 +9,7 @@ import { useMutation } from "@tanstack/react-query";
 import { api } from "convex/_generated/api";
 import { FunctionReturnType } from "convex/server";
 import { formatRequestDate } from "~/lib/format-date";
-import { RequestStatusBadge } from "./request-status-badge";
+import RequestStatusBadge from "./request-status-badge";
 import { Button } from "./ui/button";
 
 interface Props {
@@ -17,7 +17,7 @@ interface Props {
 	index: number;
 }
 
-export function ReceivedRequestCard({ request, index }: Props) {
+export default function ReceivedRequestCard({ request, index }: Props) {
 	const { mutate } = useMutation({
 		mutationFn: useConvexMutation(api.requests.updateRequestStatus),
 	});

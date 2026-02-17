@@ -1,12 +1,12 @@
 import { HugeiconsIcon } from "@hugeicons/react";
 
-export interface Props {
+interface Props {
 	icon: React.ComponentProps<typeof HugeiconsIcon>["icon"];
 	title: string;
 	description: string;
 }
 
-export function RequestEmptyState({ icon, title, description }: Props) {
+export default function RequestEmptyState({ icon, title, description }: Props) {
 	return (
 		<div className="border-border border border-dashed py-16 text-center">
 			<div className="mb-3 inline-flex">

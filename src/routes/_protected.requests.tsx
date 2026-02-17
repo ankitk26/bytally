@@ -2,8 +2,8 @@ import { InboxIcon, SentIcon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { createFileRoute } from "@tanstack/react-router";
 import Header from "~/components/header";
-import { ReceivedRequests } from "~/components/received-requests";
-import { SentRequests } from "~/components/sent-requests";
+import ReceivedRequests from "~/components/received-requests";
+import SentRequests from "~/components/sent-requests";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 
 export const Route = createFileRoute("/_protected/requests")({
