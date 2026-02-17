@@ -42,7 +42,10 @@ export default function SendRequestForm() {
 					placeholder="Enter email address"
 					required
 				/>
-				<Button type="submit" disabled={sendRequestMutation.isPending}>
+				<Button
+					type="submit"
+					disabled={sendRequestMutation.isPending || email.trim() === ""}
+				>
 					{sendRequestMutation.isPending ? "Sending..." : "Send Request"}
 				</Button>
 			</form>

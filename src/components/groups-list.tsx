@@ -1,5 +1,5 @@
 import { convexQuery } from "@convex-dev/react-query";
-import { ArrowUpRight01Icon } from "@hugeicons/core-free-icons";
+import { Invoice01Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
@@ -15,7 +15,7 @@ export default function GroupsList() {
 				{[1, 2, 3].map((i) => (
 					<div key={i} className="py-4">
 						<div className="flex items-center gap-3">
-							<Skeleton className="h-8 w-8" />
+							<Skeleton className="h-8 w-8 rounded-none" />
 							<div className="flex-1">
 								<Skeleton className="mb-1.5 h-3.5 w-28" />
 								<Skeleton className="h-3 w-48" />
@@ -42,16 +42,28 @@ export default function GroupsList() {
 
 	return (
 		<div className="divide-border border-border divide-y border-y">
-			{data?.map((group, index) => (
+			{data?.map((group) => (
 				<Link
 					key={group._id}
 					to="/groups/$groupId"
 					params={{ groupId: group._id }}
 					className="group flex cursor-pointer items-start gap-3 py-4"
 				>
-					<span className="text-muted-foreground w-5 pt-0.5 text-xs tabular-nums">
-						{String(index + 1).padStart(2, "0")}
-					</span>
+					{group.coverImageUrl ? (
+						<img
+							src={group.coverImageUrl}
+							alt={group.name}
+							className="h-8 w-8 object-cover"
+						/>
+					) : (
+						<div className="bg-muted flex h-8 w-8 items-center justify-center">
+							<HugeiconsIcon
+								icon={Invoice01Icon}
+								className="text-muted-foreground h-4 w-4"
+								strokeWidth={1.5}
+							/>
+						</div>
+					)}
 					<div className="min-w-0 flex-1">
 						<h3 className="text-foreground truncate text-sm font-medium underline-offset-2 group-hover:underline">
 							{group.name}
@@ -62,11 +74,6 @@ export default function GroupsList() {
 							</p>
 						)}
 					</div>
-					<HugeiconsIcon
-						icon={ArrowUpRight01Icon}
-						className="text-muted-foreground mt-0.5 h-3.5 w-3.5 opacity-0 transition-opacity group-hover:opacity-100"
-						strokeWidth={2}
-					/>
 				</Link>
 			))}
 		</div>
