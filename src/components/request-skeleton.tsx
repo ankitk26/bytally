@@ -1,10 +1,10 @@
 import { Skeleton } from "./ui/skeleton";
 
-interface RequestSkeletonProps {
+interface Props {
 	count?: number;
 }
 
-export function RequestSkeleton({ count = 3 }: RequestSkeletonProps) {
+export function RequestSkeleton({ count = 3 }: Props) {
 	return (
 		<div className="divide-border border-border divide-y border-y">
 			{Array.from({ length: count }).map((_, i) => (

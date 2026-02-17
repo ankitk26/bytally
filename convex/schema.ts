@@ -22,7 +22,7 @@ export default defineSchema({
 		groupId: v.id("groups"),
 	}).index("by_member", ["memberId"]),
 
-	friendRequests: defineTable({
+	requests: defineTable({
 		initiatorId: v.id("users"),
 		receiverId: v.id("users"),
 		requestTime: v.number(),
@@ -32,5 +32,7 @@ export default defineSchema({
 			v.literal("rejected"),
 		),
 		updatedTime: v.number(),
-	}),
+	})
+		.index("by_initiator", ["initiatorId"])
+		.index("by_receiver", ["receiverId"]),
 });

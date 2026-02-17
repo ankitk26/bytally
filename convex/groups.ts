@@ -4,15 +4,15 @@ import { getAuthUserIdOrThrow } from "./model/users";
 
 export const getAllGroups = query({
 	handler: async (ctx) => {
-		const authUserId = await getAuthUserIdOrThrow(ctx);
+		const authUser = await getAuthUserIdOrThrow(ctx);
 
 		const groupsWhereUserIsAdmin = await ctx.db
 			.query("groups")
-			.withIndex("by_admin", (q) => q.eq("adminId", authUserId))
+			.withIndex("by_admin", (q) => q.eq("adminId", authUser._id))
 			.collect();
 		const groupIdsWhereUserIsMember = await ctx.db
 			.query("groupMembers")
-			.withIndex("by_member", (q) => q.eq("memberId", authUserId))
+			.withIndex("by_member", (q) => q.eq("memberId", authUser._id))
 			.collect();
 
 		const groupsWhereUserIsMember = await Promise.all(
@@ -44,10 +44,10 @@ export const create = mutation({
 		groupMembers: v.array(v.id("users")),
 	},
 	handler: async (ctx, args) => {
-		const userId = await getAuthUserIdOrThrow(ctx);
+		const authUser = await getAuthUserIdOrThrow(ctx);
 
 		await ctx.db.insert("groups", {
-			adminId: userId,
+			adminId: authUser._id,
 			coverImageUrl: "",
 			name: args.name,
 			updatedTime: Date.now(),

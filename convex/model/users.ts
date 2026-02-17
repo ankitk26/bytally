@@ -1,9 +1,9 @@
 import type { QueryCtx } from "../_generated/server";
-import { Id } from "../_generated/dataModel";
+import { Doc } from "../_generated/dataModel";
 
 export const getAuthUserIdOrThrow = async (
 	ctx: QueryCtx,
-): Promise<Id<"users">> => {
+): Promise<Doc<"users">> => {
 	const auth = await ctx.auth.getUserIdentity();
 	if (!auth) {
 		throw new Error("Unauthorized");
@@ -17,5 +17,5 @@ export const getAuthUserIdOrThrow = async (
 	if (!user) {
 		throw new Error("Unauthorized");
 	}
-	return user._id;
+	return user;
 };

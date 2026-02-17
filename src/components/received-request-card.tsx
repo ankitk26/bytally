@@ -1,29 +1,39 @@
+import { useConvexMutation } from "@convex-dev/react-query";
 import {
-	CheckmarkSquare02Icon,
-	Cancel02Icon,
 	ArrowTurnBackwardIcon,
+	Cancel02Icon,
+	CheckmarkSquare02Icon,
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
+import { useMutation } from "@tanstack/react-query";
+import { api } from "convex/_generated/api";
+import { FunctionReturnType } from "convex/server";
 import { formatRequestDate } from "~/lib/format-date";
-import type { Request } from "./request-types";
 import { RequestStatusBadge } from "./request-status-badge";
 import { Button } from "./ui/button";
 
-interface ReceivedRequestCardProps {
-	request: Request;
+interface Props {
+	request: FunctionReturnType<typeof api.requests.getReceivedRequests>[0];
 	index: number;
-	onAccept: (id: string) => void;
-	onReject: (id: string) => void;
-	onUndo: (id: string) => void;
 }
 
-export function ReceivedRequestCard({
-	request,
-	index,
-	onAccept,
-	onReject,
-	onUndo,
-}: ReceivedRequestCardProps) {
+export function ReceivedRequestCard({ request, index }: Props) {
+	const { mutate } = useMutation({
+		mutationFn: useConvexMutation(api.requests.updateRequestStatus),
+	});
+
+	const handleAccept = () => {
+		mutate({ requestId: request._id, updatedStatus: "accepted" });
+	};
+
+	const handleReject = () => {
+		mutate({ requestId: request._id, updatedStatus: "rejected" });
+	};
+
+	const handleUndo = () => {
+		mutate({ requestId: request._id, updatedStatus: "pending" });
+	};
+
 	return (
 		<article className="group flex items-center gap-3 py-4">
 			<span className="text-muted-foreground w-5 text-xs tabular-nums">
@@ -31,20 +41,16 @@ export function ReceivedRequestCard({
 			</span>
 			<div className="min-w-0 flex-1">
 				<h3 className="text-foreground truncate text-sm font-medium">
-					{request.email}
+					{request.initiator.email}
 				</h3>
 				<p className="text-muted-foreground mt-0.5 text-xs">
-					{formatRequestDate(request.createdAt)}
+					{formatRequestDate(request._creationTime)}
 				</p>
 			</div>
 			<div className="flex items-center gap-2">
 				{request.status === "pending" ? (
 					<>
-						<Button
-							size="xs"
-							variant="outline"
-							onClick={() => onReject(request.id)}
-						>
+						<Button size="xs" variant="outline" onClick={handleReject}>
 							<HugeiconsIcon
 								icon={Cancel02Icon}
 								className="h-3 w-3"
@@ -52,7 +58,7 @@ export function ReceivedRequestCard({
 							/>
 							<span className="sr-only sm:not-sr-only sm:ml-1">Reject</span>
 						</Button>
-						<Button size="xs" onClick={() => onAccept(request.id)}>
+						<Button size="xs" onClick={handleAccept}>
 							<HugeiconsIcon
 								icon={CheckmarkSquare02Icon}
 								className="h-3 w-3"
@@ -64,11 +70,7 @@ export function ReceivedRequestCard({
 				) : (
 					<>
 						<RequestStatusBadge status={request.status} />
-						<Button
-							size="xs"
-							variant="ghost"
-							onClick={() => onUndo(request.id)}
-						>
+						<Button size="xs" variant="ghost" onClick={handleUndo}>
 							<HugeiconsIcon
 								icon={ArrowTurnBackwardIcon}
 								className="h-3 w-3"
