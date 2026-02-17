@@ -3,6 +3,7 @@ import {
 	ArrowTurnBackwardIcon,
 	Cancel02Icon,
 	CheckmarkSquare02Icon,
+	Loading03Icon,
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { useMutation } from "@tanstack/react-query";
@@ -18,7 +19,7 @@ interface Props {
 }
 
 export default function ReceivedRequestCard({ request, index }: Props) {
-	const { mutate } = useMutation({
+	const { mutate, isPending } = useMutation({
 		mutationFn: useConvexMutation(api.requests.updateRequestStatus),
 	});
 
@@ -48,9 +49,23 @@ export default function ReceivedRequestCard({ request, index }: Props) {
 				</p>
 			</div>
 			<div className="flex items-center gap-2">
-				{request.status === "pending" ? (
+				{isPending ? (
+					<Button size="xs" variant="ghost" disabled>
+						<HugeiconsIcon
+							icon={Loading03Icon}
+							className="h-3 w-3 animate-spin"
+							strokeWidth={2}
+						/>
+						<span className="sr-only sm:not-sr-only sm:ml-1">Updating...</span>
+					</Button>
+				) : request.status === "pending" ? (
 					<>
-						<Button size="xs" variant="outline" onClick={handleReject}>
+						<Button
+							size="xs"
+							variant="outline"
+							onClick={handleReject}
+							disabled={isPending}
+						>
 							<HugeiconsIcon
 								icon={Cancel02Icon}
 								className="h-3 w-3"
@@ -58,7 +73,7 @@ export default function ReceivedRequestCard({ request, index }: Props) {
 							/>
 							<span className="sr-only sm:not-sr-only sm:ml-1">Reject</span>
 						</Button>
-						<Button size="xs" onClick={handleAccept}>
+						<Button size="xs" onClick={handleAccept} disabled={isPending}>
 							<HugeiconsIcon
 								icon={CheckmarkSquare02Icon}
 								className="h-3 w-3"
@@ -70,7 +85,12 @@ export default function ReceivedRequestCard({ request, index }: Props) {
 				) : (
 					<>
 						<RequestStatusBadge status={request.status} />
-						<Button size="xs" variant="ghost" onClick={handleUndo}>
+						<Button
+							size="xs"
+							variant="ghost"
+							onClick={handleUndo}
+							disabled={isPending}
+						>
 							<HugeiconsIcon
 								icon={ArrowTurnBackwardIcon}
 								className="h-3 w-3"

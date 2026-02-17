@@ -7,7 +7,7 @@ interface Props {
 export default function RequestStatusBadge({ status }: Props) {
 	const styles = {
 		pending: "bg-muted text-muted-foreground",
-		accepted: "bg-primary/10 text-primary",
+		accepted: "bg-green-100 text-green-700",
 		rejected: "bg-destructive/10 text-destructive",
 	};
 
