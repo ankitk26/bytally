@@ -13,6 +13,7 @@ export const Route = createFileRoute("/_protected")({
 				authId: auth._id,
 				email: auth.email,
 				username: auth.username,
+				authUserId: auth.authUserId,
 			},
 		};
 	},

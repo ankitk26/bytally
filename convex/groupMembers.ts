@@ -27,7 +27,7 @@ export const getMembersByGroup = query({
 		}
 
 		const finalGroupMembers: Array<{
-			_id: Id<"users">;
+			memberId: Id<"users">;
 			username: string;
 			isAdmin: boolean;
 		}> = [];
@@ -43,7 +43,7 @@ export const getMembersByGroup = query({
 				continue;
 			}
 			finalGroupMembers.push({
-				_id: memberUser._id,
+				memberId: memberUser._id,
 				username: memberUser.username,
 				isAdmin: group.adminId === member.memberId,
 			});

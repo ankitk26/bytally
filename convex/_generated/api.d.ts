@@ -9,6 +9,7 @@
  */
 
 import type * as auth from "../auth.js";
+import type * as expenseContributors from "../expenseContributors.js";
 import type * as expenses from "../expenses.js";
 import type * as friends from "../friends.js";
 import type * as groupMembers from "../groupMembers.js";
@@ -26,6 +27,7 @@ import type {
 
 declare const fullApi: ApiFromModules<{
   auth: typeof auth;
+  expenseContributors: typeof expenseContributors;
   expenses: typeof expenses;
   friends: typeof friends;
   groupMembers: typeof groupMembers;

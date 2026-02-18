@@ -73,6 +73,7 @@ export const getCurrentUser = query({
 		return {
 			...authUser,
 			username: user?.username,
+			authUserId: user?._id,
 		};
 	},
 });

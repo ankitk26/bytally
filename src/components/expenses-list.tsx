@@ -4,7 +4,7 @@ import { FunctionReturnType } from "convex/server";
 import ExpenseItem from "~/components/expense-item";
 
 type Member = {
-	_id: Id<"users">;
+	memberId: Id<"users">;
 	username: string;
 };
 

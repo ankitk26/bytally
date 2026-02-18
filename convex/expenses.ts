@@ -182,11 +182,13 @@ export const create = mutation({
 
 		for (const contribution of processedContributions) {
 			await ctx.db.insert("expenseContributors", {
+				groupId: args.groupId,
 				expenseId,
 				contributorId: contribution.memberId as typeof args.paidBy,
 				amount: contribution.amount,
 				isSettled: false,
 				updatedTime: Date.now(),
+				payerId: args.paidBy,
 			});
 		}
 	},
@@ -271,11 +273,13 @@ export const update = mutation({
 
 		for (const contribution of processedContributions) {
 			await ctx.db.insert("expenseContributors", {
+				groupId: expense.groupId,
 				expenseId: args.expenseId,
 				contributorId: contribution.memberId as typeof args.paidBy,
 				amount: contribution.amount,
 				isSettled: false,
 				updatedTime: Date.now(),
+				payerId: args.paidBy,
 			});
 		}
 	},

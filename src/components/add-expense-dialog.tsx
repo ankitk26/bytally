@@ -29,7 +29,7 @@ import { Label } from "~/components/ui/label";
 import { Textarea } from "~/components/ui/textarea";
 
 type Member = {
-	_id: Id<"users">;
+	memberId: Id<"users">;
 	username: string;
 };
 
@@ -53,14 +53,14 @@ export default function AddExpenseDialog({ members }: Props) {
 	const amountNumber = Number.parseFloat(amount);
 	const safeAmount = Number.isFinite(amountNumber) ? amountNumber : 0;
 	const selectedContributors = members.filter((member) =>
-		contributorIds.includes(member._id),
+		contributorIds.includes(member.memberId),
 	);
 	const equalShare =
 		selectedContributors.length > 0
 			? safeAmount / selectedContributors.length
 			: 0;
 	const manualTotal = selectedContributors.reduce((sum, member) => {
-		const value = Number.parseFloat(manualSplits[member._id] ?? "");
+		const value = Number.parseFloat(manualSplits[member.memberId] ?? "");
 		return sum + (Number.isFinite(value) ? value : 0);
 	}, 0);
 	const remainingBalance = safeAmount - manualTotal;
@@ -96,7 +96,7 @@ export default function AddExpenseDialog({ members }: Props) {
 
 		createExpenseMutation.mutate({
 			groupId: groupId as Id<"groups">,
-			paidBy: selectedMember._id,
+			paidBy: selectedMember.memberId,
 			expenseTime: Date.now(),
 			title: title.trim(),
 			description: description.trim() || undefined,
@@ -119,7 +119,9 @@ export default function AddExpenseDialog({ members }: Props) {
 	useEffect(() => {
 		if (!selectedMember) return;
 		setContributorIds((prev) =>
-			prev.includes(selectedMember._id) ? prev : [...prev, selectedMember._id],
+			prev.includes(selectedMember.memberId)
+				? prev
+				: [...prev, selectedMember.memberId],
 		);
 	}, [selectedMember]);
 
@@ -192,7 +194,7 @@ export default function AddExpenseDialog({ members }: Props) {
 							<DropdownMenuContent align="start" className="w-[--anchor-width]">
 								{members.map((member) => (
 									<DropdownMenuItem
-										key={member._id}
+										key={member.memberId}
 										onClick={() => setSelectedMember(member)}
 									>
 										<div className="bg-muted mr-2 flex h-4 w-4 items-center justify-center rounded text-[10px] font-medium">
@@ -209,19 +211,19 @@ export default function AddExpenseDialog({ members }: Props) {
 						<div className="grid gap-1.5 rounded-md border p-2">
 							{members.map((member) => (
 								<label
-									key={member._id}
+									key={member.memberId}
 									className="hover:bg-muted/60 flex items-center gap-2 rounded-md px-2 py-1 text-sm"
 								>
 									<Checkbox
-										checked={contributorIds.includes(member._id)}
+										checked={contributorIds.includes(member.memberId)}
 										onCheckedChange={(checked) => {
 											const isChecked = checked === true;
 											setContributorIds((prev) =>
 												isChecked
-													? prev.includes(member._id)
+													? prev.includes(member.memberId)
 														? prev
-														: [...prev, member._id]
-													: prev.filter((id) => id !== member._id),
+														: [...prev, member.memberId]
+													: prev.filter((id) => id !== member.memberId),
 											);
 										}}
 									/>
@@ -279,7 +281,7 @@ export default function AddExpenseDialog({ members }: Props) {
 								)}
 								{selectedContributors.map((member) => (
 									<div
-										key={member._id}
+										key={member.memberId}
 										className="grid grid-cols-[1fr_120px] items-center gap-2"
 									>
 										<span className="truncate text-sm">{member.username}</span>
@@ -287,11 +289,11 @@ export default function AddExpenseDialog({ members }: Props) {
 											type="number"
 											min="0"
 											step="0.01"
-											value={manualSplits[member._id] ?? ""}
+											value={manualSplits[member.memberId] ?? ""}
 											onChange={(e) =>
 												setManualSplits((prev) => ({
 													...prev,
-													[member._id]: e.target.value,
+													[member.memberId]: e.target.value,
 												}))
 											}
 											placeholder="0.00"

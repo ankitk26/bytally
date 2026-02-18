@@ -53,7 +53,7 @@ export default function EditGroupMembersButton({ groupId }: Props) {
 
 	useEffect(() => {
 		if (members) {
-			const memberIds = members.map((member) => member._id);
+			const memberIds = members.map((member) => member.memberId);
 			setOriginalMemberIds(memberIds);
 			setSelectedMemberIds(memberIds);
 		}
@@ -80,7 +80,7 @@ export default function EditGroupMembersButton({ groupId }: Props) {
 	const isSaving =
 		addMemberMutation.isPending || removeMemberMutation.isPending;
 
-	const handleSubmit = async (e: React.FormEvent) => {
+	const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
 		e.preventDefault();
 
 		try {
@@ -99,7 +99,6 @@ export default function EditGroupMembersButton({ groupId }: Props) {
 			}
 
 			setOriginalMemberIds([...selectedMemberIds]);
-			console.log("Members updated successfully");
 		} catch (error) {
 			console.error("Failed to update members:", error);
 		}

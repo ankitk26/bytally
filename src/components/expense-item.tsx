@@ -17,10 +17,11 @@ import {
 	AlertDialogTitle,
 } from "~/components/ui/alert-dialog";
 import { Button } from "~/components/ui/button";
+import { formatCurrency } from "~/lib/format-currency";
 import { formatDate } from "~/lib/format-date";
 
 type Member = {
-	_id: Id<"users">;
+	memberId: Id<"users">;
 	username: string;
 };
 
@@ -47,14 +48,6 @@ type Props = {
 	expense: Expense;
 	members: Member[];
 };
-
-function formatCurrency(amount: number) {
-	return new Intl.NumberFormat("en-IN", {
-		style: "currency",
-		currency: "INR",
-		maximumFractionDigits: 0,
-	}).format(amount);
-}
 
 export default function ExpenseItem({ expense, members }: Props) {
 	const [isAlertOpen, setIsAlertOpen] = useState(false);
