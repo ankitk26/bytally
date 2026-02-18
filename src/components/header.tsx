@@ -51,8 +51,13 @@ export default function Header() {
 						}
 					/>
 					<DropdownMenuContent align="end" className="w-48">
-						<div className="text-muted-foreground truncate px-2 py-2 text-xs">
-							{auth.email}
+						<div className="px-2 py-2">
+							<div className="text-foreground truncate text-xs font-medium">
+								{auth.username}
+							</div>
+							<div className="text-muted-foreground truncate text-xs">
+								{auth.email}
+							</div>
 						</div>
 						<DropdownMenuSeparator />
 						<Link to="/requests" className="block">

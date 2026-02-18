@@ -26,7 +26,7 @@ export const getAll = query({
 		// Fetch full user data, filtering out nulls
 		const results: Array<{
 			_id: Id<"users">;
-			email: string;
+			username: string;
 		}> = [];
 
 		for (const id of friendIds) {
@@ -34,7 +34,7 @@ export const getAll = query({
 			if (friend) {
 				results.push({
 					_id: friend._id,
-					email: friend.email,
+					username: friend.username,
 				});
 			}
 		}

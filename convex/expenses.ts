@@ -83,14 +83,14 @@ export const getExpensesByGroupId = query({
 						return {
 							contributorId: c.contributorId,
 							amount: c.amount,
-							email: user?.email ?? "Unknown",
+							username: user?.username ?? "Unknown",
 						};
 					}),
 				);
 
 				return {
 					...expense,
-					paidByEmail: payer?.email ?? "Unknown",
+					paidByUsername: payer?.username ?? "Unknown",
 					canEdit:
 						expense.paidBy === authUser._id || expense.addedBy === authUser._id,
 					contributors: contributorsWithDetails,

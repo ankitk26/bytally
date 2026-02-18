@@ -152,7 +152,7 @@ export default function EditGroupMembersButton({ groupId }: Props) {
 													checked={selectedMemberIds.includes(friend._id)}
 													onCheckedChange={() => toggleMember(friend._id)}
 												>
-													{friend.email}
+													{friend.username}
 												</DropdownMenuCheckboxItem>
 											))}
 									</DropdownMenuGroup>

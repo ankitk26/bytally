@@ -129,7 +129,7 @@ export default function GroupsForm() {
 											checked={selectedFriends.includes(friend._id)}
 											onCheckedChange={() => toggleFriend(friend._id)}
 										>
-											{friend.email}
+											{friend.username}
 										</DropdownMenuCheckboxItem>
 									))
 								)}

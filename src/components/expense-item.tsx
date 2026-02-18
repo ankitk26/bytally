@@ -21,13 +21,13 @@ import { formatDate } from "~/lib/format-date";
 
 type Member = {
 	_id: Id<"users">;
-	email: string;
+	username: string;
 };
 
 type Contributor = {
 	contributorId: Id<"users">;
 	amount: number;
-	email: string;
+	username: string;
 };
 
 type Expense = {
@@ -36,7 +36,7 @@ type Expense = {
 	description?: string;
 	amount: number;
 	paidBy: Id<"users">;
-	paidByEmail: string;
+	paidByUsername: string;
 	expenseTime: number;
 	canEdit?: boolean;
 	splitMode: "equal" | "manual";
@@ -98,10 +98,10 @@ export default function ExpenseItem({ expense, members }: Props) {
 				</div>
 				<div className="mt-1 flex items-center gap-1.5">
 					<div className="bg-muted flex h-4 w-4 items-center justify-center rounded text-[10px] leading-none font-medium">
-						{expense.paidByEmail.charAt(0).toUpperCase()}
+						{expense.paidByUsername.charAt(0).toUpperCase()}
 					</div>
 					<span className="text-muted-foreground text-xs">
-						{expense.paidByEmail}
+						{expense.paidByUsername}
 					</span>
 				</div>
 			</div>

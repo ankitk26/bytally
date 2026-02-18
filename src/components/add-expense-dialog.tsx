@@ -30,7 +30,7 @@ import { Textarea } from "~/components/ui/textarea";
 
 type Member = {
 	_id: Id<"users">;
-	email: string;
+	username: string;
 };
 
 type Props = {
@@ -175,9 +175,11 @@ export default function AddExpenseDialog({ members }: Props) {
 										{selectedMember ? (
 											<>
 												<div className="bg-muted mr-2 flex h-4 w-4 items-center justify-center rounded text-[10px] font-medium">
-													{selectedMember.email.charAt(0).toUpperCase()}
+													{selectedMember.username.charAt(0).toUpperCase()}
 												</div>
-												<span className="truncate">{selectedMember.email}</span>
+												<span className="truncate">
+													{selectedMember.username}
+												</span>
 											</>
 										) : (
 											<span className="text-muted-foreground">
@@ -194,9 +196,9 @@ export default function AddExpenseDialog({ members }: Props) {
 										onClick={() => setSelectedMember(member)}
 									>
 										<div className="bg-muted mr-2 flex h-4 w-4 items-center justify-center rounded text-[10px] font-medium">
-											{member.email.charAt(0).toUpperCase()}
+											{member.username.charAt(0).toUpperCase()}
 										</div>
-										<span className="truncate">{member.email}</span>
+										<span className="truncate">{member.username}</span>
 									</DropdownMenuItem>
 								))}
 							</DropdownMenuContent>
@@ -223,7 +225,7 @@ export default function AddExpenseDialog({ members }: Props) {
 											);
 										}}
 									/>
-									<span className="truncate">{member.email}</span>
+									<span className="truncate">{member.username}</span>
 								</label>
 							))}
 						</div>
@@ -280,7 +282,7 @@ export default function AddExpenseDialog({ members }: Props) {
 										key={member._id}
 										className="grid grid-cols-[1fr_120px] items-center gap-2"
 									>
-										<span className="truncate text-sm">{member.email}</span>
+										<span className="truncate text-sm">{member.username}</span>
 										<Input
 											type="number"
 											min="0"

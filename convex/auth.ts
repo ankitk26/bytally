@@ -60,7 +60,20 @@ export const createAuth = (ctx: GenericCtx<DataModel>) => {
 
 export const getCurrentUser = query({
 	handler: async (ctx) => {
-		return await authComponent.getAuthUser(ctx);
+		const authUser = await authComponent.getAuthUser(ctx);
+		if (!authUser) {
+			return null;
+		}
+
+		const user = await ctx.db
+			.query("users")
+			.withIndex("by_auth", (q) => q.eq("authId", authUser._id))
+			.first();
+
+		return {
+			...authUser,
+			username: user?.username,
+		};
 	},
 });
 

@@ -5,7 +5,7 @@ import ExpenseItem from "~/components/expense-item";
 
 type Member = {
 	_id: Id<"users">;
-	email: string;
+	username: string;
 };
 
 type Props = {

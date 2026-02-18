@@ -2,7 +2,7 @@ import type { Id } from "convex/_generated/dataModel";
 
 type GroupMember = {
 	_id: Id<"users">;
-	email: string;
+	username: string;
 	isAdmin: boolean;
 };
 
@@ -21,11 +21,11 @@ export default function GroupMembersList({ members }: Props) {
 			{sortedMembers.map((member) => (
 				<div key={member._id} className="flex items-center gap-2 py-3">
 					<div className="bg-muted flex h-6 w-6 items-center justify-center rounded text-xs font-medium">
-						{member.email.charAt(0).toUpperCase()}
+						{member.username.charAt(0).toUpperCase()}
 					</div>
 					<div className="min-w-0 flex-1">
 						<span className="text-foreground truncate text-sm">
-							{member.email}
+							{member.username}
 						</span>
 					</div>
 					{member.isAdmin && (
