@@ -60,7 +60,9 @@ function RouteComponent() {
 							<h2 className="text-foreground font-serif text-lg">Expenses</h2>
 							{members && <AddExpenseDialog members={members} />}
 						</div>
-						{expenses && <ExpensesList expenses={expenses} />}
+						{expenses && members && (
+							<ExpensesList expenses={expenses} members={members} />
+						)}
 					</div>
 
 					{/* Right Column - Members */}

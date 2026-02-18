@@ -5,6 +5,7 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import { useMutation } from "@tanstack/react-query";
 import { api } from "convex/_generated/api";
 import { useState } from "react";
+import EditExpenseDialog from "~/components/edit-expense-dialog";
 import {
 	AlertDialog,
 	AlertDialogAction,
@@ -18,19 +19,33 @@ import {
 import { Button } from "~/components/ui/button";
 import { formatDate } from "~/lib/format-date";
 
+type Member = {
+	_id: Id<"users">;
+	email: string;
+};
+
+type Contributor = {
+	contributorId: Id<"users">;
+	amount: number;
+	email: string;
+};
+
 type Expense = {
 	_id: Id<"expenses">;
 	title: string;
 	description?: string;
 	amount: number;
-	paidBy: string;
+	paidBy: Id<"users">;
 	paidByEmail: string;
 	expenseTime: number;
-	canDelete?: boolean;
+	canEdit?: boolean;
+	splitMode: "equal" | "manual";
+	contributors: Contributor[];
 };
 
 type Props = {
 	expense: Expense;
+	members: Member[];
 };
 
 function formatCurrency(amount: number) {
@@ -41,7 +56,7 @@ function formatCurrency(amount: number) {
 	}).format(amount);
 }
 
-export default function ExpenseItem({ expense }: Props) {
+export default function ExpenseItem({ expense, members }: Props) {
 	const [isAlertOpen, setIsAlertOpen] = useState(false);
 
 	const deleteMutation = useMutation({
@@ -54,13 +69,29 @@ export default function ExpenseItem({ expense }: Props) {
 		});
 	};
 
+	const titleElement = (
+		<h3
+			className={`text-foreground truncate text-sm font-medium ${
+				expense.canEdit
+					? "hover:text-primary cursor-pointer hover:underline"
+					: ""
+			}`}
+		>
+			{expense.title}
+		</h3>
+	);
+
 	return (
 		<article className="flex items-center justify-between gap-3 py-3">
 			<div className="min-w-0 flex-1">
 				<div className="flex items-center gap-2">
-					<h3 className="text-foreground truncate text-sm font-medium">
-						{expense.title}
-					</h3>
+					{expense.canEdit ? (
+						<EditExpenseDialog expense={expense} members={members}>
+							{titleElement}
+						</EditExpenseDialog>
+					) : (
+						titleElement
+					)}
 					<span className="text-muted-foreground text-xs">
 						{formatDate(expense.expenseTime)}
 					</span>
@@ -78,7 +109,7 @@ export default function ExpenseItem({ expense }: Props) {
 				<span className="text-foreground text-sm font-semibold">
 					{formatCurrency(expense.amount)}
 				</span>
-				{expense.canDelete && (
+				{expense.canEdit && (
 					<>
 						<Button
 							size="icon-xs"

@@ -2,6 +2,42 @@ import { ConvexError, v } from "convex/values";
 import { mutation, query } from "./_generated/server";
 import { getAuthUserIdOrThrow } from "./model/users";
 
+// Helper type for contribution processing
+type Contribution = { memberId: string; amount: number };
+
+function processContributions(
+	contributions: Contribution[],
+	amount: number,
+	splitMode: "equal" | "manual",
+): Contribution[] {
+	if (splitMode === "equal" && contributions.length > 0) {
+		const count = contributions.length;
+		const baseShare = Math.floor((amount / count) * 100) / 100;
+
+		// All except last get base share
+		const roundedShares = contributions.slice(0, -1).map((c) => ({
+			memberId: c.memberId,
+			amount: baseShare,
+		}));
+
+		// Last contributor gets remainder-adjusted amount
+		const sumOfOthers = baseShare * (count - 1);
+		const lastContributor = contributions[count - 1];
+		roundedShares.push({
+			memberId: lastContributor.memberId,
+			amount: Math.round((amount - sumOfOthers) * 100) / 100,
+		});
+
+		return roundedShares;
+	}
+
+	// Manual mode: just round to 2 decimals
+	return contributions.map((c) => ({
+		memberId: c.memberId,
+		amount: Math.round(c.amount * 100) / 100,
+	}));
+}
+
 export const getExpensesByGroupId = query({
 	args: {
 		groupId: v.id("groups"),
@@ -31,20 +67,38 @@ export const getExpensesByGroupId = query({
 			.order("desc")
 			.collect();
 
-		// Fetch payer details for each expense
-		const expensesWithPayer = await Promise.all(
+		// Fetch payer details and contributions for each expense
+		const expensesWithDetails = await Promise.all(
 			expenses.map(async (expense) => {
 				const payer = await ctx.db.get(expense.paidBy);
+
+				const contributors = await ctx.db
+					.query("expenseContributors")
+					.withIndex("by_expense", (q) => q.eq("expenseId", expense._id))
+					.collect();
+
+				const contributorsWithDetails = await Promise.all(
+					contributors.map(async (c) => {
+						const user = await ctx.db.get(c.contributorId);
+						return {
+							contributorId: c.contributorId,
+							amount: c.amount,
+							email: user?.email ?? "Unknown",
+						};
+					}),
+				);
+
 				return {
 					...expense,
 					paidByEmail: payer?.email ?? "Unknown",
-					canDelete:
+					canEdit:
 						expense.paidBy === authUser._id || expense.addedBy === authUser._id,
+					contributors: contributorsWithDetails,
 				};
 			}),
 		);
 
-		return expensesWithPayer;
+		return expensesWithDetails;
 	},
 });
 
@@ -120,38 +174,105 @@ export const create = mutation({
 		});
 
 		// Process contributions with rounding
-		const processedContributions =
-			args.splitMode === "equal" && args.contributions.length > 0
-				? (() => {
-						const count = args.contributions.length;
-						const baseShare = Math.floor((args.amount / count) * 100) / 100;
-
-						// All except last get base share
-						const roundedShares = args.contributions.slice(0, -1).map((c) => ({
-							memberId: c.memberId,
-							amount: baseShare,
-						}));
-
-						// Last contributor gets remainder-adjusted amount
-						const sumOfOthers = baseShare * (count - 1);
-						const lastContributor = args.contributions[count - 1];
-						roundedShares.push({
-							memberId: lastContributor.memberId,
-							amount: Math.round((args.amount - sumOfOthers) * 100) / 100,
-						});
-
-						return roundedShares;
-					})()
-				: // Manual mode: just round to 2 decimals
-					args.contributions.map((c) => ({
-						memberId: c.memberId,
-						amount: Math.round(c.amount * 100) / 100,
-					}));
+		const processedContributions = processContributions(
+			args.contributions,
+			args.amount,
+			args.splitMode,
+		);
 
 		for (const contribution of processedContributions) {
 			await ctx.db.insert("expenseContributors", {
 				expenseId,
-				contributorId: contribution.memberId,
+				contributorId: contribution.memberId as typeof args.paidBy,
+				amount: contribution.amount,
+				isSettled: false,
+				updatedTime: Date.now(),
+			});
+		}
+	},
+});
+
+export const update = mutation({
+	args: {
+		expenseId: v.id("expenses"),
+		paidBy: v.id("users"),
+		title: v.string(),
+		description: v.optional(v.string()),
+		amount: v.number(),
+		splitMode: v.union(v.literal("equal"), v.literal("manual")),
+		contributions: v.array(
+			v.object({ memberId: v.id("users"), amount: v.number() }),
+		),
+	},
+	handler: async (ctx, args) => {
+		const authUser = await getAuthUserIdOrThrow(ctx);
+
+		const expense = await ctx.db.get(args.expenseId);
+		if (!expense) {
+			throw new ConvexError("invalid_request: expense not found");
+		}
+
+		if (expense.paidBy !== authUser._id && expense.addedBy !== authUser._id) {
+			throw new ConvexError(
+				"invalid_request: only the payer or the person who added the expense can edit it",
+			);
+		}
+
+		// Validate amount is positive
+		if (args.amount <= 0) {
+			throw new ConvexError("invalid_request: amount must be positive");
+		}
+
+		// Validate title is not empty
+		if (!args.title.trim()) {
+			throw new ConvexError("invalid_request: title is required");
+		}
+
+		// Check if paidBy user is a member of the group
+		const isPaidByMember = await ctx.db
+			.query("groupMembers")
+			.withIndex("by_group_and_member", (q) =>
+				q.eq("groupId", expense.groupId).eq("memberId", args.paidBy),
+			)
+			.first();
+
+		if (!isPaidByMember) {
+			throw new ConvexError(
+				"invalid_request: paidBy user is not a group member",
+			);
+		}
+
+		// Delete old contributions
+		const oldContributors = await ctx.db
+			.query("expenseContributors")
+			.withIndex("by_expense", (q) => q.eq("expenseId", args.expenseId))
+			.collect();
+
+		for (const contributor of oldContributors) {
+			await ctx.db.delete(contributor._id);
+		}
+
+		// Update the expense
+		await ctx.db.patch(args.expenseId, {
+			paidBy: args.paidBy,
+			updatedTime: Date.now(),
+			title: args.title.trim(),
+			description: args.description?.trim(),
+			amount: args.amount,
+			splitMode: args.splitMode,
+		});
+
+		// Process contributions with rounding
+		const processedContributions = processContributions(
+			args.contributions,
+			args.amount,
+			args.splitMode,
+		);
+
+		for (const contribution of processedContributions) {
+			await ctx.db.insert("expenseContributors", {
+				expenseId: args.expenseId,
+				contributorId: contribution.memberId as typeof args.paidBy,
 				amount: contribution.amount,
 				isSettled: false,
 				updatedTime: Date.now(),
