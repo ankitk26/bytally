@@ -3,12 +3,12 @@ import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { api } from "convex/_generated/api";
 import { Id } from "convex/_generated/dataModel";
-import { AddExpenseDialog } from "~/components/add-expense-dialog";
+import AddExpenseDialog from "~/components/add-expense-dialog";
 import EditGroupButton from "~/components/edit-group-button";
 import EditGroupMembersButton from "~/components/edit-group-members-button";
-import { ExpensesList } from "~/components/expenses-list";
+import ExpensesList from "~/components/expenses-list";
 import GroupHeader from "~/components/group-header";
-import { GroupMembersList } from "~/components/group-members-list";
+import GroupMembersList from "~/components/group-members-list";
 import GroupsPageSkeleton from "~/components/groups-page-skeleton";
 
 export const Route = createFileRoute("/_protected/groups/$groupId")({

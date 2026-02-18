@@ -3,10 +3,10 @@ import { FunctionReturnType } from "convex/server";
 import { formatDate } from "~/lib/format-date";
 import RequestStatusBadge from "./request-status-badge";
 
-interface Props {
+type Props = {
 	request: FunctionReturnType<typeof api.requests.getSentRequests>[0];
 	index: number;
-}
+};
 
 export default function SentRequestCard({ request, index }: Props) {
 	return (

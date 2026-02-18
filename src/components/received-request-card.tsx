@@ -13,10 +13,10 @@ import { formatDate } from "~/lib/format-date";
 import RequestStatusBadge from "./request-status-badge";
 import { Button } from "./ui/button";
 
-interface Props {
+type Props = {
 	request: FunctionReturnType<typeof api.requests.getReceivedRequests>[0];
 	index: number;
-}
+};
 
 export default function ReceivedRequestCard({ request, index }: Props) {
 	const { mutate, isPending } = useMutation({

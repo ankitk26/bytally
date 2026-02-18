@@ -4,9 +4,9 @@ import { api } from "convex/_generated/api";
 import { FunctionReturnType } from "convex/server";
 import { formatDate } from "~/lib/format-date";
 
-interface Props {
+type Props = {
 	group: FunctionReturnType<typeof api.groups.getById>;
-}
+};
 
 export default function GroupHeader({ group }: Props) {
 	return (

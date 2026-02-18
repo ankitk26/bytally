@@ -25,9 +25,9 @@ import {
 import { Label } from "~/components/ui/label";
 import SendRequestForm from "./send-request-form";
 
-interface Props {
+type Props = {
 	groupId: string;
-}
+};
 
 export default function EditGroupMembersButton({ groupId }: Props) {
 	const { data: friends, isPending: isFriendsLoading } = useQuery(

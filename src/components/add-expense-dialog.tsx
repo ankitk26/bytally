@@ -28,16 +28,16 @@ import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { Textarea } from "~/components/ui/textarea";
 
-interface Member {
+type Member = {
 	_id: Id<"users">;
 	email: string;
-}
+};
 
-interface Props {
+type Props = {
 	members: Member[];
-}
+};
 
-export function AddExpenseDialog({ members }: Props) {
+export default function AddExpenseDialog({ members }: Props) {
 	const { groupId } = useParams({ from: "/_protected/groups/$groupId" });
 
 	const [selectedMember, setSelectedMember] = useState<Member | null>(null);

@@ -1,8 +1,8 @@
 import { Skeleton } from "./ui/skeleton";
 
-interface Props {
+type Props = {
 	count?: number;
-}
+};
 
 export default function RequestSkeleton({ count = 3 }: Props) {
 	return (

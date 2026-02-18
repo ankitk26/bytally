@@ -1,8 +1,8 @@
 import { RequestStatus } from "~/types";
 
-interface Props {
+type Props = {
 	status: RequestStatus;
-}
+};
 
 export default function RequestStatusBadge({ status }: Props) {
 	const styles = {

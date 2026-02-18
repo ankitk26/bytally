@@ -1,10 +1,10 @@
 import { HugeiconsIcon } from "@hugeicons/react";
 
-interface Props {
+type Props = {
 	icon: React.ComponentProps<typeof HugeiconsIcon>["icon"];
 	title: string;
 	description: string;
-}
+};
 
 export default function RequestEmptyState({ icon, title, description }: Props) {
 	return (

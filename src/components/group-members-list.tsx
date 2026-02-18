@@ -1,16 +1,16 @@
 import type { Id } from "convex/_generated/dataModel";
 
-interface GroupMember {
+type GroupMember = {
 	_id: Id<"users">;
 	email: string;
 	isAdmin: boolean;
-}
+};
 
-interface GroupMembersListProps {
+type Props = {
 	members: GroupMember[];
-}
+};
 
-export function GroupMembersList({ members }: GroupMembersListProps) {
+export default function GroupMembersList({ members }: Props) {
 	const sortedMembers = [...members].sort((a, b) => {
 		if (a.isAdmin === b.isAdmin) return 0;
 		return a.isAdmin ? -1 : 1;

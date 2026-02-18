@@ -18,7 +18,7 @@ import {
 import { Button } from "~/components/ui/button";
 import { formatDate } from "~/lib/format-date";
 
-interface Expense {
+type Expense = {
 	_id: Id<"expenses">;
 	title: string;
 	description?: string;
@@ -27,11 +27,11 @@ interface Expense {
 	paidByEmail: string;
 	expenseTime: number;
 	canDelete?: boolean;
-}
+};
 
-interface ExpenseItemProps {
+type Props = {
 	expense: Expense;
-}
+};
 
 function formatCurrency(amount: number) {
 	return new Intl.NumberFormat("en-IN", {
@@ -41,7 +41,7 @@ function formatCurrency(amount: number) {
 	}).format(amount);
 }
 
-export function ExpenseItem({ expense }: ExpenseItemProps) {
+export default function ExpenseItem({ expense }: Props) {
 	const [isAlertOpen, setIsAlertOpen] = useState(false);
 
 	const deleteMutation = useMutation({

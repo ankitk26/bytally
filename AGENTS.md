@@ -11,3 +11,5 @@
 
 - Each .tsx file should have only 1 component
 - Each component should server one purpose
+- Use the name "Props" for all Props
+- Prefer types over interfaces if possible
