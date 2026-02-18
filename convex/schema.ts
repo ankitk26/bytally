@@ -55,7 +55,18 @@ export default defineSchema({
 		title: v.string(),
 		description: v.optional(v.string()),
 		amount: v.number(),
+		splitMode: v.union(v.literal("equal"), v.literal("manual")),
 	})
 		.index("by_group", ["groupId"])
 		.index("by_group_and_expense_time", ["groupId", "expenseTime"]),
+
+	expenseContributors: defineTable({
+		expenseId: v.id("expenses"),
+		contributorId: v.id("users"),
+		amount: v.number(),
+		isSettled: v.boolean(),
+		updatedTime: v.number(),
+	})
+		.index("by_expense", ["expenseId"])
+		.index("by_expense_and_contributor", ["expenseId", "contributorId"]),
 });
