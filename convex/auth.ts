@@ -71,7 +71,7 @@ export const getCurrentUser = query({
 			.first();
 
 		return {
-			...authUser,
+			email: authUser.email,
 			username: user?.username,
 			authUserId: user?._id,
 		};
