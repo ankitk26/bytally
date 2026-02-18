@@ -1,4 +1,6 @@
 import { useConvexMutation } from "@convex-dev/react-query";
+import { Loading03Icon } from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 import { useMutation } from "@tanstack/react-query";
 import { api } from "convex/_generated/api";
 import { useState } from "react";
@@ -46,7 +48,15 @@ export default function SendRequestForm() {
 					type="submit"
 					disabled={sendRequestMutation.isPending || email.trim() === ""}
 				>
-					{sendRequestMutation.isPending ? "Sending..." : "Send Request"}
+					{sendRequestMutation.isPending ? (
+						<HugeiconsIcon
+							icon={Loading03Icon}
+							className="h-4 w-4 animate-spin"
+							strokeWidth={2}
+						/>
+					) : (
+						"Send Request"
+					)}
 				</Button>
 			</form>
 			{error && <p className="text-destructive text-xs">{error}</p>}

@@ -1,4 +1,6 @@
 import { convexQuery, useConvexMutation } from "@convex-dev/react-query";
+import { Loading03Icon } from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { api } from "convex/_generated/api";
 import { Id } from "convex/_generated/dataModel";
@@ -107,11 +109,17 @@ export default function GroupsForm() {
 									className="w-full justify-start"
 									disabled={isFriendsLoading}
 								>
-									{isFriendsLoading
-										? "Loading friends..."
-										: selectedFriends.length > 0
-											? `${selectedFriends.length} member${selectedFriends.length > 1 ? "s" : ""} selected`
-											: "Select friends"}
+									{isFriendsLoading ? (
+										<HugeiconsIcon
+											icon={Loading03Icon}
+											className="h-4 w-4 animate-spin"
+											strokeWidth={2}
+										/>
+									) : selectedFriends.length > 0 ? (
+										`${selectedFriends.length} member${selectedFriends.length > 1 ? "s" : ""} selected`
+									) : (
+										"Select friends"
+									)}
 								</Button>
 							}
 						/>
@@ -143,7 +151,15 @@ export default function GroupsForm() {
 					disabled={isPending || !name.trim()}
 					className="w-full"
 				>
-					{isPending ? "Creating..." : "Create"}
+					{isPending ? (
+						<HugeiconsIcon
+							icon={Loading03Icon}
+							className="h-4 w-4 animate-spin"
+							strokeWidth={2}
+						/>
+					) : (
+						"Create"
+					)}
 				</Button>
 			</form>
 		</div>

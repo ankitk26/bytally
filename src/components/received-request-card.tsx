@@ -56,7 +56,6 @@ export default function ReceivedRequestCard({ request, index }: Props) {
 							className="h-3 w-3 animate-spin"
 							strokeWidth={2}
 						/>
-						<span className="sr-only sm:not-sr-only sm:ml-1">Updating...</span>
 					</Button>
 				) : request.status === "pending" ? (
 					<>

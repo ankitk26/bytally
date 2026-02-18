@@ -1,5 +1,9 @@
 import { useConvexMutation } from "@convex-dev/react-query";
-import { Delete01Icon, PencilEdit01Icon } from "@hugeicons/core-free-icons";
+import {
+	Delete01Icon,
+	Loading03Icon,
+	PencilEdit01Icon,
+} from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
@@ -161,14 +165,30 @@ export default function EditGroupButton({
 										onClick={handleDelete}
 										disabled={isDeleting}
 									>
-										{isDeleting ? "Deleting..." : "Delete"}
+										{isDeleting ? (
+											<HugeiconsIcon
+												icon={Loading03Icon}
+												className="h-4 w-4 animate-spin"
+												strokeWidth={2}
+											/>
+										) : (
+											"Delete"
+										)}
 									</AlertDialogAction>
 								</AlertDialogFooter>
 							</AlertDialogContent>
 						</AlertDialog>
 
 						<Button type="submit" disabled={isUpdating}>
-							{isUpdating ? "Saving..." : "Save changes"}
+							{isUpdating ? (
+								<HugeiconsIcon
+									icon={Loading03Icon}
+									className="h-4 w-4 animate-spin"
+									strokeWidth={2}
+								/>
+							) : (
+								"Save changes"
+							)}
 						</Button>
 					</div>
 				</form>

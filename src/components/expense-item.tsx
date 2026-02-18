@@ -1,6 +1,6 @@
 import type { Id } from "convex/_generated/dataModel";
 import { useConvexMutation } from "@convex-dev/react-query";
-import { Delete01Icon } from "@hugeicons/core-free-icons";
+import { Delete01Icon, Loading03Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { useMutation } from "@tanstack/react-query";
 import { api } from "convex/_generated/api";
@@ -139,7 +139,15 @@ export default function ExpenseItem({ expense, members }: Props) {
 										disabled={deleteMutation.isPending}
 										variant="destructive"
 									>
-										{deleteMutation.isPending ? "Deleting..." : "Delete"}
+										{deleteMutation.isPending ? (
+											<HugeiconsIcon
+												icon={Loading03Icon}
+												className="h-4 w-4 animate-spin"
+												strokeWidth={2}
+											/>
+										) : (
+											"Delete"
+										)}
 									</AlertDialogAction>
 								</AlertDialogFooter>
 							</AlertDialogContent>

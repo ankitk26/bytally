@@ -1,5 +1,5 @@
 import { convexQuery, useConvexMutation } from "@convex-dev/react-query";
-import { Add01Icon } from "@hugeicons/core-free-icons";
+import { Add01Icon, Loading03Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { api } from "convex/_generated/api";
@@ -161,7 +161,15 @@ export default function EditGroupMembersButton({ groupId }: Props) {
 						</div>
 
 						<Button type="submit" className="w-full" disabled={isSaving}>
-							{isSaving ? "Saving..." : "Save changes"}
+							{isSaving ? (
+								<HugeiconsIcon
+									icon={Loading03Icon}
+									className="h-4 w-4 animate-spin"
+									strokeWidth={2}
+								/>
+							) : (
+								"Save changes"
+							)}
 						</Button>
 					</form>
 

@@ -1,5 +1,9 @@
 import { convexQuery, useConvexMutation } from "@convex-dev/react-query";
-import { UserIcon, CheckmarkCircle01Icon } from "@hugeicons/core-free-icons";
+import {
+	UserIcon,
+	CheckmarkCircle01Icon,
+	Loading03Icon,
+} from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { createFileRoute, useRouteContext } from "@tanstack/react-router";
@@ -104,7 +108,11 @@ function ProfilePage() {
 								className="w-full"
 							>
 								{isPending ? (
-									"Saving..."
+									<HugeiconsIcon
+										icon={Loading03Icon}
+										className="h-3.5 w-3.5 animate-spin"
+										strokeWidth={2}
+									/>
 								) : isSaved ? (
 									<>
 										<HugeiconsIcon
