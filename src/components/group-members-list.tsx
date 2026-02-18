@@ -33,7 +33,7 @@ export default function GroupMembersList({ members }: Props) {
 	return (
 		<div className="divide-border border-border divide-y border-y">
 			{sortedMembers.map((member) => (
-				<div key={member.memberId} className="flex items-center gap-2 py-3">
+				<div key={member.memberId} className="flex gap-2 py-3">
 					<div className="bg-muted flex h-6 w-6 items-center justify-center rounded text-xs font-medium">
 						{member.username.charAt(0).toUpperCase()}
 					</div>
