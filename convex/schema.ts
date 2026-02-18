@@ -50,6 +50,7 @@ export default defineSchema({
 	expenses: defineTable({
 		groupId: v.id("groups"),
 		paidBy: v.id("users"),
+		addedBy: v.id("users"),
 		updatedTime: v.number(),
 		expenseTime: v.number(),
 		title: v.string(),

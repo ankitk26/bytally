@@ -38,6 +38,8 @@ export const getExpensesByGroupId = query({
 				return {
 					...expense,
 					paidByEmail: payer?.email ?? "Unknown",
+					canDelete:
+						expense.paidBy === authUser._id || expense.addedBy === authUser._id,
 				};
 			}),
 		);
@@ -114,6 +116,7 @@ export const create = mutation({
 			description: args.description?.trim(),
 			amount: args.amount,
 			splitMode: args.splitMode,
+			addedBy: authUser._id,
 		});
 
 		// Process contributions with rounding
@@ -154,5 +157,36 @@ export const create = mutation({
 				updatedTime: Date.now(),
 			});
 		}
+	},
+});
+
+export const remove = mutation({
+	args: {
+		expenseId: v.id("expenses"),
+	},
+	handler: async (ctx, args) => {
+		const authUser = await getAuthUserIdOrThrow(ctx);
+
+		const expense = await ctx.db.get(args.expenseId);
+		if (!expense) {
+			throw new ConvexError("invalid_request: expense not found");
+		}
+
+		if (expense.paidBy !== authUser._id && expense.addedBy !== authUser._id) {
+			throw new ConvexError(
+				"invalid_request: only the payer or the person who added the expense can delete it",
+			);
+		}
+
+		const contributors = await ctx.db
+			.query("expenseContributors")
+			.withIndex("by_expense", (q) => q.eq("expenseId", args.expenseId))
+			.collect();
+
+		for (const contributor of contributors) {
+			await ctx.db.delete(contributor._id);
+		}
+
+		await ctx.db.delete(args.expenseId);
 	},
 });
