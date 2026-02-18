@@ -121,7 +121,7 @@ export const create = mutation({
 			args.splitMode === "equal" && args.contributions.length > 0
 				? (() => {
 						const count = args.contributions.length;
-						const baseShare = Math.round((args.amount / count) * 100) / 100;
+						const baseShare = Math.floor((args.amount / count) * 100) / 100;
 
 						// All except last get base share
 						const roundedShares = args.contributions.slice(0, -1).map((c) => ({
