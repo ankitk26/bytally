@@ -22,16 +22,17 @@ function RouteComponent() {
 				</div>
 				<div className="max-w-md">
 					<h1 className="mb-4 font-serif text-5xl leading-tight">
-						Where groups
+						Shared expenses,
 						<br />
-						<em>come together.</em>
+						<em>made simple.</em>
 					</h1>
 					<p className="text-background/60 text-sm">
-						The modern way to organize, manage, and grow your communities.
+						Track shared costs, split bills fairly, and settle up with
+						friends—effortlessly.
 					</p>
 				</div>
 				<p className="text-background/40 text-xs">
-					Trusted by 2,000+ organizations worldwide
+					Splitting bills made simple
 				</p>
 			</div>
 
@@ -46,14 +47,18 @@ function RouteComponent() {
 
 					<div className="mb-6">
 						<h2 className="text-foreground mb-1 font-serif text-2xl">
-							Sign in
+							Welcome back
 						</h2>
 						<p className="text-muted-foreground text-sm">
-							Continue to your dashboard
+							Sign in to manage your group expenses
 						</p>
 					</div>
 
-					<Button onClick={handleLogin} className="w-full gap-2.5" size="lg">
+					<Button
+						onClick={handleLogin}
+						className="hover:bg-primary/90 w-full gap-2.5 transition-colors duration-200"
+						size="lg"
+					>
 						<svg className="h-4 w-4" viewBox="0 0 24 24" fill="none">
 							<path
 								d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
