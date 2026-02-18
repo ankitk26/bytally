@@ -1,4 +1,9 @@
-import { UserIcon, InboxIcon, Logout01Icon } from "@hugeicons/core-free-icons";
+import {
+	UserIcon,
+	InboxIcon,
+	Logout01Icon,
+	UserEdit01Icon,
+} from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { useRouteContext, Link } from "@tanstack/react-router";
 import { authClient } from "~/lib/auth-client";
@@ -60,6 +65,16 @@ export default function Header() {
 							</div>
 						</div>
 						<DropdownMenuSeparator />
+						<Link to="/profile" className="block">
+							<DropdownMenuItem className="cursor-pointer">
+								<HugeiconsIcon
+									icon={UserEdit01Icon}
+									className="h-3.5 w-3.5"
+									strokeWidth={2}
+								/>
+								Profile
+							</DropdownMenuItem>
+						</Link>
 						<Link to="/requests" className="block">
 							<DropdownMenuItem className="cursor-pointer">
 								<HugeiconsIcon

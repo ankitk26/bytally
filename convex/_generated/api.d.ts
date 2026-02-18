@@ -16,6 +16,7 @@ import type * as groups from "../groups.js";
 import type * as http from "../http.js";
 import type * as model_users from "../model/users.js";
 import type * as requests from "../requests.js";
+import type * as users from "../users.js";
 
 import type {
   ApiFromModules,
@@ -32,6 +33,7 @@ declare const fullApi: ApiFromModules<{
   http: typeof http;
   "model/users": typeof model_users;
   requests: typeof requests;
+  users: typeof users;
 }>;
 
 /**

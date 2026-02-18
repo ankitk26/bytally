@@ -13,6 +13,7 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as ProtectedRouteImport } from './routes/_protected'
 import { Route as ProtectedIndexRouteImport } from './routes/_protected.index'
 import { Route as ProtectedRequestsRouteImport } from './routes/_protected.requests'
+import { Route as ProtectedProfileRouteImport } from './routes/_protected.profile'
 import { Route as ApiAuthSplatRouteImport } from './routes/api.auth.$'
 import { Route as ProtectedGroupsGroupIdRouteImport } from './routes/_protected.groups.$groupId'
 
@@ -35,6 +36,11 @@ const ProtectedRequestsRoute = ProtectedRequestsRouteImport.update({
   path: '/requests',
   getParentRoute: () => ProtectedRoute,
 } as any)
+const ProtectedProfileRoute = ProtectedProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => ProtectedRoute,
+} as any)
 const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   id: '/api/auth/$',
   path: '/api/auth/$',
@@ -49,12 +55,14 @@ const ProtectedGroupsGroupIdRoute = ProtectedGroupsGroupIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof ProtectedIndexRoute
   '/login': typeof LoginRoute
+  '/profile': typeof ProtectedProfileRoute
   '/requests': typeof ProtectedRequestsRoute
   '/groups/$groupId': typeof ProtectedGroupsGroupIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
 }
 export interface FileRoutesByTo {
   '/login': typeof LoginRoute
+  '/profile': typeof ProtectedProfileRoute
   '/requests': typeof ProtectedRequestsRoute
   '/': typeof ProtectedIndexRoute
   '/groups/$groupId': typeof ProtectedGroupsGroupIdRoute
@@ -64,6 +72,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_protected': typeof ProtectedRouteWithChildren
   '/login': typeof LoginRoute
+  '/_protected/profile': typeof ProtectedProfileRoute
   '/_protected/requests': typeof ProtectedRequestsRoute
   '/_protected/': typeof ProtectedIndexRoute
   '/_protected/groups/$groupId': typeof ProtectedGroupsGroupIdRoute
@@ -71,13 +80,26 @@ export interface FileRoutesById {
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/login' | '/requests' | '/groups/$groupId' | '/api/auth/$'
+  fullPaths:
+    | '/'
+    | '/login'
+    | '/profile'
+    | '/requests'
+    | '/groups/$groupId'
+    | '/api/auth/$'
   fileRoutesByTo: FileRoutesByTo
-  to: '/login' | '/requests' | '/' | '/groups/$groupId' | '/api/auth/$'
+  to:
+    | '/login'
+    | '/profile'
+    | '/requests'
+    | '/'
+    | '/groups/$groupId'
+    | '/api/auth/$'
   id:
     | '__root__'
     | '/_protected'
     | '/login'
+    | '/_protected/profile'
     | '/_protected/requests'
     | '/_protected/'
     | '/_protected/groups/$groupId'
@@ -120,6 +142,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProtectedRequestsRouteImport
       parentRoute: typeof ProtectedRoute
     }
+    '/_protected/profile': {
+      id: '/_protected/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof ProtectedProfileRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
     '/api/auth/$': {
       id: '/api/auth/$'
       path: '/api/auth/$'
@@ -138,12 +167,14 @@ declare module '@tanstack/react-router' {
 }
 
 interface ProtectedRouteChildren {
+  ProtectedProfileRoute: typeof ProtectedProfileRoute
   ProtectedRequestsRoute: typeof ProtectedRequestsRoute
   ProtectedIndexRoute: typeof ProtectedIndexRoute
   ProtectedGroupsGroupIdRoute: typeof ProtectedGroupsGroupIdRoute
 }
 
 const ProtectedRouteChildren: ProtectedRouteChildren = {
+  ProtectedProfileRoute: ProtectedProfileRoute,
   ProtectedRequestsRoute: ProtectedRequestsRoute,
   ProtectedIndexRoute: ProtectedIndexRoute,
   ProtectedGroupsGroupIdRoute: ProtectedGroupsGroupIdRoute,
