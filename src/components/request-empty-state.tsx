@@ -8,7 +8,7 @@ type Props = {
 
 export default function RequestEmptyState({ icon, title, description }: Props) {
 	return (
-		<div className="border-border border border-dashed py-16 text-center">
+		<div className="border-border border border-dashed py-12 text-center sm:py-16">
 			<div className="mb-3 inline-flex">
 				<HugeiconsIcon
 					icon={icon}

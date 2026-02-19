@@ -282,7 +282,7 @@ export default function AddExpenseDialog({ members }: Props) {
 								{selectedContributors.map((member) => (
 									<div
 										key={member.memberId}
-										className="grid grid-cols-[1fr_120px] items-center gap-2"
+										className="grid grid-cols-[1fr_minmax(80px,120px)] items-center gap-2"
 									>
 										<span className="truncate text-sm">{member.username}</span>
 										<Input

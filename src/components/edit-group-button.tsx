@@ -142,7 +142,7 @@ export default function EditGroupButton({
 						/>
 					</div>
 
-					<div className="flex items-center justify-between pt-4">
+					<div className="flex flex-col-reverse gap-4 pt-4 sm:flex-row sm:items-center sm:justify-between">
 						<AlertDialog>
 							<AlertDialogTrigger
 								render={

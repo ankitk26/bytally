@@ -149,7 +149,10 @@ export default function EditGroupMembersButton({ groupId }: Props) {
 										</Button>
 									}
 								/>
-								<DropdownMenuContent className="w-56" align="start">
+								<DropdownMenuContent
+									className="w-[--anchor-width]"
+									align="start"
+								>
 									<DropdownMenuGroup>
 										<DropdownMenuLabel>Friends</DropdownMenuLabel>
 										{!isFriendsLoading &&

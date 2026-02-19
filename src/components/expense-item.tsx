@@ -107,12 +107,12 @@ export default function ExpenseItem({ expense, members }: Props) {
 				<span className="text-foreground text-sm font-semibold">
 					{formatCurrency(expense.amount)}
 				</span>
-				{expense.canEdit && (
-					<>
+				<div className="h-8 w-8 sm:h-7 sm:w-7">
+					{expense.canEdit && (
 						<Tooltip>
 							<TooltipTrigger>
 								<Button
-									size="icon-xs"
+									size="icon-sm"
 									variant="ghost"
 									className="text-muted-foreground hover:text-destructive"
 									onClick={() => setIsAlertOpen(true)}
@@ -126,36 +126,38 @@ export default function ExpenseItem({ expense, members }: Props) {
 							</TooltipTrigger>
 							<TooltipContent>Delete expense</TooltipContent>
 						</Tooltip>
-						<AlertDialog open={isAlertOpen} onOpenChange={setIsAlertOpen}>
-							<AlertDialogContent>
-								<AlertDialogHeader>
-									<AlertDialogTitle>Delete Expense</AlertDialogTitle>
-									<AlertDialogDescription>
-										Are you sure you want to delete this expense? This action
-										cannot be undone.
-									</AlertDialogDescription>
-								</AlertDialogHeader>
-								<AlertDialogFooter>
-									<AlertDialogCancel>Cancel</AlertDialogCancel>
-									<AlertDialogAction
-										onClick={handleDelete}
-										disabled={deleteMutation.isPending}
-										variant="destructive"
-									>
-										{deleteMutation.isPending ? (
-											<HugeiconsIcon
-												icon={Loading03Icon}
-												className="h-4 w-4 animate-spin"
-												strokeWidth={2}
-											/>
-										) : (
-											"Delete"
-										)}
-									</AlertDialogAction>
-								</AlertDialogFooter>
-							</AlertDialogContent>
-						</AlertDialog>
-					</>
+					)}
+				</div>
+				{expense.canEdit && (
+					<AlertDialog open={isAlertOpen} onOpenChange={setIsAlertOpen}>
+						<AlertDialogContent>
+							<AlertDialogHeader>
+								<AlertDialogTitle>Delete Expense</AlertDialogTitle>
+								<AlertDialogDescription>
+									Are you sure you want to delete this expense? This action
+									cannot be undone.
+								</AlertDialogDescription>
+							</AlertDialogHeader>
+							<AlertDialogFooter>
+								<AlertDialogCancel>Cancel</AlertDialogCancel>
+								<AlertDialogAction
+									onClick={handleDelete}
+									disabled={deleteMutation.isPending}
+									variant="destructive"
+								>
+									{deleteMutation.isPending ? (
+										<HugeiconsIcon
+											icon={Loading03Icon}
+											className="h-4 w-4 animate-spin"
+											strokeWidth={2}
+										/>
+									) : (
+										"Delete"
+									)}
+								</AlertDialogAction>
+							</AlertDialogFooter>
+						</AlertDialogContent>
+					</AlertDialog>
 				)}
 			</div>
 		</article>

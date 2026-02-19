@@ -13,7 +13,7 @@ export default function GroupHeader({ group }: Props) {
 		<div className="mb-8">
 			<div className="flex items-start gap-4">
 				<div className="relative shrink-0">
-					<div className="bg-muted border-border flex h-24 w-24 items-center justify-center overflow-hidden rounded-lg border">
+					<div className="bg-muted border-border flex h-16 w-16 items-center justify-center overflow-hidden rounded-lg border sm:h-20 sm:w-20 lg:h-24 lg:w-24">
 						{group.coverImageUrl ? (
 							<img
 								src={group.coverImageUrl}
@@ -23,7 +23,7 @@ export default function GroupHeader({ group }: Props) {
 						) : (
 							<HugeiconsIcon
 								icon={Invoice01Icon}
-								className="text-muted-foreground h-10 w-10"
+								className="text-muted-foreground h-8 w-8 sm:h-10 sm:w-10"
 								strokeWidth={1.5}
 							/>
 						)}

@@ -123,7 +123,7 @@ export default function GroupsForm() {
 								</Button>
 							}
 						/>
-						<DropdownMenuContent className="w-56" align="start">
+						<DropdownMenuContent className="w-[--anchor-width]" align="start">
 							<DropdownMenuGroup>
 								<DropdownMenuLabel>Friends</DropdownMenuLabel>
 								{friends?.length === 0 ? (

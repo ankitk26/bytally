@@ -21,7 +21,7 @@ function RouteComponent() {
 					<span className="font-serif text-2xl italic">bitally</span>
 				</div>
 				<div className="max-w-md">
-					<h1 className="mb-4 font-serif text-5xl leading-tight">
+					<h1 className="mb-4 font-serif text-3xl leading-tight sm:text-4xl lg:text-5xl">
 						Shared expenses,
 						<br />
 						<em>made simple.</em>

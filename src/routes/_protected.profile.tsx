@@ -42,10 +42,12 @@ function ProfilePage() {
 
 	return (
 		<div className="bg-background min-h-screen">
-			<main className="mx-auto max-w-6xl px-6 py-8">
+			<main className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
 				<div className="mb-6 flex items-end justify-between pb-4">
 					<div>
-						<h1 className="text-foreground font-serif text-3xl">Profile</h1>
+						<h1 className="text-foreground font-serif text-2xl sm:text-3xl">
+							Profile
+						</h1>
 						<p className="text-muted-foreground mt-1 text-sm">
 							Manage your account settings
 						</p>

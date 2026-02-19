@@ -41,7 +41,7 @@ function RouteComponent() {
 
 	return (
 		<div className="min-h-screen">
-			<main className="mx-auto max-w-6xl px-6 py-8">
+			<main className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
 				{/* Group Header Section */}
 				<div className="mb-8 flex items-start justify-between">
 					<GroupHeader group={group} />
