@@ -32,6 +32,11 @@ import {
 } from "~/components/ui/dialog";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
+import {
+	Tooltip,
+	TooltipContent,
+	TooltipTrigger,
+} from "~/components/ui/tooltip";
 import { Textarea } from "./ui/textarea";
 
 type Props = {
@@ -91,17 +96,22 @@ export default function EditGroupButton({
 
 	return (
 		<Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-			<DialogTrigger
-				render={
-					<Button size="icon-xs" variant="outline">
-						<HugeiconsIcon
-							icon={PencilEdit01Icon}
-							className="h-3.5 w-3.5"
-							strokeWidth={2}
-						/>
-					</Button>
-				}
-			/>
+			<Tooltip>
+				<TooltipTrigger>
+					<DialogTrigger
+						render={
+							<Button size="icon-xs" variant="outline">
+								<HugeiconsIcon
+									icon={PencilEdit01Icon}
+									className="h-3.5 w-3.5"
+									strokeWidth={2}
+								/>
+							</Button>
+						}
+					/>
+				</TooltipTrigger>
+				<TooltipContent>Edit group</TooltipContent>
+			</Tooltip>
 			<DialogContent className="sm:max-w-md">
 				<DialogHeader>
 					<DialogTitle>Edit Group</DialogTitle>

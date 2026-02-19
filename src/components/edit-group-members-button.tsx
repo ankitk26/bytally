@@ -23,6 +23,11 @@ import {
 	DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
 import { Label } from "~/components/ui/label";
+import {
+	Tooltip,
+	TooltipContent,
+	TooltipTrigger,
+} from "~/components/ui/tooltip";
 import SendRequestForm from "./send-request-form";
 
 type Props = {
@@ -106,17 +111,22 @@ export default function EditGroupMembersButton({ groupId }: Props) {
 
 	return (
 		<Dialog>
-			<DialogTrigger
-				render={
-					<Button size="icon-xs" variant="outline">
-						<HugeiconsIcon
-							icon={Add01Icon}
-							className="h-3.5 w-3.5"
-							strokeWidth={2}
-						/>
-					</Button>
-				}
-			/>
+			<Tooltip>
+				<TooltipTrigger>
+					<DialogTrigger
+						render={
+							<Button size="icon-xs" variant="outline">
+								<HugeiconsIcon
+									icon={Add01Icon}
+									className="h-3.5 w-3.5"
+									strokeWidth={2}
+								/>
+							</Button>
+						}
+					/>
+				</TooltipTrigger>
+				<TooltipContent>Add members</TooltipContent>
+			</Tooltip>
 			<DialogContent className="sm:max-w-md">
 				<DialogHeader>
 					<DialogTitle>Edit Group Members</DialogTitle>

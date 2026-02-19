@@ -17,6 +17,11 @@ import {
 	AlertDialogTitle,
 } from "~/components/ui/alert-dialog";
 import { Button } from "~/components/ui/button";
+import {
+	Tooltip,
+	TooltipContent,
+	TooltipTrigger,
+} from "~/components/ui/tooltip";
 import { formatCurrency } from "~/lib/format-currency";
 import { formatDate } from "~/lib/format-date";
 
@@ -104,18 +109,23 @@ export default function ExpenseItem({ expense, members }: Props) {
 				</span>
 				{expense.canEdit && (
 					<>
-						<Button
-							size="icon-xs"
-							variant="ghost"
-							className="text-muted-foreground hover:text-destructive"
-							onClick={() => setIsAlertOpen(true)}
-						>
-							<HugeiconsIcon
-								icon={Delete01Icon}
-								className="h-4 w-4"
-								strokeWidth={2}
-							/>
-						</Button>
+						<Tooltip>
+							<TooltipTrigger>
+								<Button
+									size="icon-xs"
+									variant="ghost"
+									className="text-muted-foreground hover:text-destructive"
+									onClick={() => setIsAlertOpen(true)}
+								>
+									<HugeiconsIcon
+										icon={Delete01Icon}
+										className="h-4 w-4"
+										strokeWidth={2}
+									/>
+								</Button>
+							</TooltipTrigger>
+							<TooltipContent>Delete expense</TooltipContent>
+						</Tooltip>
 						<AlertDialog open={isAlertOpen} onOpenChange={setIsAlertOpen}>
 							<AlertDialogContent>
 								<AlertDialogHeader>
