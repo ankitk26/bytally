@@ -11,6 +11,7 @@ import {
 	useRouteContext,
 } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
+import { TooltipProvider } from "~/components/ui/tooltip";
 import { authClient } from "~/lib/auth-client";
 import { getToken } from "~/lib/auth-server";
 import appCss from "../styles.css?url";
@@ -79,7 +80,7 @@ function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
 				<HeadContent />
 			</head>
 			<body className="bg-background text-foreground min-h-screen antialiased">
-				{children}
+				<TooltipProvider>{children}</TooltipProvider>
 				<Scripts />
 			</body>
 		</html>

@@ -5,6 +5,11 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import { useMutation } from "@tanstack/react-query";
 import { api } from "convex/_generated/api";
 import { Button } from "~/components/ui/button";
+import {
+	Tooltip,
+	TooltipContent,
+	TooltipTrigger,
+} from "~/components/ui/tooltip";
 
 type Props = {
 	groupId: Id<"groups">;
@@ -21,12 +26,13 @@ export default function SettleButton({ groupId, memberId, amountOwed }: Props) {
 		return null;
 	}
 
-	return (
+	const isInternallySettled = amountOwed === 0;
+	const button = (
 		<Button
-			variant={amountOwed === 0 ? "default" : "outline"}
+			variant={isInternallySettled ? "default" : "outline"}
 			size="icon-xs"
 			className={
-				amountOwed === 0
+				isInternallySettled
 					? "text-foreground bg-emerald-600 hover:bg-emerald-800"
 					: undefined
 			}
@@ -37,9 +43,20 @@ export default function SettleButton({ groupId, memberId, amountOwed }: Props) {
 					settled: amountOwed !== 0,
 				})
 			}
-			disabled={settleMutation.isPending}
+			disabled={settleMutation.isPending || isInternallySettled}
 		>
 			<HugeiconsIcon icon={Tick02Icon} strokeWidth={2.5} />
 		</Button>
 	);
+
+	if (isInternallySettled) {
+		return (
+			<Tooltip>
+				<TooltipTrigger>{button}</TooltipTrigger>
+				<TooltipContent>Balanced - no settlement needed</TooltipContent>
+			</Tooltip>
+		);
+	}
+
+	return button;
 }
