@@ -35,7 +35,7 @@ export default function Header() {
 					to="/"
 					className="text-foreground font-serif text-base italic transition-opacity hover:opacity-80"
 				>
-					bitally
+					bytally
 				</Link>
 				<DropdownMenu>
 					<DropdownMenuTrigger

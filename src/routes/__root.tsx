@@ -50,7 +50,7 @@ export const Route = createRootRouteWithContext<{
 				content: "width=device-width, initial-scale=1",
 			},
 			{
-				title: "bitally",
+				title: "bytally",
 			},
 		],
 		links: [{ rel: "stylesheet", href: appCss }],

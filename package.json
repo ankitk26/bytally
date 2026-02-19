@@ -1,5 +1,5 @@
 {
-	"name": "bitally",
+	"name": "bytally",
 	"type": "module",
 	"scripts": {
 		"dev": "vite dev",

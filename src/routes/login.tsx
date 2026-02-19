@@ -18,7 +18,7 @@ function RouteComponent() {
 			{/* Left - Branding */}
 			<div className="bg-foreground text-background hidden flex-col justify-between p-12 lg:flex lg:w-1/2">
 				<div>
-					<span className="font-serif text-2xl italic">bitally</span>
+					<span className="font-serif text-2xl italic">bytally</span>
 				</div>
 				<div className="max-w-md">
 					<h1 className="mb-4 font-serif text-3xl leading-tight sm:text-4xl lg:text-5xl">
@@ -41,7 +41,7 @@ function RouteComponent() {
 				<div className="w-full max-w-xs">
 					<div className="mb-8 lg:hidden">
 						<span className="text-foreground font-serif text-xl italic">
-							bitally
+							bytally
 						</span>
 					</div>
 

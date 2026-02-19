@@ -22,6 +22,7 @@ import {
 	TooltipContent,
 	TooltipTrigger,
 } from "~/components/ui/tooltip";
+import ViewExpenseDialog from "~/components/view-expense-dialog";
 import { formatCurrency } from "~/lib/format-currency";
 import { formatDate } from "~/lib/format-date";
 
@@ -72,7 +73,7 @@ export default function ExpenseItem({ expense, members }: Props) {
 			className={`text-foreground truncate text-sm font-medium ${
 				expense.canEdit
 					? "hover:text-primary cursor-pointer hover:underline"
-					: ""
+					: "cursor-pointer hover:underline"
 			}`}
 		>
 			{expense.title}
@@ -88,7 +89,9 @@ export default function ExpenseItem({ expense, members }: Props) {
 							{titleElement}
 						</EditExpenseDialog>
 					) : (
-						titleElement
+						<ViewExpenseDialog expense={expense}>
+							{titleElement}
+						</ViewExpenseDialog>
 					)}
 					<span className="text-muted-foreground text-xs">
 						{formatDate(expense.expenseTime)}

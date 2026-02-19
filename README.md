@@ -1,4 +1,4 @@
-# bitally
+# bytally
 
 To install dependencies:
 

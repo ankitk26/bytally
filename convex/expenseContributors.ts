@@ -127,5 +127,22 @@ export const settleWithUser = mutation({
 		for (const contribution of contributionsWhereIOwe) {
 			await ctx.db.patch(contribution._id, { isSettled: args.settled });
 		}
+
+		// Settle/unsettle contributions where other user is the contributor and auth user is the payer
+		// (i.e., the other user owes me money)
+		const contributionsWhereTheyOwe = await ctx.db
+			.query("expenseContributors")
+			.withIndex("by_group_and_payer_and_contributor", (q) =>
+				q
+					.eq("groupId", args.groupId)
+					.eq("payerId", authUser._id)
+					.eq("contributorId", args.otherUserId)
+					.eq("isSettled", !args.settled),
+			)
+			.collect();
+
+		for (const contribution of contributionsWhereTheyOwe) {
+			await ctx.db.patch(contribution._id, { isSettled: args.settled });
+		}
 	},
 });
