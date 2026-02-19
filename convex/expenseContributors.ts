@@ -1,6 +1,6 @@
 import { v } from "convex/values";
 import { Id } from "./_generated/dataModel";
-import { query } from "./_generated/server";
+import { mutation, query } from "./_generated/server";
 import { getAuthUserIdOrThrow } from "./model/users";
 
 export const getAmountsOwedToMeByGroup = query({
@@ -72,5 +72,60 @@ export const getAmountsOwedToMeByGroup = query({
 		}
 
 		return amountsOwedToMe;
+	},
+});
+
+export const settleWithUser = mutation({
+	args: {
+		groupId: v.id("groups"),
+		otherUserId: v.id("users"),
+		settled: v.boolean(),
+	},
+	handler: async (ctx, args) => {
+		const authUser = await getAuthUserIdOrThrow(ctx);
+
+		const group = await ctx.db.get(args.groupId);
+		if (!group) {
+			throw new Error("invalid_request");
+		}
+
+		const isGroupMember = await ctx.db
+			.query("groupMembers")
+			.withIndex("by_group_and_member", (q) =>
+				q.eq("groupId", args.groupId).eq("memberId", authUser._id),
+			)
+			.first();
+
+		if (!isGroupMember) {
+			throw new Error("invalid_request");
+		}
+
+		const otherUserIsGroupMember = await ctx.db
+			.query("groupMembers")
+			.withIndex("by_group_and_member", (q) =>
+				q.eq("groupId", args.groupId).eq("memberId", args.otherUserId),
+			)
+			.first();
+
+		if (!otherUserIsGroupMember) {
+			throw new Error("invalid_request");
+		}
+
+		// Settle/unsettle contributions where auth user is the contributor and other user is the payer
+		// (i.e., I owe the other user money)
+		const contributionsWhereIOwe = await ctx.db
+			.query("expenseContributors")
+			.withIndex("by_group_and_payer_and_contributor", (q) =>
+				q
+					.eq("groupId", args.groupId)
+					.eq("payerId", args.otherUserId)
+					.eq("contributorId", authUser._id)
+					.eq("isSettled", !args.settled),
+			)
+			.collect();
+
+		for (const contribution of contributionsWhereIOwe) {
+			await ctx.db.patch(contribution._id, { isSettled: args.settled });
+		}
 	},
 });
