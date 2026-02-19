@@ -71,7 +71,12 @@ function RouteComponent() {
 							<h2 className="text-foreground font-serif text-lg">Members</h2>
 							<EditGroupMembersButton groupId={groupId} />
 						</div>
-						{members && <GroupMembersList members={members} />}
+						{members && (
+							<GroupMembersList
+								members={members}
+								hasExpenses={expenses && expenses.length > 0}
+							/>
+						)}
 					</div>
 				</div>
 			</main>

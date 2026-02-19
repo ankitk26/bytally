@@ -11,16 +11,25 @@ type Props = {
 	};
 	amountOwed: number | undefined;
 	groupId: Id<"groups">;
+	hasExpenses?: boolean;
 };
 
-export default function MemberItem({ member, amountOwed, groupId }: Props) {
+export default function MemberItem({
+	member,
+	amountOwed,
+	groupId,
+	hasExpenses,
+}: Props) {
 	const { auth } = useRouteContext({ from: "/_protected" });
 
 	const isCurrentUser = auth.authUserId === member.memberId;
 	const showAmount =
 		!isCurrentUser && amountOwed !== undefined && amountOwed !== 0;
 	const showSettleButton =
-		!isCurrentUser && amountOwed !== undefined && amountOwed <= 0;
+		!isCurrentUser &&
+		amountOwed !== undefined &&
+		amountOwed <= 0 &&
+		hasExpenses;
 	const formattedAmount =
 		amountOwed !== undefined ? formatCurrency(Math.abs(amountOwed)) : 0;
 

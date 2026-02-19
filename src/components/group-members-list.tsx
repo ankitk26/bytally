@@ -13,9 +13,10 @@ type GroupMember = {
 
 type Props = {
 	members: GroupMember[];
+	hasExpenses?: boolean;
 };
 
-export default function GroupMembersList({ members }: Props) {
+export default function GroupMembersList({ members, hasExpenses }: Props) {
 	const { groupId } = useParams({ from: "/_protected/groups/$groupId" });
 
 	const sortedMembers = [...members].sort((a, b) => {
@@ -37,6 +38,7 @@ export default function GroupMembersList({ members }: Props) {
 					member={member}
 					amountOwed={amountsOwedToMe?.[member.memberId]}
 					groupId={groupId as Id<"groups">}
+					hasExpenses={hasExpenses}
 				/>
 			))}
 		</div>
