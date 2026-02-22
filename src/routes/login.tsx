@@ -14,8 +14,13 @@ function RouteComponent() {
 	};
 
 	return (
-		<main className="flex min-h-screen">
-			{/* Left - Branding */}
+		<main className="relative flex min-h-screen overflow-hidden">
+			<div className="pointer-events-none absolute inset-0 lg:hidden">
+				<div className="bg-chart-2/20 absolute -top-32 -left-32 h-64 w-64 rounded-full blur-3xl" />
+				<div className="bg-chart-4/20 absolute top-1/3 -right-20 h-48 w-48 rounded-full blur-3xl" />
+				<div className="bg-chart-1/15 absolute bottom-20 -left-10 h-40 w-40 rounded-full blur-3xl" />
+			</div>
+
 			<div className="bg-foreground text-background hidden flex-col justify-between p-12 lg:flex lg:w-1/2">
 				<div>
 					<span className="font-serif text-2xl italic">bytally</span>
@@ -36,13 +41,15 @@ function RouteComponent() {
 				</p>
 			</div>
 
-			{/* Right - Login */}
-			<div className="flex flex-1 items-center justify-center p-6">
+			<div className="relative z-10 flex flex-1 items-center justify-center p-6">
 				<div className="w-full max-w-xs">
 					<div className="mb-8 lg:hidden">
 						<span className="text-foreground font-serif text-xl italic">
 							bytally
 						</span>
+						<p className="text-muted-foreground mt-1 text-sm">
+							Shared expenses, <em className="font-serif">made simple.</em>
+						</p>
 					</div>
 
 					<div className="mb-6">
@@ -79,6 +86,10 @@ function RouteComponent() {
 						</svg>
 						Continue with Google
 					</Button>
+
+					<p className="text-muted-foreground/50 mt-8 text-center text-xs lg:hidden">
+						Splitting bills made simple
+					</p>
 				</div>
 			</div>
 		</main>
