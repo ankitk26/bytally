@@ -18,7 +18,11 @@ import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { Textarea } from "~/components/ui/textarea";
 
-export default function GroupsForm() {
+type Props = {
+	showBorder?: boolean;
+};
+
+export default function GroupsForm({ showBorder = true }: Props) {
 	const [name, setName] = useState("");
 	const [description, setDescription] = useState("");
 	const [selectedFriends, setSelectedFriends] = useState<Id<"users">[]>([]);
@@ -56,7 +60,7 @@ export default function GroupsForm() {
 	};
 
 	return (
-		<div className="border-border border p-5">
+		<div className={showBorder ? "border-border border p-5" : ""}>
 			<p className="text-muted-foreground mb-1 text-xs tracking-wider uppercase">
 				New group
 			</p>

@@ -83,7 +83,7 @@ export default function ExpenseItem({ expense, members }: Props) {
 	return (
 		<article className="flex items-center justify-between gap-3 py-3">
 			<div className="min-w-0 flex-1">
-				<div className="flex items-center gap-2">
+				<div className="flex flex-col gap-0.5 sm:flex-row sm:items-center sm:gap-2">
 					{expense.canEdit ? (
 						<EditExpenseDialog expense={expense} members={members}>
 							{titleElement}
@@ -93,7 +93,7 @@ export default function ExpenseItem({ expense, members }: Props) {
 							{titleElement}
 						</ViewExpenseDialog>
 					)}
-					<span className="text-muted-foreground text-xs">
+					<span className="text-muted-foreground hidden text-xs sm:inline">
 						{formatDate(expense.expenseTime)}
 					</span>
 				</div>
@@ -103,6 +103,9 @@ export default function ExpenseItem({ expense, members }: Props) {
 					</div>
 					<span className="text-muted-foreground text-xs">
 						{expense.paidByUsername}
+					</span>
+					<span className="text-muted-foreground text-xs sm:hidden">
+						· {formatDate(expense.expenseTime)}
 					</span>
 				</div>
 			</div>

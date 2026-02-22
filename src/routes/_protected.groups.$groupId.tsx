@@ -7,9 +7,11 @@ import AddExpenseDialog from "~/components/add-expense-dialog";
 import EditGroupButton from "~/components/edit-group-button";
 import EditGroupMembersButton from "~/components/edit-group-members-button";
 import ExpensesList from "~/components/expenses-list";
+import GroupBalancesList from "~/components/group-balances-list";
 import GroupHeader from "~/components/group-header";
 import GroupMembersList from "~/components/group-members-list";
 import GroupsPageSkeleton from "~/components/groups-page-skeleton";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "~/components/ui/tabs";
 
 export const Route = createFileRoute("/_protected/groups/$groupId")({
 	component: RouteComponent,
@@ -42,7 +44,6 @@ function RouteComponent() {
 	return (
 		<div className="min-h-screen">
 			<main className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
-				{/* Group Header Section */}
 				<div className="mb-8 flex items-start justify-between">
 					<GroupHeader group={group} />
 					<EditGroupButton
@@ -52,9 +53,53 @@ function RouteComponent() {
 					/>
 				</div>
 
-				{/* Two Column Layout */}
-				<div className="grid grid-cols-1 gap-8 lg:grid-cols-4">
-					{/* Left Column - Expenses */}
+				{/* Mobile Tabs Layout */}
+				<Tabs defaultValue="balances" className="flex-col lg:hidden">
+					<TabsList variant="line" className="mb-4">
+						<TabsTrigger value="balances">Balances</TabsTrigger>
+						<TabsTrigger value="members">Members</TabsTrigger>
+					</TabsList>
+
+					<TabsContent value="balances" className="space-y-6">
+						<div>
+							<h2 className="text-foreground mb-4 font-serif text-lg">
+								Balances
+							</h2>
+							{members && (
+								<GroupBalancesList
+									members={members}
+									hasExpenses={expenses && expenses.length > 0}
+								/>
+							)}
+						</div>
+
+						<div>
+							<div className="mb-4 flex items-center justify-between">
+								<h2 className="text-foreground font-serif text-lg">Expenses</h2>
+								{members && <AddExpenseDialog members={members} />}
+							</div>
+							{expenses && members && (
+								<ExpensesList expenses={expenses} members={members} />
+							)}
+						</div>
+					</TabsContent>
+
+					<TabsContent value="members">
+						<div className="mb-4 flex items-center justify-between">
+							<h2 className="text-foreground font-serif text-lg">Members</h2>
+							<EditGroupMembersButton groupId={groupId} />
+						</div>
+						{members && (
+							<GroupMembersList
+								members={members}
+								hasExpenses={expenses && expenses.length > 0}
+							/>
+						)}
+					</TabsContent>
+				</Tabs>
+
+				{/* Desktop Two Column Layout */}
+				<div className="hidden grid-cols-1 gap-8 lg:grid lg:grid-cols-4">
 					<div className="lg:col-span-3">
 						<div className="mb-4 flex items-center justify-between">
 							<h2 className="text-foreground font-serif text-lg">Expenses</h2>
@@ -65,7 +110,6 @@ function RouteComponent() {
 						)}
 					</div>
 
-					{/* Right Column - Members */}
 					<div className="lg:col-span-1">
 						<div className="mb-4 flex items-center justify-between">
 							<h2 className="text-foreground font-serif text-lg">Members</h2>
