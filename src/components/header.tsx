@@ -32,7 +32,7 @@ export default function Header() {
 
 	return (
 		<header className="border-border border-b">
-			<div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-4 sm:h-12 sm:px-6">
+			<div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-4 lg:h-12 lg:px-6">
 				<Link
 					to="/"
 					className="text-foreground font-serif text-base italic transition-opacity hover:opacity-80"

@@ -46,20 +46,13 @@ function ProfilePage() {
 
 	return (
 		<div className="bg-background min-h-screen">
-			<main className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
-				<div className="mb-6 flex items-end justify-between pb-4">
-					<div>
-						<h1 className="text-foreground font-serif text-2xl sm:text-3xl">
-							Profile
-						</h1>
-						<p className="text-muted-foreground mt-1 text-sm">
-							Manage your account settings
-						</p>
-					</div>
-				</div>
+			<main className="mx-auto max-w-6xl px-4 py-6 lg:px-6 lg:py-8">
+				<h1 className="text-foreground mb-4 font-serif text-xl lg:mb-6 lg:pb-4 lg:text-2xl">
+					Profile
+				</h1>
 
-				<div className="max-w-lg">
-					<div className="border-border border p-5">
+				<div className="lg:max-w-lg">
+					<div className="border-border p-5 lg:border">
 						<div className="mb-6 flex items-center gap-3">
 							<div className="bg-primary text-primary-foreground flex h-12 w-12 items-center justify-center">
 								<HugeiconsIcon
@@ -72,7 +65,7 @@ function ProfilePage() {
 								<p className="text-muted-foreground text-xs tracking-wider uppercase">
 									Account
 								</p>
-								<p className="text-foreground font-serif text-base">
+								<p className="text-foreground truncate font-serif text-base">
 									{user?.email || auth.email}
 								</p>
 							</div>

@@ -129,7 +129,7 @@ export default function AddExpenseDialog({ members }: Props) {
 		<Dialog>
 			<DialogTrigger
 				render={
-					<Button size="sm" variant="outline">
+					<Button size="sm">
 						<HugeiconsIcon
 							icon={Add01Icon}
 							className="mr-1.5 h-3.5 w-3.5"

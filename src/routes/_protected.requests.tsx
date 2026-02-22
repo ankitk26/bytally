@@ -12,50 +12,44 @@ export const Route = createFileRoute("/_protected/requests")({
 function RouteComponent() {
 	return (
 		<div className="bg-background min-h-screen">
-			<main className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
-				<div className="mb-6 flex items-end justify-between pb-4">
-					<div>
-						<h1 className="text-foreground font-serif text-2xl sm:text-3xl">
-							Requests
-						</h1>
-					</div>
-				</div>
+			<main className="mx-auto max-w-6xl px-4 py-6 lg:px-6 lg:py-8">
+				<h1 className="text-foreground mb-4 font-serif text-xl lg:mb-6 lg:pb-4 lg:text-2xl">
+					Requests
+				</h1>
 
-				<div className="max-w-3xl">
-					<Tabs
-						defaultValue="received"
-						orientation="horizontal"
-						className="flex w-full flex-col"
+				<Tabs
+					defaultValue="received"
+					orientation="horizontal"
+					className="flex w-full flex-col"
+				>
+					<TabsList
+						variant="line"
+						className="border-border mb-4 grid w-full grid-cols-2 border-b bg-transparent p-0 lg:mb-6 lg:flex lg:w-fit lg:gap-4"
 					>
-						<TabsList
-							variant="line"
-							className="border-border mb-6 flex flex-row gap-4 border-b bg-transparent p-0"
-						>
-							<TabsTrigger value="received">
-								<HugeiconsIcon
-									icon={InboxIcon}
-									className="h-3.5 w-3.5"
-									strokeWidth={2}
-								/>
-								Received
-							</TabsTrigger>
-							<TabsTrigger value="sent">
-								<HugeiconsIcon
-									icon={SentIcon}
-									className="h-3.5 w-3.5"
-									strokeWidth={2}
-								/>
-								Sent
-							</TabsTrigger>
-						</TabsList>
-						<TabsContent value="received">
-							<ReceivedRequests />
-						</TabsContent>
-						<TabsContent value="sent">
-							<SentRequests />
-						</TabsContent>
-					</Tabs>
-				</div>
+						<TabsTrigger value="received">
+							<HugeiconsIcon
+								icon={InboxIcon}
+								className="h-3.5 w-3.5"
+								strokeWidth={2}
+							/>
+							Received
+						</TabsTrigger>
+						<TabsTrigger value="sent">
+							<HugeiconsIcon
+								icon={SentIcon}
+								className="h-3.5 w-3.5"
+								strokeWidth={2}
+							/>
+							Sent
+						</TabsTrigger>
+					</TabsList>
+					<TabsContent value="received">
+						<ReceivedRequests />
+					</TabsContent>
+					<TabsContent value="sent">
+						<SentRequests />
+					</TabsContent>
+				</Tabs>
 			</main>
 		</div>
 	);

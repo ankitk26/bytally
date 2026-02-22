@@ -55,7 +55,10 @@ function RouteComponent() {
 
 				{/* Mobile Tabs Layout */}
 				<Tabs defaultValue="balances" className="flex-col lg:hidden">
-					<TabsList variant="line" className="mb-4">
+					<TabsList
+						variant="line"
+						className="mb-4 grid w-full grid-cols-2 border-b bg-transparent p-0"
+					>
 						<TabsTrigger value="balances">Balances</TabsTrigger>
 						<TabsTrigger value="members">Members</TabsTrigger>
 					</TabsList>
