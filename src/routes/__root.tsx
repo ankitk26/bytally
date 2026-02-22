@@ -1,7 +1,6 @@
+import { ConvexBetterAuthProvider } from "@convex-dev/better-auth/react";
 /// <reference types="vite/client" />
 import type { ConvexQueryClient } from "@convex-dev/react-query";
-import type { ReactNode } from "react";
-import { ConvexBetterAuthProvider } from "@convex-dev/better-auth/react";
 import { QueryClient } from "@tanstack/react-query";
 import {
 	HeadContent,
@@ -11,6 +10,7 @@ import {
 	useRouteContext,
 } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
+import type { ReactNode } from "react";
 import { TooltipProvider } from "~/components/ui/tooltip";
 import { authClient } from "~/lib/auth-client";
 import { getToken } from "~/lib/auth-server";

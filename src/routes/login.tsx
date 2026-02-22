@@ -79,12 +79,6 @@ function RouteComponent() {
 						</svg>
 						Continue with Google
 					</Button>
-
-					<p className="text-muted-foreground mt-4 text-center text-xs">
-						By continuing, you agree to our{" "}
-						<span className="cursor-pointer underline">Terms</span> and{" "}
-						<span className="cursor-pointer underline">Privacy Policy</span>
-					</p>
 				</div>
 			</div>
 		</main>

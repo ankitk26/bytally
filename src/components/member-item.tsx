@@ -1,5 +1,5 @@
-import type { Id } from "convex/_generated/dataModel";
 import { useRouteContext } from "@tanstack/react-router";
+import type { Id } from "convex/_generated/dataModel";
 import { formatCurrency } from "~/lib/format-currency";
 import SettleButton from "./settle-button";
 

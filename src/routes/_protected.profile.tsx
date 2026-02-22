@@ -1,17 +1,18 @@
 import { convexQuery, useConvexMutation } from "@convex-dev/react-query";
 import {
-	UserIcon,
 	CheckmarkCircle01Icon,
 	Loading03Icon,
+	UserIcon,
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, useRouteContext } from "@tanstack/react-router";
 import { api } from "convex/_generated/api";
 import { useState } from "react";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
+import { authUserQuery } from "~/queries/auth-user-query";
 
 export const Route = createFileRoute("/_protected/profile")({
 	component: ProfilePage,
@@ -23,12 +24,15 @@ function ProfilePage() {
 	const [isSaved, setIsSaved] = useState(false);
 
 	const { data: user } = useQuery(convexQuery(api.auth.getCurrentUser));
+	const queryClient = useQueryClient();
 
 	const { mutate, isPending } = useMutation({
 		mutationFn: useConvexMutation(api.users.update),
 		onSuccess: () => {
 			setIsSaved(true);
-			setTimeout(() => setIsSaved(false), 2000);
+			queryClient.invalidateQueries({
+				queryKey: authUserQuery.queryKey,
+			});
 		},
 	});
 

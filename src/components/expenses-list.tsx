@@ -1,5 +1,5 @@
-import type { Id } from "convex/_generated/dataModel";
 import { api } from "convex/_generated/api";
+import type { Id } from "convex/_generated/dataModel";
 import { FunctionReturnType } from "convex/server";
 import ExpenseItem from "~/components/expense-item";
 
