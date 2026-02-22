@@ -52,7 +52,7 @@ function ProfilePage() {
 				</h1>
 
 				<div className="lg:max-w-lg">
-					<div className="border-border p-5 lg:border">
+					<div className="border-border py-5 lg:border lg:px-5">
 						<div className="mb-6 flex items-center gap-3">
 							<div className="bg-primary text-primary-foreground flex h-12 w-12 items-center justify-center">
 								<HugeiconsIcon
