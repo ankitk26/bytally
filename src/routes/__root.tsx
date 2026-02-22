@@ -14,6 +14,7 @@ import type { ReactNode } from "react";
 import { TooltipProvider } from "~/components/ui/tooltip";
 import { authClient } from "~/lib/auth-client";
 import { getToken } from "~/lib/auth-server";
+import { getAppTheme } from "~/lib/theme";
 import appCss from "../styles.css?url";
 
 const getAuth = createServerFn({ method: "GET" }).handler(async () => {
@@ -35,9 +36,12 @@ export const Route = createRootRouteWithContext<{
 			ctx.context.convexQueryClient.serverHttpClient?.setAuth(token);
 		}
 
+		const theme = await getAppTheme();
+
 		return {
 			isAuthenticated: !!token,
 			token,
+			theme,
 		};
 	},
 	head: () => ({
@@ -74,8 +78,10 @@ function RootComponent() {
 }
 
 function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
+	const { theme } = Route.useRouteContext();
+
 	return (
-		<html lang="en" className="dark">
+		<html lang="en" className={theme === "dark" ? theme : ""}>
 			<head>
 				<HeadContent />
 			</head>
