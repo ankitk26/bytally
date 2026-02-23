@@ -1,12 +1,16 @@
-import { convexQuery, useConvexMutation } from "@convex-dev/react-query";
+import { useConvexMutation } from "@convex-dev/react-query";
 import {
 	CheckmarkCircle01Icon,
 	Loading03Icon,
 	UserIcon,
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { createFileRoute, useRouteContext } from "@tanstack/react-router";
+import { useMutation } from "@tanstack/react-query";
+import {
+	createFileRoute,
+	useRouteContext,
+	useRouter,
+} from "@tanstack/react-router";
 import { api } from "convex/_generated/api";
 import { useState } from "react";
 import { Button } from "~/components/ui/button";
@@ -19,20 +23,20 @@ export const Route = createFileRoute("/_protected/profile")({
 });
 
 function ProfilePage() {
-	const { auth } = useRouteContext({ from: "/_protected" });
+	const { auth, queryClient } = useRouteContext({ from: "/_protected" });
+
 	const [username, setUsername] = useState(auth.username || "");
 	const [isSaved, setIsSaved] = useState(false);
-
-	const { data: user } = useQuery(convexQuery(api.auth.getCurrentUser));
-	const queryClient = useQueryClient();
+	const router = useRouter();
 
 	const { mutate, isPending } = useMutation({
 		mutationFn: useConvexMutation(api.users.update),
-		onSuccess: () => {
-			setIsSaved(true);
-			queryClient.invalidateQueries({
+		onSuccess: async () => {
+			await queryClient.invalidateQueries({
 				queryKey: authUserQuery.queryKey,
 			});
+			await router.invalidate();
+			setIsSaved(true);
 		},
 	});
 
@@ -66,7 +70,7 @@ function ProfilePage() {
 									Account
 								</p>
 								<p className="text-foreground truncate font-serif text-base">
-									{user?.email || auth.email}
+									{auth.email}
 								</p>
 							</div>
 						</div>
@@ -93,7 +97,7 @@ function ProfilePage() {
 								<Label className="text-muted-foreground text-xs">Email</Label>
 								<Input
 									type="email"
-									value={user?.email || auth.email}
+									value={auth.email}
 									disabled
 									className="bg-muted/50"
 								/>

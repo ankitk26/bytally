@@ -8,6 +8,7 @@ export const Route = createFileRoute("/_protected")({
 		if (!auth) {
 			throw redirect({ to: "/login" });
 		}
+
 		return {
 			auth: {
 				email: auth.email,
