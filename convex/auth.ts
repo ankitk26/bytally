@@ -16,10 +16,14 @@ export const authComponent = createClient<DataModel>(components.betterAuth, {
 	triggers: {
 		user: {
 			onCreate: async (ctx, doc) => {
+				const initialUsername = doc.name
+					? doc.name.split(" ")[0]
+					: doc.email.split("@")[0];
+
 				await ctx.db.insert("users", {
 					authId: doc._id,
 					email: doc.email,
-					username: doc.email.split("@")[0],
+					username: initialUsername,
 					updatedTime: Date.now(),
 				});
 			},
