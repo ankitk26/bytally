@@ -7,7 +7,6 @@ import AddExpenseDialog from "~/components/add-expense-dialog";
 import EditGroupButton from "~/components/edit-group-button";
 import EditGroupMembersButton from "~/components/edit-group-members-button";
 import ExpensesList from "~/components/expenses-list";
-import GroupBalancesList from "~/components/group-balances-list";
 import GroupHeader from "~/components/group-header";
 import GroupMembersList from "~/components/group-members-list";
 import GroupsPageSkeleton from "~/components/groups-page-skeleton";
@@ -54,28 +53,16 @@ function RouteComponent() {
 				</div>
 
 				{/* Mobile Tabs Layout */}
-				<Tabs defaultValue="balances" className="flex-col lg:hidden">
+				<Tabs defaultValue="expenses" className="flex-col lg:hidden">
 					<TabsList
 						variant="line"
 						className="mb-4 grid w-full grid-cols-2 border-b bg-transparent p-0"
 					>
-						<TabsTrigger value="balances">Balances</TabsTrigger>
+						<TabsTrigger value="expenses">Expenses</TabsTrigger>
 						<TabsTrigger value="members">Members</TabsTrigger>
 					</TabsList>
 
-					<TabsContent value="balances" className="space-y-6">
-						<div>
-							<h2 className="text-foreground mb-4 font-serif text-lg">
-								Balances
-							</h2>
-							{members && (
-								<GroupBalancesList
-									members={members}
-									hasExpenses={expenses && expenses.length > 0}
-								/>
-							)}
-						</div>
-
+					<TabsContent value="expenses" className="space-y-6">
 						<div>
 							<div className="mb-4 flex items-center justify-between">
 								<h2 className="text-foreground font-serif text-lg">Expenses</h2>

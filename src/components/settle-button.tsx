@@ -15,18 +15,26 @@ type Props = {
 	groupId: Id<"groups">;
 	memberId: Id<"users">;
 	amountOwed: number;
+	isSimplified?: boolean;
 };
 
-export default function SettleButton({ groupId, memberId, amountOwed }: Props) {
+export default function SettleButton({
+	groupId,
+	memberId,
+	amountOwed,
+	isSimplified = false,
+}: Props) {
 	const settleMutation = useMutation({
-		mutationFn: useConvexMutation(api.expenseContributors.settleWithUser),
+		mutationFn: useConvexMutation(
+			isSimplified
+				? api.expenseContributors.settleSimplifiedDebt
+				: api.expenseContributors.settleWithUser,
+		),
 	});
 
-	if (amountOwed > 0) {
-		return null;
-	}
-
 	const isInternallySettled = amountOwed === 0;
+	const theyOweYou = amountOwed > 0;
+
 	const button = (
 		<Button
 			variant={isInternallySettled ? "default" : "outline"}
@@ -54,6 +62,15 @@ export default function SettleButton({ groupId, memberId, amountOwed }: Props) {
 			<Tooltip>
 				<TooltipTrigger>{button}</TooltipTrigger>
 				<TooltipContent>Balanced - no settlement needed</TooltipContent>
+			</Tooltip>
+		);
+	}
+
+	if (theyOweYou) {
+		return (
+			<Tooltip>
+				<TooltipTrigger>{button}</TooltipTrigger>
+				<TooltipContent>Mark as received</TooltipContent>
 			</Tooltip>
 		);
 	}

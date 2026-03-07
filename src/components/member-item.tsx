@@ -12,6 +12,7 @@ type Props = {
 	amountOwed: number | undefined;
 	groupId: Id<"groups">;
 	hasExpenses?: boolean;
+	isSimplified?: boolean;
 };
 
 export default function MemberItem({
@@ -19,16 +20,22 @@ export default function MemberItem({
 	amountOwed,
 	groupId,
 	hasExpenses,
+	isSimplified = false,
 }: Props) {
 	const { auth } = useRouteContext({ from: "/_protected" });
 
 	const isCurrentUser = auth.authUserId === member.memberId;
 	const showAmount =
 		!isCurrentUser && amountOwed !== undefined && amountOwed !== 0;
+	// Show settle button if:
+	// 1. Not current user
+	// 2. Amount is defined
+	// 3. Either it's simplified view (always show if there's an amount) or original view (show if you owe money)
+	// 4. Has expenses
 	const showSettleButton =
 		!isCurrentUser &&
 		amountOwed !== undefined &&
-		amountOwed <= 0 &&
+		amountOwed !== 0 &&
 		hasExpenses;
 	const formattedAmount =
 		amountOwed !== undefined ? formatCurrency(Math.abs(amountOwed)) : 0;
@@ -58,6 +65,7 @@ export default function MemberItem({
 					groupId={groupId}
 					memberId={member.memberId}
 					amountOwed={amountOwed}
+					isSimplified={isSimplified}
 				/>
 			)}
 		</div>

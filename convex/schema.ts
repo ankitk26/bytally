@@ -73,5 +73,10 @@ export default defineSchema({
 			"payerId",
 			"contributorId",
 			"isSettled",
+		])
+		.index("by_group_and_contributor", [
+			"groupId",
+			"contributorId",
+			"isSettled",
 		]),
 });
