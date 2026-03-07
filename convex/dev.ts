@@ -1,5 +1,5 @@
 import { v } from "convex/values";
-import { mutation } from "./_generated/server";
+import { internalMutation, mutation } from "./_generated/server";
 import { authComponent, createAuth } from "./auth";
 
 const TEST_PASSWORD = "testpassword123";
@@ -74,5 +74,44 @@ export const listTestUsers = mutation({
 			username: user.username,
 			authId: user.authId,
 		}));
+	},
+});
+
+export const acceptRequest = internalMutation({
+	args: {
+		requestId: v.id("requests"),
+	},
+	handler: async (ctx, args) => {
+		const request = await ctx.db.get(args.requestId);
+		if (!request) {
+			throw new Error("Request not found");
+		}
+
+		if (request.status !== "pending") {
+			throw new Error("Request is not pending");
+		}
+
+		await ctx.db.patch(request._id, {
+			status: "accepted",
+			updatedTime: Date.now(),
+		});
+
+		const [userId1, userId2] =
+			request.initiatorId < request.receiverId
+				? [request.initiatorId, request.receiverId]
+				: [request.receiverId, request.initiatorId];
+
+		const alreadyFriends = await ctx.db
+			.query("friends")
+			.withIndex("by_user", (q) =>
+				q.eq("userId1", userId1).eq("userId2", userId2),
+			)
+			.first();
+
+		if (!alreadyFriends) {
+			await ctx.db.insert("friends", { userId1, userId2 });
+		}
+
+		return { success: true };
 	},
 });
