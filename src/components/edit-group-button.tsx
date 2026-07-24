@@ -95,7 +95,7 @@ export default function EditGroupButton({
 				<TooltipTrigger>
 					<DialogTrigger
 						render={
-							<Button size="icon-xs" variant="outline">
+							<Button size="icon-sm" variant="outline">
 								<PencilIcon />
 							</Button>
 						}
