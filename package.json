@@ -3,6 +3,7 @@
 	"type": "module",
 	"scripts": {
 		"dev": "vite dev",
+		"dev:all": "concurrently \"bun run dev\" \"bunx convex dev\"",
 		"start": "node .output/server/index.mjs",
 		"build": "vite build",
 		"lint": "oxlint",
@@ -40,6 +41,7 @@
 		"@types/react": "^19.2.14",
 		"@types/react-dom": "^19.2.3",
 		"@vitejs/plugin-react": "^5.1.4",
+		"concurrently": "^9.0.1",
 		"oxfmt": "^0.34.0",
 		"oxlint": "^1.49.0",
 		"shadcn": "^3.8.5",
