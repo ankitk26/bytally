@@ -1,3 +1,4 @@
+import { v } from "convex/values";
 import { mutation } from "./_generated/server";
 import { authComponent, createAuth } from "./auth";
 
@@ -51,6 +52,54 @@ export const createTestUser = mutation({
 				userId: result.user?.id,
 			};
 		} catch (error) {
+			throw new Error(
+				`Failed to create test user: ${error instanceof Error ? error.message : "Unknown error"}`,
+			);
+		}
+	},
+});
+
+export const createTestUserWithEmail = mutation({
+	args: {
+		email: v.string(),
+		name: v.string(),
+	},
+	handler: async (ctx, args) => {
+		if (process.env.CONVEX_ENV !== "dev") {
+			throw new Error("This mutation is only available in development mode");
+		}
+
+		const { auth, headers } = await authComponent.getAuth(createAuth, ctx);
+
+		try {
+			const result = await auth.api.signUpEmail({
+				body: {
+					email: args.email,
+					password: TEST_PASSWORD,
+					name: args.name,
+				},
+				headers,
+			});
+
+			return {
+				success: true,
+				email: args.email,
+				password: TEST_PASSWORD,
+				name: args.name,
+				userId: result.user?.id,
+			};
+		} catch (error) {
+			if (
+				error instanceof Error &&
+				error.message.toLowerCase().includes("already exists")
+			) {
+				return {
+					success: false,
+					email: args.email,
+					reason: "user already exists",
+				};
+			}
+
 			throw new Error(
 				`Failed to create test user: ${error instanceof Error ? error.message : "Unknown error"}`,
 			);
