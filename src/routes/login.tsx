@@ -23,13 +23,13 @@ function RouteComponent() {
 
 			<div className="bg-foreground text-background hidden flex-col justify-between p-12 lg:flex lg:w-1/2">
 				<div>
-					<span className="font-serif text-2xl italic">bytally</span>
+					<span className="font-serif text-2xl">bytally</span>
 				</div>
 				<div className="max-w-md">
 					<h1 className="mb-4 font-serif text-3xl leading-tight sm:text-4xl lg:text-5xl">
 						Shared expenses,
 						<br />
-						<em>made simple.</em>
+						made simple.
 					</h1>
 					<p className="text-background/60 text-sm">
 						Track shared costs, split bills fairly, and settle up with
@@ -44,11 +44,9 @@ function RouteComponent() {
 			<div className="relative z-10 flex flex-1 items-center justify-center p-6">
 				<div className="w-full max-w-xs">
 					<div className="mb-8 lg:hidden">
-						<span className="text-foreground font-serif text-xl italic">
-							bytally
-						</span>
+						<span className="text-foreground font-serif text-xl">bytally</span>
 						<p className="text-muted-foreground mt-1 text-sm">
-							Shared expenses, <em className="font-serif">made simple.</em>
+							Shared expenses, made simple.
 						</p>
 					</div>
 
