@@ -1,5 +1,6 @@
 import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
+import { addMemberByEmail, normalizeEmail } from "./model/members";
 import { getAuthUserIdOrThrow } from "./model/users";
 
 export const getById = query({
@@ -70,7 +71,7 @@ export const create = mutation({
 		description: v.string(),
 		// TODO: allow to pass adminId
 		// adminId: v.optional(v.id("users"))
-		groupMembers: v.array(v.id("users")),
+		memberEmails: v.optional(v.array(v.string())),
 	},
 	handler: async (ctx, args) => {
 		const authUser = await getAuthUserIdOrThrow(ctx);
@@ -83,18 +84,30 @@ export const create = mutation({
 			description: args.description,
 		});
 
-		for (const memberId of args.groupMembers) {
-			await ctx.db.insert("groupMembers", {
-				groupId: newGroupId,
-				memberId,
-			});
+		const memberEmails = args.memberEmails ?? [];
+		const seenEmails = new Set<string>();
+
+		for (const rawEmail of memberEmails) {
+			const email = normalizeEmail(rawEmail);
+			if (!email || seenEmails.has(email)) continue;
+			seenEmails.add(email);
+			await addMemberByEmail(ctx, newGroupId, email);
 		}
 
-		// add admin also as a member
-		await ctx.db.insert("groupMembers", {
-			groupId: newGroupId,
-			memberId: authUser._id,
-		});
+		// Ensure the creator is also a member.
+		const existingAdminMember = await ctx.db
+			.query("groupMembers")
+			.withIndex("by_group_and_member", (q) =>
+				q.eq("groupId", newGroupId).eq("memberId", authUser._id),
+			)
+			.first();
+
+		if (!existingAdminMember) {
+			await ctx.db.insert("groupMembers", {
+				groupId: newGroupId,
+				memberId: authUser._id,
+			});
+		}
 	},
 });
 

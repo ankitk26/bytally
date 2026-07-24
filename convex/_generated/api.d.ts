@@ -12,12 +12,11 @@ import type * as auth from "../auth.js";
 import type * as dev from "../dev.js";
 import type * as expenseContributors from "../expenseContributors.js";
 import type * as expenses from "../expenses.js";
-import type * as friends from "../friends.js";
 import type * as groupMembers from "../groupMembers.js";
 import type * as groups from "../groups.js";
 import type * as http from "../http.js";
+import type * as model_members from "../model/members.js";
 import type * as model_users from "../model/users.js";
-import type * as requests from "../requests.js";
 import type * as users from "../users.js";
 
 import type {
@@ -31,12 +30,11 @@ declare const fullApi: ApiFromModules<{
   dev: typeof dev;
   expenseContributors: typeof expenseContributors;
   expenses: typeof expenses;
-  friends: typeof friends;
   groupMembers: typeof groupMembers;
   groups: typeof groups;
   http: typeof http;
+  "model/members": typeof model_members;
   "model/users": typeof model_users;
-  requests: typeof requests;
   users: typeof users;
 }>;
 

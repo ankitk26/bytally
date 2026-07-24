@@ -1,19 +1,10 @@
-import { convexQuery, useConvexMutation } from "@convex-dev/react-query";
+import { useConvexMutation } from "@convex-dev/react-query";
 import { Loading03Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { api } from "convex/_generated/api";
-import { Id } from "convex/_generated/dataModel";
 import { useState } from "react";
 import { Button } from "~/components/ui/button";
-import {
-	DropdownMenu,
-	DropdownMenuCheckboxItem,
-	DropdownMenuContent,
-	DropdownMenuGroup,
-	DropdownMenuLabel,
-	DropdownMenuTrigger,
-} from "~/components/ui/dropdown-menu";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { Textarea } from "~/components/ui/textarea";
@@ -22,40 +13,42 @@ type Props = {
 	showBorder?: boolean;
 };
 
+function parseEmails(input: string): string[] {
+	const emails = input
+		.split(/[\s,]+/)
+		.map((email) => email.trim().toLowerCase())
+		.filter((email) => email.length > 0 && email.includes("@"));
+	return Array.from(new Set(emails));
+}
+
 export default function GroupsForm({ showBorder = true }: Props) {
 	const [name, setName] = useState("");
 	const [description, setDescription] = useState("");
-	const [selectedFriends, setSelectedFriends] = useState<Id<"users">[]>([]);
+	const [memberEmailsInput, setMemberEmailsInput] = useState("");
 
 	const { mutate, isPending } = useMutation({
 		mutationFn: useConvexMutation(api.groups.create),
 	});
 
-	const { data: friends, isPending: isFriendsLoading } = useQuery(
-		convexQuery(api.friends.getAll),
-	);
-
-	const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
+	const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		if (!name.trim()) return;
 
+		const memberEmails = parseEmails(memberEmailsInput);
+
 		mutate(
-			{ name, description, groupMembers: selectedFriends },
+			{
+				name,
+				description,
+				memberEmails,
+			},
 			{
 				onSuccess: () => {
 					setName("");
 					setDescription("");
-					setSelectedFriends([]);
+					setMemberEmailsInput("");
 				},
 			},
-		);
-	};
-
-	const toggleFriend = (friendId: Id<"users">) => {
-		setSelectedFriends((prev) =>
-			prev.includes(friendId)
-				? prev.filter((id) => id !== friendId)
-				: [...prev, friendId],
 		);
 	};
 
@@ -102,52 +95,28 @@ export default function GroupsForm({ showBorder = true }: Props) {
 				</div>
 
 				<div className="space-y-1.5">
-					<Label className="text-muted-foreground text-xs">
-						Group Members <span className="opacity-50">(optional)</span>
+					<Label
+						htmlFor="member-emails"
+						className="text-muted-foreground text-xs"
+					>
+						Members{" "}
+						<span className="opacity-50">(optional, comma-separated)</span>
 					</Label>
-					<DropdownMenu>
-						<DropdownMenuTrigger
-							render={
-								<Button
-									variant="outline"
-									className="w-full justify-start"
-									disabled={isFriendsLoading}
-								>
-									{isFriendsLoading ? (
-										<HugeiconsIcon
-											icon={Loading03Icon}
-											className="h-4 w-4 animate-spin"
-											strokeWidth={2}
-										/>
-									) : selectedFriends.length > 0 ? (
-										`${selectedFriends.length} member${selectedFriends.length > 1 ? "s" : ""} selected`
-									) : (
-										"Select friends"
-									)}
-								</Button>
-							}
-						/>
-						<DropdownMenuContent className="w-[--anchor-width]" align="start">
-							<DropdownMenuGroup>
-								<DropdownMenuLabel>Friends</DropdownMenuLabel>
-								{friends?.length === 0 ? (
-									<DropdownMenuCheckboxItem disabled>
-										No friends found
-									</DropdownMenuCheckboxItem>
-								) : (
-									friends?.map((friend) => (
-										<DropdownMenuCheckboxItem
-											key={friend._id}
-											checked={selectedFriends.includes(friend._id)}
-											onCheckedChange={() => toggleFriend(friend._id)}
-										>
-											{friend.username}
-										</DropdownMenuCheckboxItem>
-									))
-								)}
-							</DropdownMenuGroup>
-						</DropdownMenuContent>
-					</DropdownMenu>
+					<Input
+						id="member-emails"
+						name="member-emails"
+						type="text"
+						value={memberEmailsInput}
+						onChange={(e) => setMemberEmailsInput(e.target.value)}
+						placeholder="one@email.com, two@email.com"
+					/>
+					{memberEmailsInput.trim() && (
+						<p className="text-muted-foreground text-xs">
+							{parseEmails(memberEmailsInput).length} member
+							{parseEmails(memberEmailsInput).length === 1 ? "" : "s"} will be
+							invited
+						</p>
+					)}
 				</div>
 
 				<Button

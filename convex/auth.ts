@@ -16,16 +16,41 @@ export const authComponent = createClient<DataModel>(components.betterAuth, {
 	triggers: {
 		user: {
 			onCreate: async (ctx, doc) => {
+				const normalizedEmail = doc.email.trim().toLowerCase();
 				const initialUsername = doc.name
 					? doc.name.split(" ")[0]
-					: doc.email.split("@")[0];
+					: normalizedEmail.split("@")[0];
 
-				await ctx.db.insert("users", {
+				const user = await ctx.db.insert("users", {
 					authId: doc._id,
-					email: doc.email,
+					email: normalizedEmail,
 					username: initialUsername,
 					updatedTime: Date.now(),
 				});
+
+				// Resolve any pending group invites for this email.
+				const pendingInvites = await ctx.db
+					.query("pendingGroupMembers")
+					.withIndex("by_email", (q) => q.eq("email", normalizedEmail))
+					.collect();
+
+				for (const invite of pendingInvites) {
+					const existingMember = await ctx.db
+						.query("groupMembers")
+						.withIndex("by_group_and_member", (q) =>
+							q.eq("groupId", invite.groupId).eq("memberId", user),
+						)
+						.first();
+
+					if (!existingMember) {
+						await ctx.db.insert("groupMembers", {
+							groupId: invite.groupId,
+							memberId: user,
+						});
+					}
+
+					await ctx.db.delete(invite._id);
+				}
 			},
 			onUpdate: async (ctx, newDoc) => {
 				const user = await ctx.db
@@ -37,7 +62,7 @@ export const authComponent = createClient<DataModel>(components.betterAuth, {
 				}
 
 				await ctx.db.patch(user._id, {
-					email: newDoc.email,
+					email: newDoc.email.trim().toLowerCase(),
 					updatedTime: Date.now(),
 				});
 			},

@@ -26,26 +26,13 @@ export default defineSchema({
 		.index("by_group_and_member", ["groupId", "memberId"])
 		.index("by_member", ["memberId"]),
 
-	requests: defineTable({
-		initiatorId: v.id("users"),
-		receiverId: v.id("users"),
-		status: v.union(
-			v.literal("pending"),
-			v.literal("accepted"),
-			v.literal("rejected"),
-		),
-		updatedTime: v.number(),
+	pendingGroupMembers: defineTable({
+		groupId: v.id("groups"),
+		email: v.string(),
 	})
-		.index("by_initiator", ["initiatorId"])
-		.index("by_receiver", ["receiverId"]),
-
-	friends: defineTable({
-		userId1: v.id("users"),
-		userId2: v.id("users"),
-	})
-		.index("by_user", ["userId1", "userId2"])
-		.index("by_user1", ["userId1"])
-		.index("by_user2", ["userId2"]),
+		.index("by_group", ["groupId"])
+		.index("by_email", ["email"])
+		.index("by_group_and_email", ["groupId", "email"]),
 
 	expenses: defineTable({
 		groupId: v.id("groups"),
