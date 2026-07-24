@@ -7,6 +7,7 @@ export default defineSchema({
 		authId: v.string(),
 		username: v.string(),
 		updatedTime: v.number(),
+		isPlaceholder: v.optional(v.boolean()),
 	})
 		.index("by_auth", ["authId"])
 		.index("by_email", ["email"]),
@@ -25,14 +26,6 @@ export default defineSchema({
 	})
 		.index("by_group_and_member", ["groupId", "memberId"])
 		.index("by_member", ["memberId"]),
-
-	pendingGroupMembers: defineTable({
-		groupId: v.id("groups"),
-		email: v.string(),
-	})
-		.index("by_group", ["groupId"])
-		.index("by_email", ["email"])
-		.index("by_group_and_email", ["groupId", "email"]),
 
 	expenses: defineTable({
 		groupId: v.id("groups"),

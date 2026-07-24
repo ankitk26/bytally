@@ -1,6 +1,10 @@
 import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
-import { addMemberByEmail, normalizeEmail } from "./model/members";
+import {
+	addMemberByEmail,
+	removePlaceholderUserIfNoGroups,
+	normalizeEmail,
+} from "./model/members";
 import { getAuthUserIdOrThrow } from "./model/users";
 
 export const getById = query({
@@ -165,6 +169,7 @@ export const deleteGroup = mutation({
 
 		for (const member of groupMembers) {
 			await ctx.db.delete(member._id);
+			await removePlaceholderUserIfNoGroups(ctx, member.memberId);
 		}
 
 		// Delete all expenses associated with the group

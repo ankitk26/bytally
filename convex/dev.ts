@@ -1,4 +1,5 @@
 import { v } from "convex/values";
+import { components } from "./_generated/api";
 import { mutation } from "./_generated/server";
 import { authComponent, createAuth } from "./auth";
 
@@ -107,6 +108,65 @@ export const createTestUserWithEmail = mutation({
 	},
 });
 
+export const deleteTestUser = mutation({
+	args: {
+		email: v.string(),
+	},
+	handler: async (ctx, args) => {
+		if (process.env.CONVEX_ENV !== "dev") {
+			throw new Error("This mutation is only available in development mode");
+		}
+
+		const normalizedEmail = args.email.trim().toLowerCase();
+
+		// Delete our app-level user if it exists.
+		const appUser = await ctx.db
+			.query("users")
+			.withIndex("by_email", (q) => q.eq("email", normalizedEmail))
+			.first();
+
+		if (appUser) {
+			await ctx.db.delete(appUser._id);
+		}
+
+		// Delete the better-auth user by email.
+		const authUser = await ctx.runMutation(
+			components.betterAuth.adapter.deleteOne,
+			{
+				input: {
+					model: "user",
+					where: [{ field: "email", value: normalizedEmail }],
+				},
+			},
+		);
+
+		const authUserId =
+			authUser && typeof authUser === "object" && "id" in authUser
+				? (authUser.id as string)
+				: null;
+
+		if (authUserId) {
+			// Clean up sessions and accounts linked to the auth user.
+			await ctx.runMutation(components.betterAuth.adapter.deleteMany, {
+				input: {
+					model: "session",
+					where: [{ field: "userId", value: authUserId }],
+				},
+				paginationOpts: { numItems: 100, cursor: null },
+			});
+			await ctx.runMutation(components.betterAuth.adapter.deleteMany, {
+				input: {
+					model: "account",
+					where: [{ field: "userId", value: authUserId }],
+				},
+				paginationOpts: { numItems: 100, cursor: null },
+			});
+		}
+
+		return { deleted: true, email: normalizedEmail };
+	},
+});
+
 export const listTestUsers = mutation({
 	args: {},
 	handler: async (ctx) => {
@@ -121,6 +181,7 @@ export const listTestUsers = mutation({
 			email: user.email,
 			username: user.username,
 			authId: user.authId,
+			isPlaceholder: user.isPlaceholder,
 		}));
 	},
 });

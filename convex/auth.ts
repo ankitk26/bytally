@@ -21,35 +21,26 @@ export const authComponent = createClient<DataModel>(components.betterAuth, {
 					? doc.name.split(" ")[0]
 					: normalizedEmail.split("@")[0];
 
-				const user = await ctx.db.insert("users", {
-					authId: doc._id,
-					email: normalizedEmail,
-					username: initialUsername,
-					updatedTime: Date.now(),
-				});
-
-				// Resolve any pending group invites for this email.
-				const pendingInvites = await ctx.db
-					.query("pendingGroupMembers")
+				const existingUser = await ctx.db
+					.query("users")
 					.withIndex("by_email", (q) => q.eq("email", normalizedEmail))
-					.collect();
+					.first();
 
-				for (const invite of pendingInvites) {
-					const existingMember = await ctx.db
-						.query("groupMembers")
-						.withIndex("by_group_and_member", (q) =>
-							q.eq("groupId", invite.groupId).eq("memberId", user),
-						)
-						.first();
-
-					if (!existingMember) {
-						await ctx.db.insert("groupMembers", {
-							groupId: invite.groupId,
-							memberId: user,
-						});
-					}
-
-					await ctx.db.delete(invite._id);
+				if (existingUser) {
+					await ctx.db.patch(existingUser._id, {
+						authId: doc._id,
+						username: initialUsername,
+						updatedTime: Date.now(),
+						isPlaceholder: false,
+					});
+				} else {
+					await ctx.db.insert("users", {
+						authId: doc._id,
+						email: normalizedEmail,
+						username: initialUsername,
+						updatedTime: Date.now(),
+						isPlaceholder: false,
+					});
 				}
 			},
 			onUpdate: async (ctx, newDoc) => {

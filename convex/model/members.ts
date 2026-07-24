@@ -5,6 +5,19 @@ export function normalizeEmail(email: string): string {
 	return email.trim().toLowerCase();
 }
 
+async function createPlaceholderUser(
+	ctx: MutationCtx,
+	email: string,
+): Promise<Id<"users">> {
+	return await ctx.db.insert("users", {
+		authId: `placeholder:${email}:${Date.now()}`,
+		email,
+		username: email,
+		updatedTime: Date.now(),
+		isPlaceholder: true,
+	});
+}
+
 export async function addMemberByEmail(
 	ctx: MutationCtx,
 	groupId: Id<"groups">,
@@ -18,34 +31,38 @@ export async function addMemberByEmail(
 		.withIndex("by_email", (q) => q.eq("email", normalized))
 		.first();
 
-	if (existingUser) {
-		const existingMember = await ctx.db
-			.query("groupMembers")
-			.withIndex("by_group_and_member", (q) =>
-				q.eq("groupId", groupId).eq("memberId", existingUser._id),
-			)
-			.first();
+	const userId = existingUser
+		? existingUser._id
+		: await createPlaceholderUser(ctx, normalized);
 
-		if (!existingMember) {
-			await ctx.db.insert("groupMembers", {
-				groupId,
-				memberId: existingUser._id,
-			});
-		}
-		return;
-	}
-
-	const existingPending = await ctx.db
-		.query("pendingGroupMembers")
-		.withIndex("by_group_and_email", (q) =>
-			q.eq("groupId", groupId).eq("email", normalized),
+	const existingMember = await ctx.db
+		.query("groupMembers")
+		.withIndex("by_group_and_member", (q) =>
+			q.eq("groupId", groupId).eq("memberId", userId),
 		)
 		.first();
 
-	if (!existingPending) {
-		await ctx.db.insert("pendingGroupMembers", {
+	if (!existingMember) {
+		await ctx.db.insert("groupMembers", {
 			groupId,
-			email: normalized,
+			memberId: userId,
 		});
+	}
+}
+
+export async function removePlaceholderUserIfNoGroups(
+	ctx: MutationCtx,
+	userId: Id<"users">,
+): Promise<void> {
+	const user = await ctx.db.get(userId);
+	if (!user?.isPlaceholder) return;
+
+	const remainingMemberships = await ctx.db
+		.query("groupMembers")
+		.withIndex("by_member", (q) => q.eq("memberId", userId))
+		.first();
+
+	if (!remainingMemberships) {
+		await ctx.db.delete(userId);
 	}
 }
