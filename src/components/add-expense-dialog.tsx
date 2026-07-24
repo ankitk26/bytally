@@ -1,6 +1,5 @@
 import { useConvexMutation } from "@convex-dev/react-query";
-import { Add01Icon } from "@hugeicons/core-free-icons";
-import { HugeiconsIcon } from "@hugeicons/react";
+import { PlusIcon } from "@phosphor-icons/react";
 import { useMutation } from "@tanstack/react-query";
 import { useParams } from "@tanstack/react-router";
 import { api } from "convex/_generated/api";
@@ -130,11 +129,7 @@ export default function AddExpenseDialog({ members }: Props) {
 			<DialogTrigger
 				render={
 					<Button size="sm">
-						<HugeiconsIcon
-							icon={Add01Icon}
-							className="mr-1.5 h-3.5 w-3.5"
-							strokeWidth={2}
-						/>
+						<PlusIcon />
 						Add expense
 					</Button>
 				}

@@ -1,6 +1,5 @@
 import { useConvexMutation } from "@convex-dev/react-query";
-import { Tick02Icon } from "@hugeicons/core-free-icons";
-import { HugeiconsIcon } from "@hugeicons/react";
+import { CheckIcon } from "@phosphor-icons/react";
 import { useMutation } from "@tanstack/react-query";
 import { api } from "convex/_generated/api";
 import type { Id } from "convex/_generated/dataModel";
@@ -53,7 +52,7 @@ export default function SettleButton({
 			}
 			disabled={settleMutation.isPending || isInternallySettled}
 		>
-			<HugeiconsIcon icon={Tick02Icon} strokeWidth={2.5} />
+			<CheckIcon />
 		</Button>
 	);
 

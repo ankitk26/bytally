@@ -1,5 +1,4 @@
-import { Add01Icon } from "@hugeicons/core-free-icons";
-import { HugeiconsIcon } from "@hugeicons/react";
+import { PlusIcon } from "@phosphor-icons/react";
 import { createFileRoute } from "@tanstack/react-router";
 import GroupsForm from "~/components/groups-form";
 import GroupsList from "~/components/groups-list";
@@ -24,7 +23,7 @@ function RouteComponent() {
 						<DialogTrigger
 							render={
 								<Button size="sm" className="lg:hidden">
-									<HugeiconsIcon icon={Add01Icon} strokeWidth={2} />
+									<PlusIcon />
 									Add group
 								</Button>
 							}

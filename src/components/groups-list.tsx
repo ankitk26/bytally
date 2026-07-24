@@ -1,6 +1,5 @@
 import { convexQuery } from "@convex-dev/react-query";
-import { Invoice01Icon } from "@hugeicons/core-free-icons";
-import { HugeiconsIcon } from "@hugeicons/react";
+import { ReceiptIcon } from "@phosphor-icons/react";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
 import { api } from "convex/_generated/api";
@@ -57,11 +56,7 @@ export default function GroupsList() {
 						/>
 					) : (
 						<div className="bg-muted flex h-8 w-8 items-center justify-center">
-							<HugeiconsIcon
-								icon={Invoice01Icon}
-								className="text-muted-foreground h-4 w-4"
-								strokeWidth={1.5}
-							/>
+							<ReceiptIcon />
 						</div>
 					)}
 					<div className="min-w-0 flex-1">

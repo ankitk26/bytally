@@ -1,10 +1,5 @@
 import { useConvexMutation } from "@convex-dev/react-query";
-import {
-	CheckmarkCircle01Icon,
-	Loading03Icon,
-	UserIcon,
-} from "@hugeicons/core-free-icons";
-import { HugeiconsIcon } from "@hugeicons/react";
+import { CheckCircleIcon, SpinnerIcon, UserIcon } from "@phosphor-icons/react";
 import { useMutation } from "@tanstack/react-query";
 import {
 	createFileRoute,
@@ -59,11 +54,7 @@ function ProfilePage() {
 					<div className="border-border py-5 lg:border lg:px-5">
 						<div className="mb-6 flex items-center gap-3">
 							<div className="bg-primary text-primary-foreground flex h-12 w-12 items-center justify-center">
-								<HugeiconsIcon
-									icon={UserIcon}
-									className="h-6 w-6"
-									strokeWidth={2}
-								/>
+								<UserIcon />
 							</div>
 							<div>
 								<p className="text-muted-foreground text-xs tracking-wider uppercase">
@@ -111,18 +102,10 @@ function ProfilePage() {
 								className="w-full"
 							>
 								{isPending ? (
-									<HugeiconsIcon
-										icon={Loading03Icon}
-										className="h-3.5 w-3.5 animate-spin"
-										strokeWidth={2}
-									/>
+									<SpinnerIcon />
 								) : isSaved ? (
 									<>
-										<HugeiconsIcon
-											icon={CheckmarkCircle01Icon}
-											className="h-3.5 w-3.5"
-											strokeWidth={2}
-										/>
+										<CheckCircleIcon />
 										Saved
 									</>
 								) : (

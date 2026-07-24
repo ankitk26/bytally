@@ -1,6 +1,5 @@
 import { useConvexMutation } from "@convex-dev/react-query";
-import { Delete01Icon, Loading03Icon } from "@hugeicons/core-free-icons";
-import { HugeiconsIcon } from "@hugeicons/react";
+import { SpinnerIcon, TrashIcon } from "@phosphor-icons/react";
 import { useMutation } from "@tanstack/react-query";
 import { api } from "convex/_generated/api";
 import type { Id } from "convex/_generated/dataModel";
@@ -123,11 +122,7 @@ export default function ExpenseItem({ expense, members }: Props) {
 									className="text-muted-foreground hover:text-destructive"
 									onClick={() => setIsAlertOpen(true)}
 								>
-									<HugeiconsIcon
-										icon={Delete01Icon}
-										className="h-4 w-4"
-										strokeWidth={2}
-									/>
+									<TrashIcon />
 								</Button>
 							</TooltipTrigger>
 							<TooltipContent>Delete expense</TooltipContent>
@@ -151,15 +146,7 @@ export default function ExpenseItem({ expense, members }: Props) {
 									disabled={deleteMutation.isPending}
 									variant="destructive"
 								>
-									{deleteMutation.isPending ? (
-										<HugeiconsIcon
-											icon={Loading03Icon}
-											className="h-4 w-4 animate-spin"
-											strokeWidth={2}
-										/>
-									) : (
-										"Delete"
-									)}
+									{deleteMutation.isPending ? <SpinnerIcon /> : "Delete"}
 								</AlertDialogAction>
 							</AlertDialogFooter>
 						</AlertDialogContent>

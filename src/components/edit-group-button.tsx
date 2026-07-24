@@ -1,10 +1,5 @@
 import { useConvexMutation } from "@convex-dev/react-query";
-import {
-	Delete01Icon,
-	Loading03Icon,
-	PencilEdit01Icon,
-} from "@hugeicons/core-free-icons";
-import { HugeiconsIcon } from "@hugeicons/react";
+import { PencilIcon, SpinnerIcon, TrashIcon } from "@phosphor-icons/react";
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
 import { api } from "convex/_generated/api";
@@ -101,11 +96,7 @@ export default function EditGroupButton({
 					<DialogTrigger
 						render={
 							<Button size="icon-xs" variant="outline">
-								<HugeiconsIcon
-									icon={PencilEdit01Icon}
-									className="h-3.5 w-3.5"
-									strokeWidth={2}
-								/>
+								<PencilIcon />
 							</Button>
 						}
 					/>
@@ -152,11 +143,7 @@ export default function EditGroupButton({
 										size="sm"
 										disabled={isDeleting}
 									>
-										<HugeiconsIcon
-											icon={Delete01Icon}
-											className="mr-1 h-4 w-4"
-											strokeWidth={2}
-										/>
+										<TrashIcon />
 										Delete group
 									</Button>
 								}
@@ -175,30 +162,14 @@ export default function EditGroupButton({
 										onClick={handleDelete}
 										disabled={isDeleting}
 									>
-										{isDeleting ? (
-											<HugeiconsIcon
-												icon={Loading03Icon}
-												className="h-4 w-4 animate-spin"
-												strokeWidth={2}
-											/>
-										) : (
-											"Delete"
-										)}
+										{isDeleting ? <SpinnerIcon /> : "Delete"}
 									</AlertDialogAction>
 								</AlertDialogFooter>
 							</AlertDialogContent>
 						</AlertDialog>
 
 						<Button type="submit" disabled={isUpdating}>
-							{isUpdating ? (
-								<HugeiconsIcon
-									icon={Loading03Icon}
-									className="h-4 w-4 animate-spin"
-									strokeWidth={2}
-								/>
-							) : (
-								"Save changes"
-							)}
+							{isUpdating ? <SpinnerIcon /> : "Save changes"}
 						</Button>
 					</div>
 				</form>

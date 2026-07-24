@@ -1,6 +1,5 @@
 import { useConvexMutation } from "@convex-dev/react-query";
-import { Loading03Icon } from "@hugeicons/core-free-icons";
-import { HugeiconsIcon } from "@hugeicons/react";
+import { SpinnerIcon } from "@phosphor-icons/react";
 import { useMutation } from "@tanstack/react-query";
 import { api } from "convex/_generated/api";
 import { useState } from "react";
@@ -124,15 +123,7 @@ export default function GroupsForm({ showBorder = true }: Props) {
 					disabled={isPending || !name.trim()}
 					className="w-full"
 				>
-					{isPending ? (
-						<HugeiconsIcon
-							icon={Loading03Icon}
-							className="h-4 w-4 animate-spin"
-							strokeWidth={2}
-						/>
-					) : (
-						"Create"
-					)}
+					{isPending ? <SpinnerIcon /> : "Create"}
 				</Button>
 			</form>
 		</div>

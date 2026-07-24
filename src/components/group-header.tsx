@@ -1,5 +1,4 @@
-import { Invoice01Icon } from "@hugeicons/core-free-icons";
-import { HugeiconsIcon } from "@hugeicons/react";
+import { ReceiptIcon } from "@phosphor-icons/react";
 import { api } from "convex/_generated/api";
 import { FunctionReturnType } from "convex/server";
 import { formatDate } from "~/lib/format-date";
@@ -21,11 +20,7 @@ export default function GroupHeader({ group }: Props) {
 								className="h-full w-full object-cover"
 							/>
 						) : (
-							<HugeiconsIcon
-								icon={Invoice01Icon}
-								className="text-muted-foreground h-8 w-8 sm:h-10 sm:w-10"
-								strokeWidth={1.5}
-							/>
+							<ReceiptIcon className="h-8 w-8 sm:h-10 sm:w-10" />
 						)}
 					</div>
 				</div>

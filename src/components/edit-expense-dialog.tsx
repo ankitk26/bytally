@@ -1,6 +1,5 @@
 import { useConvexMutation } from "@convex-dev/react-query";
-import { Loading03Icon } from "@hugeicons/core-free-icons";
-import { HugeiconsIcon } from "@hugeicons/react";
+import { SpinnerIcon } from "@phosphor-icons/react";
 import { useMutation } from "@tanstack/react-query";
 import { api } from "convex/_generated/api";
 import { Id } from "convex/_generated/dataModel";
@@ -369,15 +368,7 @@ export default function EditExpenseDialog({
 							updateExpenseMutation.isPending
 						}
 					>
-						{updateExpenseMutation.isPending ? (
-							<HugeiconsIcon
-								icon={Loading03Icon}
-								className="h-4 w-4 animate-spin"
-								strokeWidth={2}
-							/>
-						) : (
-							"Save Changes"
-						)}
+						{updateExpenseMutation.isPending ? <SpinnerIcon /> : "Save Changes"}
 					</Button>
 				</DialogFooter>
 			</DialogContent>

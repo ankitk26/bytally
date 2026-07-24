@@ -1,9 +1,4 @@
-import {
-	UserIcon,
-	Logout01Icon,
-	UserEdit01Icon,
-} from "@hugeicons/core-free-icons";
-import { HugeiconsIcon } from "@hugeicons/react";
+import { SignOutIcon, UserIcon } from "@phosphor-icons/react";
 import { useRouteContext, Link } from "@tanstack/react-router";
 import { authClient } from "~/lib/auth-client";
 import ThemeToggler from "./theme-toggler";
@@ -44,11 +39,7 @@ export default function Header() {
 						<DropdownMenuTrigger
 							render={
 								<Button type="button" size="icon-sm" variant="outline">
-									<HugeiconsIcon
-										icon={UserIcon}
-										className="h-3.5 w-3.5"
-										strokeWidth={2}
-									/>
+									<UserIcon />
 								</Button>
 							}
 						/>
@@ -64,11 +55,7 @@ export default function Header() {
 							<DropdownMenuSeparator />
 							<Link to="/profile" className="block">
 								<DropdownMenuItem className="cursor-pointer">
-									<HugeiconsIcon
-										icon={UserEdit01Icon}
-										className="h-3.5 w-3.5"
-										strokeWidth={2}
-									/>
+									<UserIcon />
 									Profile
 								</DropdownMenuItem>
 							</Link>
@@ -78,11 +65,7 @@ export default function Header() {
 								onClick={handleSignOut}
 								className="cursor-pointer"
 							>
-								<HugeiconsIcon
-									icon={Logout01Icon}
-									className="h-3.5 w-3.5"
-									strokeWidth={2}
-								/>
+								<SignOutIcon />
 								Sign out
 							</DropdownMenuItem>
 						</DropdownMenuContent>

@@ -1,10 +1,5 @@
 import { convexQuery, useConvexMutation } from "@convex-dev/react-query";
-import {
-	Add01Icon,
-	Cancel02Icon,
-	Loading03Icon,
-} from "@hugeicons/core-free-icons";
-import { HugeiconsIcon } from "@hugeicons/react";
+import { PlusIcon, SpinnerIcon, XIcon } from "@phosphor-icons/react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { api } from "convex/_generated/api";
 import { Id } from "convex/_generated/dataModel";
@@ -102,11 +97,7 @@ export default function EditGroupMembersButton({ groupId }: Props) {
 					<DialogTrigger
 						render={
 							<Button size="icon-xs" variant="outline">
-								<HugeiconsIcon
-									icon={Add01Icon}
-									className="h-3.5 w-3.5"
-									strokeWidth={2}
-								/>
+								<PlusIcon />
 							</Button>
 						}
 					/>
@@ -142,15 +133,7 @@ export default function EditGroupMembersButton({ groupId }: Props) {
 								parseEmails(emailsInput).length === 0
 							}
 						>
-							{addMembersMutation.isPending ? (
-								<HugeiconsIcon
-									icon={Loading03Icon}
-									className="h-4 w-4 animate-spin"
-									strokeWidth={2}
-								/>
-							) : (
-								"Add members"
-							)}
+							{addMembersMutation.isPending ? <SpinnerIcon /> : "Add members"}
 						</Button>
 					</form>
 
@@ -189,11 +172,7 @@ export default function EditGroupMembersButton({ groupId }: Props) {
 												onClick={() => handleRemoveMember(member.memberId)}
 												disabled={removeMemberMutation.isPending || isLoading}
 											>
-												<HugeiconsIcon
-													icon={Cancel02Icon}
-													className="h-3.5 w-3.5"
-													strokeWidth={2}
-												/>
+												<XIcon />
 												<span className="sr-only">Remove</span>
 											</Button>
 										)}
@@ -223,11 +202,7 @@ export default function EditGroupMembersButton({ groupId }: Props) {
 											onClick={() => handleCancelPending(invite._id)}
 											disabled={cancelPendingMutation.isPending || isLoading}
 										>
-											<HugeiconsIcon
-												icon={Cancel02Icon}
-												className="h-3.5 w-3.5"
-												strokeWidth={2}
-											/>
+											<XIcon />
 											<span className="sr-only">Cancel invite</span>
 										</Button>
 									</div>

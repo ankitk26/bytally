@@ -1,5 +1,4 @@
-import { Moon01Icon, Sun01Icon } from "@hugeicons/core-free-icons";
-import { HugeiconsIcon } from "@hugeicons/react";
+import { MoonIcon, SunIcon } from "@phosphor-icons/react";
 import { useRouteContext, useRouter } from "@tanstack/react-router";
 import { setAppTheme } from "~/lib/theme";
 import { Button } from "./ui/button";
@@ -16,11 +15,7 @@ export default function ThemeToggler() {
 
 	return (
 		<Button size="icon-sm" onClick={toggleTheme}>
-			{theme === "dark" ? (
-				<HugeiconsIcon icon={Sun01Icon} />
-			) : (
-				<HugeiconsIcon icon={Moon01Icon} />
-			)}
+			{theme === "dark" ? <SunIcon /> : <MoonIcon />}
 		</Button>
 	);
 }
