@@ -84,6 +84,7 @@ export const getExpensesByGroupId = query({
 							contributorId: c.contributorId,
 							amount: c.amount,
 							username: user?.username ?? "Unknown",
+							isSettled: c.isSettled,
 						};
 					}),
 				);
@@ -244,21 +245,12 @@ export const update = mutation({
 			);
 		}
 
-		// Fetch old contributions and track which were settled
+		// Delete old contributions
 		const oldContributors = await ctx.db
 			.query("expenseContributors")
 			.withIndex("by_expense", (q) => q.eq("expenseId", args.expenseId))
 			.collect();
 
-		// Track settled state by contributor ID
-		const settledContributors = new Set<string>();
-		for (const contributor of oldContributors) {
-			if (contributor.isSettled) {
-				settledContributors.add(contributor.contributorId);
-			}
-		}
-
-		// Delete old contributions
 		for (const contributor of oldContributors) {
 			await ctx.db.delete(contributor._id);
 		}
@@ -281,14 +273,12 @@ export const update = mutation({
 		);
 
 		for (const contribution of processedContributions) {
-			// Preserve settled state if this contributor was already settled
-			const wasSettled = settledContributors.has(contribution.memberId);
 			await ctx.db.insert("expenseContributors", {
 				groupId: expense.groupId,
 				expenseId: args.expenseId,
 				contributorId: contribution.memberId as typeof args.paidBy,
 				amount: contribution.amount,
-				isSettled: wasSettled,
+				isSettled: false,
 				updatedTime: Date.now(),
 				payerId: args.paidBy,
 			});

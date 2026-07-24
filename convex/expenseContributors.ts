@@ -26,48 +26,68 @@ export const getAmountsOwedToMeByGroup = query({
 			throw new Error("invalid_request");
 		}
 
-		let amountsOwedToMe: Record<Id<"users">, number> = {};
-
 		const allGroupMembers = await ctx.db
 			.query("groupMembers")
 			.withIndex("by_group_and_member", (q) => q.eq("groupId", args.groupId))
 			.collect();
 
+		const balances: Record<Id<"users">, number> = {};
+
 		for (const groupMember of allGroupMembers) {
 			if (groupMember.memberId === authUser._id) {
 				continue;
 			}
+			balances[groupMember.memberId] = 0;
+		}
 
-			amountsOwedToMe[groupMember.memberId] = 0;
+		const contributions = await ctx.db
+			.query("expenseContributors")
+			.withIndex("by_group_and_payer_and_contributor", (q) =>
+				q.eq("groupId", args.groupId),
+			)
+			.filter((q) => q.eq(q.field("isSettled"), false))
+			.collect();
 
-			const expensesPaidByGroupMember = await ctx.db
-				.query("expenseContributors")
-				.withIndex("by_group_and_payer_and_contributor", (q) =>
-					q
-						.eq("groupId", args.groupId)
-						.eq("payerId", groupMember.memberId)
-						.eq("contributorId", authUser._id)
-						.eq("isSettled", false),
-				)
-				.collect();
-
-			for (const expenseContribution of expensesPaidByGroupMember) {
-				amountsOwedToMe[groupMember.memberId] -= expenseContribution.amount;
+		for (const contribution of contributions) {
+			if (
+				contribution.payerId === authUser._id &&
+				contribution.contributorId in balances
+			) {
+				balances[contribution.contributorId] += contribution.amount;
 			}
+			if (
+				contribution.contributorId === authUser._id &&
+				contribution.payerId in balances
+			) {
+				balances[contribution.payerId] -= contribution.amount;
+			}
+		}
 
-			const expensesPaidByMe = await ctx.db
-				.query("expenseContributors")
-				.withIndex("by_group_and_payer_and_contributor", (q) =>
-					q
-						.eq("groupId", args.groupId)
-						.eq("payerId", authUser._id)
-						.eq("contributorId", groupMember.memberId)
-						.eq("isSettled", false),
-				)
-				.collect();
+		const settlements = await ctx.db
+			.query("settlements")
+			.withIndex("by_group", (q) => q.eq("groupId", args.groupId))
+			.collect();
 
-			for (const expenseContribution of expensesPaidByMe) {
-				amountsOwedToMe[groupMember.memberId] += expenseContribution.amount;
+		for (const settlement of settlements) {
+			if (
+				settlement.fromUserId === authUser._id &&
+				settlement.toUserId in balances
+			) {
+				balances[settlement.toUserId] += settlement.amount;
+			}
+			if (
+				settlement.toUserId === authUser._id &&
+				settlement.fromUserId in balances
+			) {
+				balances[settlement.fromUserId] -= settlement.amount;
+			}
+		}
+
+		const amountsOwedToMe: Record<Id<"users">, number> = {};
+		for (const [memberId, balance] of Object.entries(balances)) {
+			if (Math.abs(balance) > 0.01) {
+				amountsOwedToMe[memberId as Id<"users">] =
+					Math.round(balance * 100) / 100;
 			}
 		}
 
@@ -110,7 +130,7 @@ export const getSimplifiedDebts = query({
 			balances[memberId] = 0;
 		}
 
-		const allContributions = await ctx.db
+		const contributions = await ctx.db
 			.query("expenseContributors")
 			.withIndex("by_group_and_payer_and_contributor", (q) =>
 				q.eq("groupId", args.groupId),
@@ -118,9 +138,27 @@ export const getSimplifiedDebts = query({
 			.filter((q) => q.eq(q.field("isSettled"), false))
 			.collect();
 
-		for (const contribution of allContributions) {
-			balances[contribution.payerId] += contribution.amount;
-			balances[contribution.contributorId] -= contribution.amount;
+		for (const contribution of contributions) {
+			if (memberIds.includes(contribution.payerId)) {
+				balances[contribution.payerId] += contribution.amount;
+			}
+			if (memberIds.includes(contribution.contributorId)) {
+				balances[contribution.contributorId] -= contribution.amount;
+			}
+		}
+
+		const settlements = await ctx.db
+			.query("settlements")
+			.withIndex("by_group", (q) => q.eq("groupId", args.groupId))
+			.collect();
+
+		for (const settlement of settlements) {
+			if (memberIds.includes(settlement.fromUserId)) {
+				balances[settlement.fromUserId] += settlement.amount;
+			}
+			if (memberIds.includes(settlement.toUserId)) {
+				balances[settlement.toUserId] -= settlement.amount;
+			}
 		}
 
 		const debtors: Array<{ userId: Id<"users">; amount: number }> = [];
@@ -206,8 +244,37 @@ export const settleWithUser = mutation({
 			throw new Error("invalid_request");
 		}
 
-		// Settle/unsettle contributions where auth user is the contributor and other user is the payer
-		// (i.e., I owe the other user money)
+		if (!args.settled) {
+			const latestSettlement = await ctx.db
+				.query("settlements")
+				.withIndex("by_group_and_from", (q) =>
+					q.eq("groupId", args.groupId).eq("fromUserId", authUser._id),
+				)
+				.filter((q) => q.eq(q.field("toUserId"), args.otherUserId))
+				.order("desc")
+				.first();
+
+			if (latestSettlement) {
+				await ctx.db.delete(latestSettlement._id);
+				return;
+			}
+
+			const reverseSettlement = await ctx.db
+				.query("settlements")
+				.withIndex("by_group_and_from", (q) =>
+					q.eq("groupId", args.groupId).eq("fromUserId", args.otherUserId),
+				)
+				.filter((q) => q.eq(q.field("toUserId"), authUser._id))
+				.order("desc")
+				.first();
+
+			if (reverseSettlement) {
+				await ctx.db.delete(reverseSettlement._id);
+			}
+
+			return;
+		}
+
 		const contributionsWhereIOwe = await ctx.db
 			.query("expenseContributors")
 			.withIndex("by_group_and_payer_and_contributor", (q) =>
@@ -215,16 +282,10 @@ export const settleWithUser = mutation({
 					.eq("groupId", args.groupId)
 					.eq("payerId", args.otherUserId)
 					.eq("contributorId", authUser._id)
-					.eq("isSettled", !args.settled),
+					.eq("isSettled", false),
 			)
 			.collect();
 
-		for (const contribution of contributionsWhereIOwe) {
-			await ctx.db.patch(contribution._id, { isSettled: args.settled });
-		}
-
-		// Settle/unsettle contributions where other user is the contributor and auth user is the payer
-		// (i.e., the other user owes me money)
 		const contributionsWhereTheyOwe = await ctx.db
 			.query("expenseContributors")
 			.withIndex("by_group_and_payer_and_contributor", (q) =>
@@ -232,84 +293,79 @@ export const settleWithUser = mutation({
 					.eq("groupId", args.groupId)
 					.eq("payerId", authUser._id)
 					.eq("contributorId", args.otherUserId)
-					.eq("isSettled", !args.settled),
+					.eq("isSettled", false),
 			)
 			.collect();
 
+		let netAmount = 0;
 		for (const contribution of contributionsWhereTheyOwe) {
-			await ctx.db.patch(contribution._id, { isSettled: args.settled });
+			netAmount += contribution.amount;
 		}
+		for (const contribution of contributionsWhereIOwe) {
+			netAmount -= contribution.amount;
+		}
+
+		netAmount = Math.round(netAmount * 100) / 100;
+
+		if (Math.abs(netAmount) < 0.01) {
+			return;
+		}
+
+		const fromUserId = netAmount > 0 ? args.otherUserId : authUser._id;
+		const toUserId = netAmount > 0 ? authUser._id : args.otherUserId;
+
+		await ctx.db.insert("settlements", {
+			groupId: args.groupId,
+			fromUserId,
+			toUserId,
+			amount: Math.abs(netAmount),
+			createdBy: authUser._id,
+			createdTime: Date.now(),
+			type: "direct",
+		});
 	},
 });
 
 export const settleSimplifiedDebt = mutation({
 	args: {
 		groupId: v.id("groups"),
-		otherUserId: v.id("users"),
-		settled: v.boolean(),
+		fromUserId: v.id("users"),
+		toUserId: v.id("users"),
+		amount: v.number(),
 	},
 	handler: async (ctx, args) => {
 		const authUser = await getAuthUserIdOrThrow(ctx);
+
+		if (args.amount <= 0) {
+			throw new Error("invalid_request");
+		}
 
 		const group = await ctx.db.get(args.groupId);
 		if (!group) {
 			throw new Error("invalid_request");
 		}
 
-		const isGroupMember = await ctx.db
-			.query("groupMembers")
-			.withIndex("by_group_and_member", (q) =>
-				q.eq("groupId", args.groupId).eq("memberId", authUser._id),
-			)
-			.first();
+		for (const memberId of [args.fromUserId, args.toUserId, authUser._id]) {
+			const isGroupMember = await ctx.db
+				.query("groupMembers")
+				.withIndex("by_group_and_member", (q) =>
+					q.eq("groupId", args.groupId).eq("memberId", memberId),
+				)
+				.first();
 
-		if (!isGroupMember) {
-			throw new Error("invalid_request");
-		}
-
-		const otherUserIsGroupMember = await ctx.db
-			.query("groupMembers")
-			.withIndex("by_group_and_member", (q) =>
-				q.eq("groupId", args.groupId).eq("memberId", args.otherUserId),
-			)
-			.first();
-
-		if (!otherUserIsGroupMember) {
-			throw new Error("invalid_request");
-		}
-
-		// In simplified settling, we need to settle ALL contributions where:
-		// 1. Auth user owes money to anyone (auth user is contributor)
-		// 2. Anyone owes money to the other user (other user is payer)
-		// This handles the debt chain A -> B -> C when A settles with C
-
-		// Settle contributions where auth user is the contributor (owes money to anyone)
-		// Query all contributions first, then filter by isSettled
-		const contributionsWhereAuthOwes = await ctx.db
-			.query("expenseContributors")
-			.withIndex("by_group_and_contributor", (q) =>
-				q.eq("groupId", args.groupId).eq("contributorId", authUser._id),
-			)
-			.collect();
-
-		for (const contribution of contributionsWhereAuthOwes) {
-			if (contribution.isSettled !== args.settled) {
-				await ctx.db.patch(contribution._id, { isSettled: args.settled });
+			if (!isGroupMember) {
+				throw new Error("invalid_request");
 			}
 		}
 
-		// Settle contributions where other user is the payer (is owed money by anyone)
-		const contributionsWhereOtherIsPaid = await ctx.db
-			.query("expenseContributors")
-			.withIndex("by_group_and_payer_and_contributor", (q) =>
-				q.eq("groupId", args.groupId).eq("payerId", args.otherUserId),
-			)
-			.collect();
-
-		for (const contribution of contributionsWhereOtherIsPaid) {
-			if (contribution.isSettled !== args.settled) {
-				await ctx.db.patch(contribution._id, { isSettled: args.settled });
-			}
-		}
+		await ctx.db.insert("settlements", {
+			groupId: args.groupId,
+			fromUserId: args.fromUserId,
+			toUserId: args.toUserId,
+			amount: Math.round(args.amount * 100) / 100,
+			createdBy: authUser._id,
+			createdTime: Date.now(),
+			type: "simplified",
+		});
 	},
 });

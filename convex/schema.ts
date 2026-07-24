@@ -38,6 +38,7 @@ export default defineSchema({
 		amount: v.number(),
 		splitMode: v.union(v.literal("equal"), v.literal("manual")),
 	}).index("by_group", ["groupId"]),
+
 	expenseContributors: defineTable({
 		groupId: v.id("groups"),
 		payerId: v.id("users"),
@@ -59,4 +60,17 @@ export default defineSchema({
 			"contributorId",
 			"isSettled",
 		]),
+
+	settlements: defineTable({
+		groupId: v.id("groups"),
+		fromUserId: v.id("users"),
+		toUserId: v.id("users"),
+		amount: v.number(),
+		createdBy: v.id("users"),
+		createdTime: v.number(),
+		type: v.union(v.literal("direct"), v.literal("simplified")),
+	})
+		.index("by_group", ["groupId"])
+		.index("by_group_and_from", ["groupId", "fromUserId"])
+		.index("by_group_and_to", ["groupId", "toUserId"]),
 });

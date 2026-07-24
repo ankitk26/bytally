@@ -1,6 +1,7 @@
 import { useConvexMutation } from "@convex-dev/react-query";
 import { CheckIcon } from "@phosphor-icons/react";
 import { useMutation } from "@tanstack/react-query";
+import { useRouteContext } from "@tanstack/react-router";
 import { api } from "convex/_generated/api";
 import type { Id } from "convex/_generated/dataModel";
 import { Button } from "~/components/ui/button";
@@ -23,6 +24,8 @@ export default function SettleButton({
 	amountOwed,
 	isSimplified = false,
 }: Props) {
+	const { auth } = useRouteContext({ from: "/_protected" });
+
 	const settleMutation = useMutation({
 		mutationFn: useConvexMutation(
 			isSimplified
@@ -33,6 +36,12 @@ export default function SettleButton({
 
 	const isInternallySettled = amountOwed === 0;
 	const theyOweYou = amountOwed > 0;
+	const iOweThem = amountOwed < 0;
+	const simplifiedDebt = {
+		fromUserId: (theyOweYou ? memberId : auth.authUserId) as Id<"users">,
+		toUserId: (theyOweYou ? auth.authUserId : memberId) as Id<"users">,
+		amount: Math.abs(amountOwed),
+	};
 
 	const button = (
 		<Button
@@ -44,13 +53,20 @@ export default function SettleButton({
 					: undefined
 			}
 			onClick={() =>
-				settleMutation.mutate({
-					groupId,
-					otherUserId: memberId,
-					settled: amountOwed !== 0,
-				})
+				settleMutation.mutate(
+					isSimplified
+						? {
+								groupId,
+								...simplifiedDebt,
+							}
+						: {
+								groupId,
+								otherUserId: memberId,
+								settled: iOweThem,
+							},
+				)
 			}
-			disabled={settleMutation.isPending || isInternallySettled}
+			disabled={settleMutation.isPending || isInternallySettled || !iOweThem}
 		>
 			<CheckIcon />
 		</Button>
@@ -66,12 +82,7 @@ export default function SettleButton({
 	}
 
 	if (theyOweYou) {
-		return (
-			<Tooltip>
-				<TooltipTrigger>{button}</TooltipTrigger>
-				<TooltipContent>Mark as received</TooltipContent>
-			</Tooltip>
-		);
+		return null;
 	}
 
 	return button;

@@ -34,16 +34,17 @@ export default function SimplifiedBalancesList({ members }: Props) {
 	);
 
 	const settleMutation = useMutation({
-		mutationFn: useConvexMutation(api.expenseContributors.settleWithUser),
+		mutationFn: useConvexMutation(api.expenseContributors.settleSimplifiedDebt),
 	});
 
 	const memberMap = new Map(members.map((m) => [m.memberId, m.username]));
 
-	const handleSettle = (otherUserId: Id<"users">) => {
+	const handleSettle = (transaction: Transaction) => {
 		settleMutation.mutate({
 			groupId: groupId as Id<"groups">,
-			otherUserId,
-			settled: true,
+			fromUserId: transaction.fromUserId,
+			toUserId: transaction.toUserId,
+			amount: transaction.amount,
 		});
 	};
 
@@ -68,14 +69,14 @@ export default function SimplifiedBalancesList({ members }: Props) {
 				const isToCurrentUser = transaction.toUserId === currentUserId;
 
 				let displayText: string;
-				let settleTargetId: Id<"users"> | null = null;
+				let canSettle = false;
 
 				if (isFromCurrentUser) {
 					displayText = `You pay ${formattedAmount} to ${toUsername}`;
-					settleTargetId = transaction.toUserId;
+					canSettle = true;
 				} else if (isToCurrentUser) {
 					displayText = `${fromUsername} pays you ${formattedAmount}`;
-					settleTargetId = transaction.fromUserId;
+					canSettle = false;
 				} else {
 					displayText = `${fromUsername} pays ${toUsername} ${formattedAmount}`;
 				}
@@ -97,11 +98,11 @@ export default function SimplifiedBalancesList({ members }: Props) {
 								{displayText}
 							</span>
 						</div>
-						{settleTargetId && (
+						{canSettle && (
 							<Button
 								variant="ghost"
 								size="sm"
-								onClick={() => handleSettle(settleTargetId!)}
+								onClick={() => handleSettle(transaction)}
 								disabled={settleMutation.isPending}
 								className={cn(
 									"h-6 px-2 text-xs",
