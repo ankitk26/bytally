@@ -202,7 +202,26 @@ export default function AddExpenseDialog({ members }: Props) {
 						</DropdownMenu>
 					</div>
 					<div className="grid gap-2">
-						<Label>Contributors</Label>
+						<div className="flex items-center justify-between">
+							<Label>Contributors</Label>
+							{members.length > 0 && (
+								<button
+									type="button"
+									onClick={() =>
+										setContributorIds(
+											contributorIds.length === members.length
+												? []
+												: members.map((m) => m.memberId),
+										)
+									}
+									className="text-muted-foreground hover:text-foreground text-xs underline underline-offset-2 transition-colors"
+								>
+									{contributorIds.length === members.length
+										? "Deselect all"
+										: "Select all"}
+								</button>
+							)}
+						</div>
 						<div className="grid gap-1.5 rounded-md border p-2">
 							{members.map((member) => (
 								<label
