@@ -15,7 +15,9 @@ import type * as expenses from "../expenses.js";
 import type * as groupMembers from "../groupMembers.js";
 import type * as groups from "../groups.js";
 import type * as http from "../http.js";
+import type * as model_helpers from "../model/helpers.js";
 import type * as model_members from "../model/members.js";
+import type * as model_settlements from "../model/settlements.js";
 import type * as model_users from "../model/users.js";
 import type * as users from "../users.js";
 
@@ -33,7 +35,9 @@ declare const fullApi: ApiFromModules<{
   groupMembers: typeof groupMembers;
   groups: typeof groups;
   http: typeof http;
+  "model/helpers": typeof model_helpers;
   "model/members": typeof model_members;
+  "model/settlements": typeof model_settlements;
   "model/users": typeof model_users;
   users: typeof users;
 }>;

@@ -2,6 +2,7 @@ import { v } from "convex/values";
 import { components } from "./_generated/api";
 import { mutation } from "./_generated/server";
 import { authComponent, createAuth } from "./auth";
+import { deleteAllExpenseData as deleteAllExpenseDataHelper } from "./model/helpers";
 
 const TEST_PASSWORD = "testpassword123";
 
@@ -183,5 +184,13 @@ export const listTestUsers = mutation({
 			authId: user.authId,
 			isPlaceholder: user.isPlaceholder,
 		}));
+	},
+});
+
+export const deleteAllExpenseData = mutation({
+	args: {},
+	handler: async (ctx) => {
+		const result = await deleteAllExpenseDataHelper(ctx);
+		return result;
 	},
 });

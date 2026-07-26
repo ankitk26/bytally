@@ -182,6 +182,28 @@ export const deleteGroup = mutation({
 			await ctx.db.delete(expense._id);
 		}
 
+		// Delete all contributions associated with the group
+		const contributions = await ctx.db
+			.query("expenseContributors")
+			.withIndex("by_group_and_payer_and_contributor", (q) =>
+				q.eq("groupId", args.groupId),
+			)
+			.collect();
+
+		for (const contribution of contributions) {
+			await ctx.db.delete(contribution._id);
+		}
+
+		// Delete all settlements associated with the group
+		const settlements = await ctx.db
+			.query("settlements")
+			.withIndex("by_group", (q) => q.eq("groupId", args.groupId))
+			.collect();
+
+		for (const settlement of settlements) {
+			await ctx.db.delete(settlement._id);
+		}
+
 		// Delete the group
 		await ctx.db.delete(args.groupId);
 	},

@@ -340,6 +340,42 @@ export const removeMemberFromGroup = mutation({
 			}
 		}
 
+		// Delete any remaining contribution rows of the removed member
+		// (settled shares that were not part of the redistribution above)
+		const remainingContributions = await ctx.db
+			.query("expenseContributors")
+			.withIndex("by_group_and_contributor", (q) =>
+				q.eq("groupId", args.groupId).eq("contributorId", args.memberId),
+			)
+			.collect();
+
+		for (const contribution of remainingContributions) {
+			await ctx.db.delete(contribution._id);
+		}
+
+		// Clean up settlement records involving the removed member
+		const settlementsFrom = await ctx.db
+			.query("settlements")
+			.withIndex("by_group_and_from", (q) =>
+				q.eq("groupId", args.groupId).eq("fromUserId", args.memberId),
+			)
+			.collect();
+
+		const settlementsTo = await ctx.db
+			.query("settlements")
+			.withIndex("by_group_and_to", (q) =>
+				q.eq("groupId", args.groupId).eq("toUserId", args.memberId),
+			)
+			.collect();
+
+		for (const settlement of settlementsFrom) {
+			await ctx.db.delete(settlement._id);
+		}
+
+		for (const settlement of settlementsTo) {
+			await ctx.db.delete(settlement._id);
+		}
+
 		await ctx.db.delete(targetMemberRecord._id);
 		await removePlaceholderUserIfNoGroups(ctx, args.memberId);
 

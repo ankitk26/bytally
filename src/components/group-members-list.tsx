@@ -4,10 +4,8 @@ import { useParams } from "@tanstack/react-router";
 import { useRouteContext } from "@tanstack/react-router";
 import { api } from "convex/_generated/api";
 import type { Id } from "convex/_generated/dataModel";
-import { useState, useMemo } from "react";
+import { useMemo } from "react";
 import MemberItem from "./member-item";
-import { Label } from "./ui/label";
-import { Switch } from "./ui/switch";
 
 type GroupMember = {
 	memberId: Id<"users">;
@@ -23,24 +21,21 @@ type Props = {
 export default function GroupMembersList({ members, hasExpenses }: Props) {
 	const { groupId } = useParams({ from: "/_protected/groups/$groupId" });
 	const { auth } = useRouteContext({ from: "/_protected" });
-	const [isSimplified, setIsSimplified] = useState(false);
 
 	const sortedMembers = [...members].sort((a, b) => {
 		if (a.isAdmin === b.isAdmin) return 0;
 		return a.isAdmin ? -1 : 1;
 	});
 
-	const { data: amountsOwedToMe } = useQuery(
-		convexQuery(api.expenseContributors.getAmountsOwedToMeByGroup, {
-			groupId: groupId as Id<"groups">,
-		}),
-	);
-
 	const { data: simplifiedDebts } = useQuery(
 		convexQuery(api.expenseContributors.getSimplifiedDebts, {
 			groupId: groupId as Id<"groups">,
 		}),
 	);
+
+	// TEMP DEBUG
+	console.log("[debug] authUserId:", auth.authUserId);
+	console.log("[debug] simplifiedDebts:", simplifiedDebts);
 
 	const simplifiedAmounts = useMemo(() => {
 		if (!simplifiedDebts) return {};
@@ -57,39 +52,29 @@ export default function GroupMembersList({ members, hasExpenses }: Props) {
 			}
 		}
 
+		for (const memberId of Object.keys(amounts)) {
+			if (Math.abs(amounts[memberId as Id<"users">]) <= 0.01) {
+				delete amounts[memberId as Id<"users">];
+			}
+		}
+
+		// TEMP DEBUG
+		console.log("[debug] simplifiedAmounts:", amounts);
+
 		return amounts;
 	}, [simplifiedDebts, auth.authUserId]);
 
-	const displayAmounts = isSimplified ? simplifiedAmounts : amountsOwedToMe;
-
 	return (
-		<div className="space-y-4">
-			<div className="flex items-center justify-between">
-				<Label
-					htmlFor="simplify-toggle"
-					className="text-muted-foreground cursor-pointer text-sm"
-				>
-					Simplify
-				</Label>
-				<Switch
-					id="simplify-toggle"
-					checked={isSimplified}
-					onCheckedChange={setIsSimplified}
+		<div className="divide-border border-border divide-y border-y">
+			{sortedMembers.map((member) => (
+				<MemberItem
+					key={member.memberId}
+					member={member}
+					amountOwed={simplifiedAmounts?.[member.memberId]}
+					groupId={groupId as Id<"groups">}
+					hasExpenses={hasExpenses}
 				/>
-			</div>
-
-			<div className="divide-border border-border divide-y border-y">
-				{sortedMembers.map((member) => (
-					<MemberItem
-						key={member.memberId}
-						member={member}
-						amountOwed={displayAmounts?.[member.memberId]}
-						groupId={groupId as Id<"groups">}
-						hasExpenses={hasExpenses}
-						isSimplified={isSimplified}
-					/>
-				))}
-			</div>
+			))}
 		</div>
 	);
 }
