@@ -84,7 +84,7 @@ export default function ViewExpenseDialog({ expense, children }: Props) {
 					</div>
 					<div className="grid gap-2">
 						<span className="text-muted-foreground text-xs">Contributors</span>
-						<div className="grid gap-2 rounded-md border p-2">
+						<div className="grid gap-2 border p-2">
 							{expense.contributors.length === 0 && (
 								<span className="text-muted-foreground text-sm">
 									No contributors listed.

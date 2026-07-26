@@ -97,7 +97,7 @@ export default function ExpenseItem({ expense, members }: Props) {
 					</span>
 				</div>
 				<div className="mt-1 flex items-center gap-1.5">
-					<div className="bg-muted flex h-4 w-4 items-center justify-center rounded text-[10px] leading-none font-medium">
+					<div className="bg-muted flex h-4 w-4 items-center justify-center text-[10px] leading-none font-medium">
 						{expense.paidByUsername.charAt(0).toUpperCase()}
 					</div>
 					<span className="text-muted-foreground text-xs">

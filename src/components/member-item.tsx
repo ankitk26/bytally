@@ -35,7 +35,7 @@ export default function MemberItem({
 
 	return (
 		<div className="flex gap-2 py-3">
-			<div className="bg-muted flex h-6 w-6 items-center justify-center rounded text-xs font-medium">
+			<div className="bg-muted flex h-6 w-6 items-center justify-center text-xs font-medium">
 				{member.username.charAt(0).toUpperCase()}
 			</div>
 			<div className="flex min-w-0 flex-1 flex-col">

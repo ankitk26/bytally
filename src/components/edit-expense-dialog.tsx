@@ -198,7 +198,7 @@ export default function EditExpenseDialog({
 									<Button variant="outline" className="w-full justify-start">
 										{selectedMember ? (
 											<>
-												<div className="bg-muted mr-2 flex h-4 w-4 items-center justify-center rounded text-[10px] font-medium">
+												<div className="bg-muted mr-2 flex h-4 w-4 items-center justify-center text-[10px] font-medium">
 													{selectedMember.username.charAt(0).toUpperCase()}
 												</div>
 												<span className="truncate">
@@ -219,7 +219,7 @@ export default function EditExpenseDialog({
 										key={member.memberId}
 										onClick={() => setSelectedMember(member)}
 									>
-										<div className="bg-muted mr-2 flex h-4 w-4 items-center justify-center rounded text-[10px] font-medium">
+										<div className="bg-muted mr-2 flex h-4 w-4 items-center justify-center text-[10px] font-medium">
 											{member.username.charAt(0).toUpperCase()}
 										</div>
 										<span className="truncate">{member.username}</span>
@@ -230,11 +230,11 @@ export default function EditExpenseDialog({
 					</div>
 					<div className="grid gap-2">
 						<Label>Contributors</Label>
-						<div className="grid gap-1.5 rounded-md border p-2">
+						<div className="grid gap-1.5 border p-2">
 							{members.map((member) => (
 								<label
 									key={member.memberId}
-									className="hover:bg-muted/60 flex items-center gap-2 rounded-md px-2 py-1 text-sm"
+									className="hover:bg-muted/60 flex items-center gap-2 px-2 py-1 text-sm"
 								>
 									<Checkbox
 										checked={contributorIds.includes(member.memberId)}
@@ -278,7 +278,7 @@ export default function EditExpenseDialog({
 						</div>
 					</div>
 					{splitMode === "equal" && (
-						<div className="bg-muted/40 rounded-md border p-2 text-sm">
+						<div className="bg-muted/40 border p-2 text-sm">
 							<div className="flex items-center justify-between gap-2">
 								<span className="text-muted-foreground">Contributors</span>
 								<span>{selectedContributors.length}</span>
@@ -295,7 +295,7 @@ export default function EditExpenseDialog({
 					)}
 					{splitMode === "manual" && (
 						<div className="grid gap-3">
-							<div className="grid gap-2 rounded-md border p-2">
+							<div className="grid gap-2 border p-2">
 								{selectedContributors.length === 0 && (
 									<p className="text-muted-foreground text-sm">
 										Select contributors to split manually.

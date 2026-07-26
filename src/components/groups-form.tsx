@@ -154,7 +154,7 @@ export default function GroupsForm({ showBorder = true }: Props) {
 								type="button"
 								key={email}
 								onClick={() => handleChipClick(email)}
-								className="bg-secondary text-secondary-foreground hover:bg-secondary/80 group inline-flex h-6 cursor-pointer items-center gap-1 rounded-xs px-1.5 text-xs transition-colors"
+								className="bg-secondary text-secondary-foreground hover:bg-secondary/80 group inline-flex h-6 cursor-pointer items-center gap-1 px-1.5 text-xs transition-colors"
 							>
 								<span className="max-w-[10rem] truncate">{email}</span>
 								<span
@@ -170,7 +170,7 @@ export default function GroupsForm({ showBorder = true }: Props) {
 											removeEmail(email);
 										}
 									}}
-									className="text-muted-foreground hover:text-foreground ml-0.5 inline-flex cursor-pointer rounded-xs p-0.5 transition-colors"
+									className="text-muted-foreground hover:text-foreground ml-0.5 inline-flex cursor-pointer p-0.5 transition-colors"
 								>
 									<XIcon weight="bold" size={10} />
 								</span>
