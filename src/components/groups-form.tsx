@@ -1,8 +1,8 @@
 import { useConvexMutation } from "@convex-dev/react-query";
-import { SpinnerIcon } from "@phosphor-icons/react";
+import { SpinnerIcon, XIcon } from "@phosphor-icons/react";
 import { useMutation } from "@tanstack/react-query";
 import { api } from "convex/_generated/api";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
@@ -12,40 +12,90 @@ type Props = {
 	showBorder?: boolean;
 };
 
-function parseEmails(input: string): string[] {
-	const emails = input
-		.split(/[\s,]+/)
-		.map((email) => email.trim().toLowerCase())
-		.filter((email) => email.length > 0 && email.includes("@"));
-	return Array.from(new Set(emails));
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+function isValidEmail(email: string): boolean {
+	return EMAIL_REGEX.test(email.trim().toLowerCase());
 }
 
 export default function GroupsForm({ showBorder = true }: Props) {
 	const [name, setName] = useState("");
 	const [description, setDescription] = useState("");
-	const [memberEmailsInput, setMemberEmailsInput] = useState("");
+	const [emails, setEmails] = useState<string[]>([]);
+	const [inputValue, setInputValue] = useState("");
+	const [inputError, setInputError] = useState<string | null>(null);
+	const inputRef = useRef<HTMLInputElement>(null);
 
 	const { mutate, isPending } = useMutation({
 		mutationFn: useConvexMutation(api.groups.create),
 	});
 
+	const addEmail = (raw: string) => {
+		const email = raw.trim().toLowerCase();
+		if (!email) return false;
+
+		if (!isValidEmail(email)) {
+			setInputError("Enter a valid email address");
+			return false;
+		}
+
+		if (emails.includes(email)) {
+			setInputError("This email is already added");
+			return false;
+		}
+
+		setEmails((prev) => [...prev, email]);
+		setInputValue("");
+		setInputError(null);
+		return true;
+	};
+
+	const removeEmail = (email: string) => {
+		setEmails((prev) => prev.filter((e) => e !== email));
+	};
+
+	const handleChipClick = (email: string) => {
+		if (inputValue === "") {
+			setInputValue(email);
+			setInputError(null);
+		}
+	};
+
+	const handleInputKeyDown = (e: React.KeyboardEvent) => {
+		if (e.key === "Enter") {
+			e.preventDefault();
+			addEmail(inputValue);
+		} else if (
+			e.key === "Backspace" &&
+			inputValue === "" &&
+			emails.length > 0
+		) {
+			setEmails((prev) => prev.slice(0, -1));
+		}
+	};
+
+	const handleInputChange = (value: string) => {
+		setInputValue(value);
+		if (inputError) setInputError(null);
+	};
+
 	const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		if (!name.trim()) return;
-
-		const memberEmails = parseEmails(memberEmailsInput);
 
 		mutate(
 			{
 				name,
 				description,
-				memberEmails,
+				memberEmails: emails,
 			},
 			{
 				onSuccess: () => {
 					setName("");
 					setDescription("");
-					setMemberEmailsInput("");
+					setEmails([]);
+					setInputValue("");
+					setInputError(null);
 				},
 			},
 		);
@@ -94,25 +144,69 @@ export default function GroupsForm({ showBorder = true }: Props) {
 				</div>
 
 				<div className="space-y-1.5">
-					<Label
-						htmlFor="member-emails"
-						className="text-muted-foreground text-xs"
-					>
-						Members{" "}
-						<span className="opacity-50">(optional, comma-separated)</span>
+					<Label className="text-muted-foreground text-xs">
+						Members <span className="opacity-50">(optional)</span>
 					</Label>
-					<Input
-						id="member-emails"
-						name="member-emails"
-						type="text"
-						value={memberEmailsInput}
-						onChange={(e) => setMemberEmailsInput(e.target.value)}
-						placeholder="one@email.com, two@email.com"
-					/>
-					{memberEmailsInput.trim() && (
+
+					<div className="border-border focus-within:border-ring focus-within:ring-ring/50 flex flex-wrap items-center gap-1.5 border bg-transparent px-2.5 py-1.5 transition-colors focus-within:ring-1">
+						{emails.map((email) => (
+							<button
+								type="button"
+								key={email}
+								onClick={() => handleChipClick(email)}
+								className="bg-secondary text-secondary-foreground hover:bg-secondary/80 group inline-flex h-6 cursor-pointer items-center gap-1 rounded-xs px-1.5 text-xs transition-colors"
+							>
+								<span className="max-w-[10rem] truncate">{email}</span>
+								<span
+									role="button"
+									tabIndex={-1}
+									onClick={(e) => {
+										e.stopPropagation();
+										removeEmail(email);
+									}}
+									onKeyDown={(e) => {
+										if (e.key === "Enter" || e.key === " ") {
+											e.stopPropagation();
+											removeEmail(email);
+										}
+									}}
+									className="text-muted-foreground hover:text-foreground ml-0.5 inline-flex cursor-pointer rounded-xs p-0.5 transition-colors"
+								>
+									<XIcon weight="bold" size={10} />
+								</span>
+							</button>
+						))}
+						<input
+							ref={inputRef}
+							type="text"
+							value={inputValue}
+							onChange={(e) => handleInputChange(e.target.value)}
+							onKeyDown={handleInputKeyDown}
+							placeholder={emails.length === 0 ? "Enter email addresses" : ""}
+							className="placeholder:text-muted-foreground min-w-[12rem] flex-1 bg-transparent text-xs outline-none"
+						/>
+					</div>
+
+					<div className="flex items-center gap-2">
+						<Button
+							type="button"
+							variant="outline"
+							size="xs"
+							disabled={!inputValue.trim()}
+							onClick={() => addEmail(inputValue)}
+						>
+							Add email
+						</Button>
+						{inputError && (
+							<p className="text-destructive animate-in fade-in text-xs">
+								{inputError}
+							</p>
+						)}
+					</div>
+
+					{emails.length > 0 && !inputError && (
 						<p className="text-muted-foreground text-xs">
-							{parseEmails(memberEmailsInput).length} member
-							{parseEmails(memberEmailsInput).length === 1 ? "" : "s"} will be
+							{emails.length} member{emails.length === 1 ? "" : "s"} will be
 							invited
 						</p>
 					)}
