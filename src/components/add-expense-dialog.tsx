@@ -141,8 +141,8 @@ export default function AddExpenseDialog({ members }: Props) {
 						Add a new expense to this group.
 					</DialogDescription>
 				</DialogHeader>
-				<div className="grid gap-4 py-4">
-					<div className="grid gap-2">
+				<div className="grid gap-6 py-2">
+					<div className="grid gap-3">
 						<Label htmlFor="title">Title</Label>
 						<Input
 							id="title"
@@ -151,7 +151,7 @@ export default function AddExpenseDialog({ members }: Props) {
 							placeholder="e.g., Dinner at restaurant"
 						/>
 					</div>
-					<div className="grid gap-2">
+					<div className="grid gap-3">
 						<Label htmlFor="amount">Amount (INR)</Label>
 						<Input
 							id="amount"
@@ -163,7 +163,7 @@ export default function AddExpenseDialog({ members }: Props) {
 							step="0.01"
 						/>
 					</div>
-					<div className="grid gap-2">
+					<div className="grid gap-3">
 						<Label htmlFor="paid-by">Paid by</Label>
 						<DropdownMenu>
 							<DropdownMenuTrigger
@@ -201,7 +201,7 @@ export default function AddExpenseDialog({ members }: Props) {
 							</DropdownMenuContent>
 						</DropdownMenu>
 					</div>
-					<div className="grid gap-2">
+					<div className="grid gap-3">
 						<div className="flex items-center justify-between">
 							<Label>Contributors</Label>
 							{members.length > 0 && (
@@ -222,7 +222,7 @@ export default function AddExpenseDialog({ members }: Props) {
 								</button>
 							)}
 						</div>
-						<div className="grid gap-1.5 rounded-md border p-2">
+						<div className="grid gap-1.5 rounded-md border p-3">
 							{members.map((member) => (
 								<label
 									key={member.memberId}
@@ -250,7 +250,7 @@ export default function AddExpenseDialog({ members }: Props) {
 						</p>
 					</div>
 
-					<div className="grid gap-2">
+					<div className="grid gap-3">
 						<Label>Split mode</Label>
 						<div className="grid grid-cols-2 gap-2">
 							<Button
@@ -270,7 +270,7 @@ export default function AddExpenseDialog({ members }: Props) {
 						</div>
 					</div>
 					{splitMode === "equal" && (
-						<div className="bg-muted/40 rounded-md border p-2 text-sm">
+						<div className="bg-muted/40 rounded-md border p-3 text-sm">
 							<div className="flex items-center justify-between gap-2">
 								<span className="text-muted-foreground">Contributors</span>
 								<span>{selectedContributors.length}</span>
@@ -287,7 +287,7 @@ export default function AddExpenseDialog({ members }: Props) {
 					)}
 					{splitMode === "manual" && (
 						<div className="grid gap-3">
-							<div className="grid gap-2 rounded-md border p-2">
+							<div className="grid gap-2 rounded-md border p-3">
 								{selectedContributors.length === 0 && (
 									<p className="text-muted-foreground text-sm">
 										Select contributors to split manually.
@@ -331,7 +331,7 @@ export default function AddExpenseDialog({ members }: Props) {
 							</div>
 						</div>
 					)}
-					<div className="grid gap-2">
+					<div className="grid gap-3">
 						<Label htmlFor="description">
 							Description{" "}
 							<span className="text-muted-foreground font-normal">
