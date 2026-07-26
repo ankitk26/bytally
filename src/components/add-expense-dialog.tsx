@@ -3,10 +3,12 @@ import { PlusIcon } from "@phosphor-icons/react";
 import { useMutation } from "@tanstack/react-query";
 import { useParams } from "@tanstack/react-router";
 import { api } from "convex/_generated/api";
-import { Id } from "convex/_generated/dataModel";
+import type { Id } from "convex/_generated/dataModel";
 import { useEffect, useState } from "react";
+import ExpenseContributorsCheckboxList from "~/components/expense-contributors-checkbox-list";
+import ExpensePaidByDropdown from "~/components/expense-paid-by-dropdown";
+import ExpenseSplitModeFields from "~/components/expense-split-mode-fields";
 import { Button } from "~/components/ui/button";
-import { Checkbox } from "~/components/ui/checkbox";
 import {
 	Dialog,
 	DialogClose,
@@ -17,54 +19,48 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from "~/components/ui/dialog";
-import {
-	DropdownMenu,
-	DropdownMenuContent,
-	DropdownMenuItem,
-	DropdownMenuTrigger,
-} from "~/components/ui/dropdown-menu";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { Textarea } from "~/components/ui/textarea";
-
-type Member = {
-	memberId: Id<"users">;
-	username: string;
-};
+import {
+	buildExpenseContributions,
+	computeManualSplitTotal,
+	isManualSplitTotalWithinAmount,
+	parseExpenseAmount,
+	type ExpenseSplitMode,
+	type ManualSplitAmounts,
+} from "~/lib/expense-split-calculations";
+import type { GroupMember } from "~/types";
 
 type Props = {
-	members: Member[];
+	members: GroupMember[];
 };
 
 export default function AddExpenseDialog({ members }: Props) {
 	const { groupId } = useParams({ from: "/_protected/groups/$groupId" });
 
-	const [selectedMember, setSelectedMember] = useState<Member | null>(null);
+	const [paidByMember, setPaidByMember] = useState<GroupMember | null>(null);
 	const [title, setTitle] = useState("");
 	const [description, setDescription] = useState("");
 	const [amount, setAmount] = useState("");
 	const [contributorIds, setContributorIds] = useState<Id<"users">[]>([]);
-	const [splitMode, setSplitMode] = useState<"equal" | "manual">("equal");
-	const [manualSplits, setManualSplits] = useState<Record<Id<"users">, string>>(
-		{},
-	);
+	const [splitMode, setSplitMode] = useState<ExpenseSplitMode>("equal");
+	const [manualSplitAmounts, setManualSplitAmounts] =
+		useState<ManualSplitAmounts>({});
 
-	const amountNumber = Number.parseFloat(amount);
-	const safeAmount = Number.isFinite(amountNumber) ? amountNumber : 0;
+	const totalAmount = parseExpenseAmount(amount);
 	const selectedContributors = members.filter((member) =>
 		contributorIds.includes(member.memberId),
 	);
-	const equalShare =
-		selectedContributors.length > 0
-			? safeAmount / selectedContributors.length
-			: 0;
-	const manualTotal = selectedContributors.reduce((sum, member) => {
-		const value = Number.parseFloat(manualSplits[member.memberId] ?? "");
-		return sum + (Number.isFinite(value) ? value : 0);
-	}, 0);
-	const remainingBalance = safeAmount - manualTotal;
-	const isManualTotalValid =
-		splitMode !== "manual" || manualTotal <= safeAmount;
+	const manualSplitTotal = computeManualSplitTotal(
+		contributorIds,
+		manualSplitAmounts,
+	);
+	const isSplitTotalValid = isManualSplitTotalWithinAmount(
+		splitMode,
+		manualSplitTotal,
+		totalAmount,
+	);
 
 	const createExpenseMutation = useMutation({
 		mutationFn: useConvexMutation(api.expenses.create),
@@ -73,56 +69,44 @@ export default function AddExpenseDialog({ members }: Props) {
 		},
 	});
 
-	const handleSubmit = () => {
-		if (!selectedMember || !title || !amount) return;
-
-		let finalContributions: Array<{ memberId: Id<"users">; amount: number }>;
-
-		if (splitMode === "equal") {
-			finalContributions = contributorIds.map((memberId) => ({
-				memberId,
-				amount: equalShare,
-			}));
-		} else {
-			finalContributions = contributorIds.map((memberId) => {
-				const value = Number.parseFloat(manualSplits[memberId] ?? "");
-				return {
-					memberId,
-					amount: Number.isFinite(value) ? value : 0,
-				};
-			});
-		}
-
-		createExpenseMutation.mutate({
-			groupId: groupId as Id<"groups">,
-			paidBy: selectedMember.memberId,
-			expenseTime: Date.now(),
-			title: title.trim(),
-			description: description.trim() || undefined,
-			amount: Number.parseFloat(amount),
-			splitMode,
-			contributions: finalContributions,
-		});
-	};
-
 	const resetExpenseForm = () => {
-		setSelectedMember(null);
+		setPaidByMember(null);
 		setTitle("");
 		setDescription("");
 		setAmount("");
 		setContributorIds([]);
 		setSplitMode("equal");
-		setManualSplits({});
+		setManualSplitAmounts({});
 	};
 
 	useEffect(() => {
-		if (!selectedMember) return;
-		setContributorIds((prev) =>
-			prev.includes(selectedMember.memberId)
-				? prev
-				: [...prev, selectedMember.memberId],
+		if (!paidByMember) return;
+		setContributorIds((previousIds) =>
+			previousIds.includes(paidByMember.memberId)
+				? previousIds
+				: [...previousIds, paidByMember.memberId],
 		);
-	}, [selectedMember]);
+	}, [paidByMember]);
+
+	const handleSubmit = () => {
+		if (!paidByMember || !title || !amount) return;
+
+		createExpenseMutation.mutate({
+			groupId: groupId as Id<"groups">,
+			paidBy: paidByMember.memberId,
+			expenseTime: Date.now(),
+			title: title.trim(),
+			description: description.trim() || undefined,
+			amount: Number.parseFloat(amount),
+			splitMode,
+			contributions: buildExpenseContributions(
+				splitMode,
+				contributorIds,
+				totalAmount,
+				manualSplitAmounts,
+			),
+		});
+	};
 
 	return (
 		<Dialog>
@@ -163,174 +147,24 @@ export default function AddExpenseDialog({ members }: Props) {
 							step="0.01"
 						/>
 					</div>
-					<div className="grid gap-3">
-						<Label htmlFor="paid-by">Paid by</Label>
-						<DropdownMenu>
-							<DropdownMenuTrigger
-								render={
-									<Button variant="outline" className="w-full justify-start">
-										{selectedMember ? (
-											<>
-												<div className="bg-muted mr-2 flex h-4 w-4 items-center justify-center text-[10px] font-medium">
-													{selectedMember.username.charAt(0).toUpperCase()}
-												</div>
-												<span className="truncate">
-													{selectedMember.username}
-												</span>
-											</>
-										) : (
-											<span className="text-muted-foreground">
-												Select a member
-											</span>
-										)}
-									</Button>
-								}
-							/>
-							<DropdownMenuContent align="start" className="w-[--anchor-width]">
-								{members.map((member) => (
-									<DropdownMenuItem
-										key={member.memberId}
-										onClick={() => setSelectedMember(member)}
-									>
-										<div className="bg-muted mr-2 flex h-4 w-4 items-center justify-center text-[10px] font-medium">
-											{member.username.charAt(0).toUpperCase()}
-										</div>
-										<span className="truncate">{member.username}</span>
-									</DropdownMenuItem>
-								))}
-							</DropdownMenuContent>
-						</DropdownMenu>
-					</div>
-					<div className="grid gap-3">
-						<div className="flex items-center justify-between">
-							<Label>Contributors</Label>
-							{members.length > 0 && (
-								<button
-									type="button"
-									onClick={() =>
-										setContributorIds(
-											contributorIds.length === members.length
-												? []
-												: members.map((m) => m.memberId),
-										)
-									}
-									className="text-muted-foreground hover:text-foreground text-xs underline underline-offset-2 transition-colors"
-								>
-									{contributorIds.length === members.length
-										? "Deselect all"
-										: "Select all"}
-								</button>
-							)}
-						</div>
-						<div className="grid gap-1.5 border p-3">
-							{members.map((member) => (
-								<label
-									key={member.memberId}
-									className="hover:bg-muted/60 flex items-center gap-2 px-2 py-1 text-sm"
-								>
-									<Checkbox
-										checked={contributorIds.includes(member.memberId)}
-										onCheckedChange={(checked) => {
-											const isChecked = checked === true;
-											setContributorIds((prev) =>
-												isChecked
-													? prev.includes(member.memberId)
-														? prev
-														: [...prev, member.memberId]
-													: prev.filter((id) => id !== member.memberId),
-											);
-										}}
-									/>
-									<span className="truncate">{member.username}</span>
-								</label>
-							))}
-						</div>
-						<p className="text-muted-foreground text-xs">
-							Choose who shares this expense.
-						</p>
-					</div>
-
-					<div className="grid gap-3">
-						<Label>Split mode</Label>
-						<div className="grid grid-cols-2 gap-2">
-							<Button
-								type="button"
-								variant={splitMode === "equal" ? "default" : "outline"}
-								onClick={() => setSplitMode("equal")}
-							>
-								Equal
-							</Button>
-							<Button
-								type="button"
-								variant={splitMode === "manual" ? "default" : "outline"}
-								onClick={() => setSplitMode("manual")}
-							>
-								Manual
-							</Button>
-						</div>
-					</div>
-					{splitMode === "equal" && (
-						<div className="bg-muted/40 border p-3 text-sm">
-							<div className="flex items-center justify-between gap-2">
-								<span className="text-muted-foreground">Contributors</span>
-								<span>{selectedContributors.length}</span>
-							</div>
-							<div className="mt-1 flex items-center justify-between gap-2">
-								<span className="text-muted-foreground">Cost per person</span>
-								<span>
-									{selectedContributors.length > 0
-										? equalShare.toFixed(2)
-										: "0.00"}
-								</span>
-							</div>
-						</div>
-					)}
-					{splitMode === "manual" && (
-						<div className="grid gap-3">
-							<div className="grid gap-2 border p-3">
-								{selectedContributors.length === 0 && (
-									<p className="text-muted-foreground text-sm">
-										Select contributors to split manually.
-									</p>
-								)}
-								{selectedContributors.map((member) => (
-									<div
-										key={member.memberId}
-										className="grid grid-cols-[1fr_minmax(80px,120px)] items-center gap-2"
-									>
-										<span className="truncate text-sm">{member.username}</span>
-										<Input
-											type="number"
-											min="0"
-											step="0.01"
-											value={manualSplits[member.memberId] ?? ""}
-											onChange={(e) =>
-												setManualSplits((prev) => ({
-													...prev,
-													[member.memberId]: e.target.value,
-												}))
-											}
-											placeholder="0.00"
-										/>
-									</div>
-								))}
-							</div>
-							<div className="flex items-center justify-between text-sm">
-								<span className="text-muted-foreground">
-									Balance left to split
-								</span>
-								<span
-									className={
-										remainingBalance < 0
-											? "text-destructive"
-											: "text-foreground"
-									}
-								>
-									{remainingBalance.toFixed(2)}
-								</span>
-							</div>
-						</div>
-					)}
+					<ExpensePaidByDropdown
+						members={members}
+						paidByMember={paidByMember}
+						onPaidByMemberChange={setPaidByMember}
+					/>
+					<ExpenseContributorsCheckboxList
+						members={members}
+						selectedContributorIds={contributorIds}
+						onSelectedContributorIdsChange={setContributorIds}
+					/>
+					<ExpenseSplitModeFields
+						splitMode={splitMode}
+						onSplitModeChange={setSplitMode}
+						totalAmount={totalAmount}
+						selectedContributors={selectedContributors}
+						manualSplitAmounts={manualSplitAmounts}
+						onManualSplitAmountsChange={setManualSplitAmounts}
+					/>
 					<div className="grid gap-3">
 						<Label htmlFor="description">
 							Description{" "}
@@ -360,11 +194,11 @@ export default function AddExpenseDialog({ members }: Props) {
 							<Button
 								onClick={handleSubmit}
 								disabled={
-									!selectedMember ||
+									!paidByMember ||
 									!title ||
 									!amount ||
 									contributorIds.length === 0 ||
-									!isManualTotalValid
+									!isSplitTotalValid
 								}
 							>
 								Add Expense

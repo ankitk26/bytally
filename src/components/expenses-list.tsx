@@ -1,16 +1,11 @@
 import { api } from "convex/_generated/api";
-import type { Id } from "convex/_generated/dataModel";
 import { FunctionReturnType } from "convex/server";
 import ExpenseItem from "~/components/expense-item";
-
-type Member = {
-	memberId: Id<"users">;
-	username: string;
-};
+import type { GroupMember } from "~/types";
 
 type Props = {
 	expenses: FunctionReturnType<typeof api.expenses.getExpensesByGroupId>;
-	members: Member[];
+	members: GroupMember[];
 };
 
 export default function ExpensesList({ expenses, members }: Props) {

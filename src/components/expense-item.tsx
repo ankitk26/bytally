@@ -1,34 +1,9 @@
-import { useConvexMutation } from "@convex-dev/react-query";
-import { SpinnerIcon, TrashIcon } from "@phosphor-icons/react";
-import { useMutation } from "@tanstack/react-query";
-import { api } from "convex/_generated/api";
 import type { Id } from "convex/_generated/dataModel";
-import { useState } from "react";
 import EditExpenseDialog from "~/components/edit-expense-dialog";
-import {
-	AlertDialog,
-	AlertDialogAction,
-	AlertDialogCancel,
-	AlertDialogContent,
-	AlertDialogDescription,
-	AlertDialogFooter,
-	AlertDialogHeader,
-	AlertDialogTitle,
-} from "~/components/ui/alert-dialog";
-import { Button } from "~/components/ui/button";
-import {
-	Tooltip,
-	TooltipContent,
-	TooltipTrigger,
-} from "~/components/ui/tooltip";
 import ViewExpenseDialog from "~/components/view-expense-dialog";
 import { formatCurrency } from "~/lib/format-currency";
 import { formatDate } from "~/lib/format-date";
-
-type Member = {
-	memberId: Id<"users">;
-	username: string;
-};
+import type { GroupMember } from "~/types";
 
 type Contributor = {
 	contributorId: Id<"users">;
@@ -51,30 +26,12 @@ type Expense = {
 
 type Props = {
 	expense: Expense;
-	members: Member[];
+	members: GroupMember[];
 };
 
 export default function ExpenseItem({ expense, members }: Props) {
-	const [isAlertOpen, setIsAlertOpen] = useState(false);
-
-	const deleteMutation = useMutation({
-		mutationFn: useConvexMutation(api.expenses.remove),
-	});
-
-	const handleDelete = () => {
-		deleteMutation.mutate({
-			expenseId: expense._id,
-		});
-	};
-
 	const titleElement = (
-		<h3
-			className={`text-foreground truncate text-sm font-medium ${
-				expense.canEdit
-					? "hover:text-primary cursor-pointer hover:underline"
-					: "cursor-pointer hover:underline"
-			}`}
-		>
+		<h3 className="text-foreground cursor-pointer truncate text-sm font-medium hover:underline">
 			{expense.title}
 		</h3>
 	);
@@ -108,55 +65,9 @@ export default function ExpenseItem({ expense, members }: Props) {
 					</span>
 				</div>
 			</div>
-			<div className="flex items-center gap-3">
-				<span className="text-foreground text-sm font-semibold">
-					{formatCurrency(expense.amount)}
-				</span>
-				<div className="h-8 w-8 sm:h-7 sm:w-7">
-					{expense.canEdit && (
-						<Tooltip>
-							<TooltipTrigger>
-								<Button
-									size="icon-sm"
-									variant="ghost"
-									className="text-muted-foreground hover:text-destructive"
-									onClick={() => setIsAlertOpen(true)}
-								>
-									<TrashIcon />
-								</Button>
-							</TooltipTrigger>
-							<TooltipContent>Delete expense</TooltipContent>
-						</Tooltip>
-					)}
-				</div>
-				{expense.canEdit && (
-					<AlertDialog open={isAlertOpen} onOpenChange={setIsAlertOpen}>
-						<AlertDialogContent>
-							<AlertDialogHeader>
-								<AlertDialogTitle>Delete Expense</AlertDialogTitle>
-								<AlertDialogDescription>
-									Are you sure you want to delete this expense? This action
-									cannot be undone.
-								</AlertDialogDescription>
-							</AlertDialogHeader>
-							<AlertDialogFooter>
-								<AlertDialogCancel>Cancel</AlertDialogCancel>
-								<AlertDialogAction
-									onClick={handleDelete}
-									disabled={deleteMutation.isPending}
-									variant="destructive"
-								>
-									{deleteMutation.isPending ? (
-										<SpinnerIcon className="animate-spin" />
-									) : (
-										"Delete"
-									)}
-								</AlertDialogAction>
-							</AlertDialogFooter>
-						</AlertDialogContent>
-					</AlertDialog>
-				)}
-			</div>
+			<span className="text-foreground text-sm font-semibold">
+				{formatCurrency(expense.amount)}
+			</span>
 		</article>
 	);
 }
