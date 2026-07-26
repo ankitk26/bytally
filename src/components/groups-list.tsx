@@ -26,6 +26,8 @@ export default function GroupsList() {
 		);
 	}
 
+	console.log(data)
+
 	if (data?.length === 0) {
 		return (
 			<div className="border border-dashed border-border py-12 text-center">
