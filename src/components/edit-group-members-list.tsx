@@ -1,4 +1,4 @@
-import { SpinnerIcon, XIcon } from "@phosphor-icons/react";
+import { SpinnerIcon, TrashIcon } from "@phosphor-icons/react";
 import { Id } from "convex/_generated/dataModel";
 import { Button } from "~/components/ui/button";
 import { Label } from "~/components/ui/label";
@@ -60,14 +60,14 @@ export default function EditGroupMembersList({
 								{!member.isAdmin && (
 									<Button
 										size="icon-xs"
-										variant="ghost"
+										variant="destructive"
 										onClick={() => onRemoveMember(member.memberId)}
 										disabled={isRemoveDisabled}
 									>
 										{isCheckingMember ? (
 											<SpinnerIcon className="size-4 animate-spin" />
 										) : (
-											<XIcon />
+											<TrashIcon />
 										)}
 										<span className="sr-only">Remove</span>
 									</Button>
