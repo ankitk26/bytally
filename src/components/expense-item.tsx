@@ -30,6 +30,11 @@ type Props = {
 };
 
 export default function ExpenseItem({ expense, members }: Props) {
+	// amount the payer covered for others (total minus their own share)
+	const lentAmount = expense.contributors
+		.filter((c) => c.contributorId !== expense.paidBy)
+		.reduce((sum, c) => sum + c.amount, 0);
+
 	const titleElement = (
 		<h3 className="cursor-pointer truncate text-sm font-medium text-foreground hover:underline">
 			{expense.title}
@@ -59,6 +64,7 @@ export default function ExpenseItem({ expense, members }: Props) {
 					</div>
 					<span className="text-xs text-muted-foreground">
 						{expense.paidByUsername}
+						{lentAmount > 0.01 && ` lent ${formatCurrency(lentAmount)}`}
 					</span>
 					<span className="text-xs text-muted-foreground sm:hidden">
 						· {formatDate(expense.expenseTime)}
