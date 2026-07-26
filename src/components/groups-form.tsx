@@ -217,7 +217,7 @@ export default function GroupsForm({ showBorder = true }: Props) {
 					disabled={isPending || !name.trim()}
 					className="w-full"
 				>
-					{isPending ? <SpinnerIcon /> : "Create"}
+					{isPending ? <SpinnerIcon className="animate-spin" /> : "Create"}
 				</Button>
 			</form>
 		</div>

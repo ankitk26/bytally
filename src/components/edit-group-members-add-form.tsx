@@ -55,7 +55,11 @@ export default function EditGroupMembersAddForm({ groupId }: Props) {
 					addMembersMutation.isPending || parseEmails(emailsInput).length === 0
 				}
 			>
-				{addMembersMutation.isPending ? <SpinnerIcon /> : "Add members"}
+				{addMembersMutation.isPending ? (
+					<SpinnerIcon className="animate-spin" />
+				) : (
+					"Add members"
+				)}
 			</Button>
 		</form>
 	);

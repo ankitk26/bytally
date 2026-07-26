@@ -102,7 +102,7 @@ function ProfilePage() {
 								className="w-full"
 							>
 								{isPending ? (
-									<SpinnerIcon />
+									<SpinnerIcon className="animate-spin" />
 								) : isSaved ? (
 									<>
 										<CheckCircleIcon />

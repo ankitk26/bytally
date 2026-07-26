@@ -162,14 +162,22 @@ export default function EditGroupButton({
 										onClick={handleDelete}
 										disabled={isDeleting}
 									>
-										{isDeleting ? <SpinnerIcon /> : "Delete"}
+										{isDeleting ? (
+											<SpinnerIcon className="animate-spin" />
+										) : (
+											"Delete"
+										)}
 									</AlertDialogAction>
 								</AlertDialogFooter>
 							</AlertDialogContent>
 						</AlertDialog>
 
 						<Button type="submit" disabled={isUpdating}>
-							{isUpdating ? <SpinnerIcon /> : "Save changes"}
+							{isUpdating ? (
+								<SpinnerIcon className="animate-spin" />
+							) : (
+								"Save changes"
+							)}
 						</Button>
 					</div>
 				</form>

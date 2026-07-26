@@ -146,7 +146,11 @@ export default function ExpenseItem({ expense, members }: Props) {
 									disabled={deleteMutation.isPending}
 									variant="destructive"
 								>
-									{deleteMutation.isPending ? <SpinnerIcon /> : "Delete"}
+									{deleteMutation.isPending ? (
+										<SpinnerIcon className="animate-spin" />
+									) : (
+										"Delete"
+									)}
 								</AlertDialogAction>
 							</AlertDialogFooter>
 						</AlertDialogContent>

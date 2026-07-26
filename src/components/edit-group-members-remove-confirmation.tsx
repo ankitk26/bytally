@@ -231,7 +231,7 @@ export default function EditGroupMembersRemoveConfirmation({
 						disabled={!canConfirm || isConfirmPending}
 					>
 						{isConfirmPending ? (
-							<SpinnerIcon className="size-4" />
+							<SpinnerIcon className="size-4 animate-spin" />
 						) : hasBlockedExpenses ? (
 							"Cannot remove"
 						) : (

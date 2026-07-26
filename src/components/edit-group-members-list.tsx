@@ -65,7 +65,7 @@ export default function EditGroupMembersList({
 										disabled={isRemoveDisabled}
 									>
 										{isCheckingMember ? (
-											<SpinnerIcon className="size-4" />
+											<SpinnerIcon className="size-4 animate-spin" />
 										) : (
 											<XIcon />
 										)}

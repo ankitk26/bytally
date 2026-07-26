@@ -368,7 +368,11 @@ export default function EditExpenseDialog({
 							updateExpenseMutation.isPending
 						}
 					>
-						{updateExpenseMutation.isPending ? <SpinnerIcon /> : "Save Changes"}
+						{updateExpenseMutation.isPending ? (
+							<SpinnerIcon className="animate-spin" />
+						) : (
+							"Save Changes"
+						)}
 					</Button>
 				</DialogFooter>
 			</DialogContent>
