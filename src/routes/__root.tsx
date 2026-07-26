@@ -1,5 +1,5 @@
-import { ConvexBetterAuthProvider } from "@convex-dev/better-auth/react";
 /// <reference types="vite/client" />
+import { ConvexBetterAuthProvider } from "@convex-dev/better-auth/react";
 import type { ConvexQueryClient } from "@convex-dev/react-query";
 import { QueryClient } from "@tanstack/react-query";
 import {
