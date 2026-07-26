@@ -58,7 +58,7 @@ export default function ExpenseSplitModeFields({
 				</div>
 			</div>
 			{splitMode === "equal" && (
-				<div className="bg-muted/40 border p-3 text-sm">
+				<div className="border bg-muted/40 p-3 text-sm">
 					<div className="flex items-center justify-between gap-2">
 						<span className="text-muted-foreground">Contributors</span>
 						<span>{selectedContributors.length}</span>
@@ -77,7 +77,7 @@ export default function ExpenseSplitModeFields({
 				<div className="grid gap-3">
 					<div className="grid gap-2 border p-3">
 						{selectedContributors.length === 0 && (
-							<p className="text-muted-foreground text-sm">
+							<p className="text-sm text-muted-foreground">
 								Select contributors to split manually.
 							</p>
 						)}

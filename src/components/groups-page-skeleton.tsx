@@ -2,7 +2,7 @@ import { Skeleton } from "./ui/skeleton";
 
 export default function GroupsPageSkeleton() {
 	return (
-		<div className="bg-background min-h-screen">
+		<div className="min-h-screen bg-background">
 			<main className="mx-auto max-w-6xl px-6 py-8">
 				{/* Group Header Skeleton */}
 				<div className="mb-8">
@@ -30,7 +30,7 @@ export default function GroupsPageSkeleton() {
 							<Skeleton className="h-8 w-28" />
 						</div>
 
-						<div className="divide-border border-border divide-y border-y">
+						<div className="divide-y divide-border border-y border-border">
 							{[1, 2, 3, 4].map((i) => (
 								<div
 									key={i}
@@ -58,7 +58,7 @@ export default function GroupsPageSkeleton() {
 							<Skeleton className="h-6 w-20" />
 							<Skeleton className="h-8 w-16" />
 						</div>
-						<div className="divide-border border-border divide-y border-y">
+						<div className="divide-y divide-border border-y border-border">
 							{[1, 2, 3, 4, 5].map((i) => (
 								<div key={i} className="flex items-center gap-2 py-3">
 									<Skeleton className="h-6 w-6" />

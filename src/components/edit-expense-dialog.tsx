@@ -198,7 +198,7 @@ export default function EditExpenseDialog({
 					<div className="grid gap-2">
 						<Label htmlFor="edit-description">
 							Description{" "}
-							<span className="text-muted-foreground font-normal">
+							<span className="font-normal text-muted-foreground">
 								(optional)
 							</span>
 						</Label>

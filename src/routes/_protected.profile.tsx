@@ -44,23 +44,23 @@ function ProfilePage() {
 	};
 
 	return (
-		<div className="bg-background min-h-screen">
+		<div className="min-h-screen bg-background">
 			<main className="mx-auto max-w-6xl px-4 py-6 lg:px-6 lg:py-8">
-				<h1 className="text-foreground mb-4 font-serif text-xl lg:mb-6 lg:pb-4 lg:text-2xl">
+				<h1 className="mb-4 font-serif text-xl text-foreground lg:mb-6 lg:pb-4 lg:text-2xl">
 					Profile
 				</h1>
 
 				<div className="lg:max-w-lg">
 					<div className="border-border py-5 lg:border lg:px-5">
 						<div className="mb-6 flex items-center gap-3">
-							<div className="bg-primary text-primary-foreground flex h-12 w-12 items-center justify-center">
+							<div className="flex h-12 w-12 items-center justify-center bg-primary text-primary-foreground">
 								<UserIcon />
 							</div>
 							<div>
-								<p className="text-muted-foreground text-xs tracking-wider uppercase">
+								<p className="text-xs tracking-wider text-muted-foreground uppercase">
 									Account
 								</p>
-								<p className="text-foreground truncate font-serif text-base">
+								<p className="truncate font-serif text-base text-foreground">
 									{auth.email}
 								</p>
 							</div>
@@ -70,7 +70,7 @@ function ProfilePage() {
 							<div className="space-y-1.5">
 								<Label
 									htmlFor="username"
-									className="text-muted-foreground text-xs"
+									className="text-xs text-muted-foreground"
 								>
 									Username
 								</Label>
@@ -85,7 +85,7 @@ function ProfilePage() {
 							</div>
 
 							<div className="space-y-1.5">
-								<Label className="text-muted-foreground text-xs">Email</Label>
+								<Label className="text-xs text-muted-foreground">Email</Label>
 								<Input
 									type="email"
 									value={auth.email}

@@ -35,15 +35,15 @@ export default function MemberItem({
 
 	return (
 		<div className="flex gap-2 py-3">
-			<div className="bg-muted flex h-6 w-6 items-center justify-center text-xs font-medium">
+			<div className="flex h-6 w-6 items-center justify-center bg-muted text-xs font-medium">
 				{member.username.charAt(0).toUpperCase()}
 			</div>
 			<div className="flex min-w-0 flex-1 flex-col">
-				<span className="text-foreground truncate text-sm">
+				<span className="truncate text-sm text-foreground">
 					{member.username}
 				</span>
 				{showAmount && (
-					<span className="text-muted-foreground text-xs">
+					<span className="text-xs text-muted-foreground">
 						{amountOwed < 0
 							? `you owe ${formattedAmount}`
 							: `owes you ${formattedAmount}`}
@@ -51,7 +51,7 @@ export default function MemberItem({
 				)}
 			</div>
 			{member.isAdmin && (
-				<span className="text-muted-foreground text-xs">Admin</span>
+				<span className="text-xs text-muted-foreground">Admin</span>
 			)}
 			{showSettleButton && (
 				<SettleButton

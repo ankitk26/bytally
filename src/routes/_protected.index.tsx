@@ -11,11 +11,11 @@ export const Route = createFileRoute("/_protected/")({
 
 function RouteComponent() {
 	return (
-		<div className="bg-background min-h-screen">
+		<div className="min-h-screen bg-background">
 			<main className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
 				<div className="mb-6 flex items-end justify-between pb-4">
 					<div>
-						<h1 className="text-foreground font-serif text-2xl sm:text-3xl">
+						<h1 className="font-serif text-2xl text-foreground sm:text-3xl">
 							Groups
 						</h1>
 					</div>

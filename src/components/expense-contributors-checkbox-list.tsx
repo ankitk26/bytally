@@ -45,7 +45,7 @@ export default function ExpenseContributorsCheckboxList({
 					<button
 						type="button"
 						onClick={toggleAllMembers}
-						className="text-muted-foreground hover:text-foreground text-xs underline underline-offset-2 transition-colors"
+						className="text-xs text-muted-foreground underline underline-offset-2 transition-colors hover:text-foreground"
 					>
 						{areAllMembersSelected ? "Deselect all" : "Select all"}
 					</button>
@@ -55,7 +55,7 @@ export default function ExpenseContributorsCheckboxList({
 				{members.map((member) => (
 					<label
 						key={member.memberId}
-						className="hover:bg-muted/60 flex items-center gap-2 px-2 py-1 text-sm"
+						className="flex items-center gap-2 px-2 py-1 text-sm hover:bg-muted/60"
 					>
 						<Checkbox
 							checked={selectedContributorIds.includes(member.memberId)}
@@ -67,7 +67,7 @@ export default function ExpenseContributorsCheckboxList({
 					</label>
 				))}
 			</div>
-			<p className="text-muted-foreground text-xs">
+			<p className="text-xs text-muted-foreground">
 				Choose who shares this expense.
 			</p>
 		</div>

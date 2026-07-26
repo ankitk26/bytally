@@ -26,11 +26,11 @@ export default function EditGroupMembersList({
 }: Props) {
 	return (
 		<div className="space-y-3">
-			<Label className="text-muted-foreground text-xs">Members</Label>
+			<Label className="text-xs text-muted-foreground">Members</Label>
 			{members.length === 0 ? (
-				<p className="text-muted-foreground text-sm">No members</p>
+				<p className="text-sm text-muted-foreground">No members</p>
 			) : (
-				<div className="divide-border border-border divide-y border-y">
+				<div className="divide-y divide-border border-y border-border">
 					{members.map((member) => {
 						const isCheckingMember = checkingMemberId === member.memberId;
 
@@ -40,20 +40,20 @@ export default function EditGroupMembersList({
 								className="flex items-center justify-between gap-2 py-2"
 							>
 								<div className="min-w-0 flex-1">
-									<p className="text-foreground truncate text-sm font-medium">
+									<p className="truncate text-sm font-medium text-foreground">
 										{member.username}
 										{member.isAdmin && (
-											<span className="text-muted-foreground ml-2 text-xs">
+											<span className="ml-2 text-xs text-muted-foreground">
 												Admin
 											</span>
 										)}
 										{member.isPlaceholder && (
-											<span className="text-muted-foreground ml-2 text-xs">
+											<span className="ml-2 text-xs text-muted-foreground">
 												Pending
 											</span>
 										)}
 									</p>
-									<p className="text-muted-foreground truncate text-xs">
+									<p className="truncate text-xs text-muted-foreground">
 										{member.email}
 									</p>
 								</div>

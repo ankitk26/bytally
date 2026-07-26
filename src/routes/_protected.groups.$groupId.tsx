@@ -65,7 +65,7 @@ function RouteComponent() {
 					<TabsContent value="expenses" className="space-y-6">
 						<div>
 							<div className="mb-4 flex items-center justify-between">
-								<h2 className="text-foreground font-serif text-lg">Expenses</h2>
+								<h2 className="font-serif text-lg text-foreground">Expenses</h2>
 								{members && <AddExpenseDialog members={members} />}
 							</div>
 							{expenses && members && (
@@ -76,7 +76,7 @@ function RouteComponent() {
 
 					<TabsContent value="members">
 						<div className="mb-4 flex items-center justify-between">
-							<h2 className="text-foreground font-serif text-lg">Members</h2>
+							<h2 className="font-serif text-lg text-foreground">Members</h2>
 							<EditGroupMembersButton groupId={groupId} />
 						</div>
 						{members && (
@@ -92,7 +92,7 @@ function RouteComponent() {
 				<div className="hidden grid-cols-1 gap-8 lg:grid lg:grid-cols-4">
 					<div className="lg:col-span-3">
 						<div className="mb-4 flex items-center justify-between">
-							<h2 className="text-foreground font-serif text-lg">Expenses</h2>
+							<h2 className="font-serif text-lg text-foreground">Expenses</h2>
 							{members && <AddExpenseDialog members={members} />}
 						</div>
 						{expenses && members && (
@@ -102,7 +102,7 @@ function RouteComponent() {
 
 					<div className="lg:col-span-1">
 						<div className="mb-4 flex items-center justify-between">
-							<h2 className="text-foreground font-serif text-lg">Members</h2>
+							<h2 className="font-serif text-lg text-foreground">Members</h2>
 							<EditGroupMembersButton groupId={groupId} />
 						</div>
 						{members && (

@@ -25,11 +25,11 @@ export default function Header() {
 	};
 
 	return (
-		<header className="border-border border-b">
+		<header className="border-b border-border">
 			<div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-4 lg:h-12 lg:px-6">
 				<Link
 					to="/"
-					className="text-foreground font-serif text-base transition-opacity hover:opacity-80"
+					className="font-serif text-base text-foreground transition-opacity hover:opacity-80"
 				>
 					bytally
 				</Link>
@@ -45,10 +45,10 @@ export default function Header() {
 						/>
 						<DropdownMenuContent align="end" className="w-48">
 							<div className="px-2 py-2">
-								<div className="text-foreground truncate text-xs font-medium">
+								<div className="truncate text-xs font-medium text-foreground">
 									{auth.username}
 								</div>
-								<div className="text-muted-foreground truncate text-xs">
+								<div className="truncate text-xs text-muted-foreground">
 									{auth.email}
 								</div>
 							</div>

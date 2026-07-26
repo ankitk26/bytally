@@ -12,7 +12,7 @@ export default function GroupHeader({ group }: Props) {
 		<div className="mb-8">
 			<div className="flex items-start gap-4">
 				<div className="relative shrink-0">
-					<div className="bg-muted border-border flex h-16 w-16 items-center justify-center overflow-hidden border sm:h-20 sm:w-20 lg:h-24 lg:w-24">
+					<div className="flex h-16 w-16 items-center justify-center overflow-hidden border border-border bg-muted sm:h-20 sm:w-20 lg:h-24 lg:w-24">
 						{group.coverImageUrl ? (
 							<img
 								src={group.coverImageUrl}
@@ -25,8 +25,8 @@ export default function GroupHeader({ group }: Props) {
 					</div>
 				</div>
 				<div className="min-w-0 flex-1">
-					<h1 className="text-foreground font-serif text-xl">{group.name}</h1>
-					<p className="text-muted-foreground mt-1 line-clamp-2 text-sm">
+					<h1 className="font-serif text-xl text-foreground">{group.name}</h1>
+					<p className="mt-1 line-clamp-2 text-sm text-muted-foreground">
 						{group?.description}
 					</p>
 					<div className="mt-2 text-xs">

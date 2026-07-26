@@ -102,17 +102,17 @@ export default function GroupsForm({ showBorder = true }: Props) {
 	};
 
 	return (
-		<div className={showBorder ? "border-border border p-5" : ""}>
-			<p className="text-muted-foreground mb-1 text-xs tracking-wider uppercase">
+		<div className={showBorder ? "border border-border p-5" : ""}>
+			<p className="mb-1 text-xs tracking-wider text-muted-foreground uppercase">
 				New group
 			</p>
-			<h2 className="text-foreground mb-4 font-serif text-lg">
+			<h2 className="mb-4 font-serif text-lg text-foreground">
 				Create a group
 			</h2>
 
 			<form onSubmit={handleSubmit} className="space-y-4">
 				<div className="space-y-1.5">
-					<Label htmlFor="name" className="text-muted-foreground text-xs">
+					<Label htmlFor="name" className="text-xs text-muted-foreground">
 						Name
 					</Label>
 					<Input
@@ -129,7 +129,7 @@ export default function GroupsForm({ showBorder = true }: Props) {
 				<div className="space-y-1.5">
 					<Label
 						htmlFor="description"
-						className="text-muted-foreground text-xs"
+						className="text-xs text-muted-foreground"
 					>
 						Description <span className="opacity-50">(optional)</span>
 					</Label>
@@ -144,17 +144,17 @@ export default function GroupsForm({ showBorder = true }: Props) {
 				</div>
 
 				<div className="space-y-1.5">
-					<Label className="text-muted-foreground text-xs">
+					<Label className="text-xs text-muted-foreground">
 						Members <span className="opacity-50">(optional)</span>
 					</Label>
 
-					<div className="border-border focus-within:border-ring focus-within:ring-ring/50 flex flex-wrap items-center gap-1.5 border bg-transparent px-2.5 py-1.5 transition-colors focus-within:ring-1">
+					<div className="flex flex-wrap items-center gap-1.5 border border-border bg-transparent px-2.5 py-1.5 transition-colors focus-within:border-ring focus-within:ring-1 focus-within:ring-ring/50">
 						{emails.map((email) => (
 							<button
 								type="button"
 								key={email}
 								onClick={() => handleChipClick(email)}
-								className="bg-secondary text-secondary-foreground hover:bg-secondary/80 group inline-flex h-6 cursor-pointer items-center gap-1 px-1.5 text-xs transition-colors"
+								className="group inline-flex h-6 cursor-pointer items-center gap-1 bg-secondary px-1.5 text-xs text-secondary-foreground transition-colors hover:bg-secondary/80"
 							>
 								<span className="max-w-[10rem] truncate">{email}</span>
 								<span
@@ -170,7 +170,7 @@ export default function GroupsForm({ showBorder = true }: Props) {
 											removeEmail(email);
 										}
 									}}
-									className="text-muted-foreground hover:text-foreground ml-0.5 inline-flex cursor-pointer p-0.5 transition-colors"
+									className="ml-0.5 inline-flex cursor-pointer p-0.5 text-muted-foreground transition-colors hover:text-foreground"
 								>
 									<XIcon weight="bold" size={10} />
 								</span>
@@ -183,7 +183,7 @@ export default function GroupsForm({ showBorder = true }: Props) {
 							onChange={(e) => handleInputChange(e.target.value)}
 							onKeyDown={handleInputKeyDown}
 							placeholder={emails.length === 0 ? "Enter email addresses" : ""}
-							className="placeholder:text-muted-foreground min-w-[12rem] flex-1 bg-transparent text-xs outline-none"
+							className="min-w-[12rem] flex-1 bg-transparent text-xs outline-none placeholder:text-muted-foreground"
 						/>
 					</div>
 
@@ -198,14 +198,14 @@ export default function GroupsForm({ showBorder = true }: Props) {
 							Add email
 						</Button>
 						{inputError && (
-							<p className="text-destructive animate-in fade-in text-xs">
+							<p className="animate-in text-xs text-destructive fade-in">
 								{inputError}
 							</p>
 						)}
 					</div>
 
 					{emails.length > 0 && !inputError && (
-						<p className="text-muted-foreground text-xs">
+						<p className="text-xs text-muted-foreground">
 							{emails.length} member{emails.length === 1 ? "" : "s"} will be
 							invited
 						</p>

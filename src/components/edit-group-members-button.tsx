@@ -142,10 +142,10 @@ export default function EditGroupMembersButton({ groupId }: Props) {
 					<div className="space-y-6 py-4">
 						<EditGroupMembersAddForm groupId={groupId as Id<"groups">} />
 
-						<div className="border-border border-t" />
+						<div className="border-t border-border" />
 
 						{isMembersPending ? (
-							<p className="text-muted-foreground text-sm">Loading...</p>
+							<p className="text-sm text-muted-foreground">Loading...</p>
 						) : (
 							<EditGroupMembersList
 								members={sortedMembersWithAdminFirst}

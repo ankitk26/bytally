@@ -49,44 +49,44 @@ export default function ViewExpenseDialog({ expense, children }: Props) {
 				</DialogHeader>
 				<div className="grid gap-4 py-4">
 					<div className="grid gap-1">
-						<span className="text-muted-foreground text-xs">Title</span>
-						<span className="text-foreground text-sm font-medium">
+						<span className="text-xs text-muted-foreground">Title</span>
+						<span className="text-sm font-medium text-foreground">
 							{expense.title}
 						</span>
 					</div>
 					<div className="grid grid-cols-2 gap-3">
 						<div className="grid gap-1">
-							<span className="text-muted-foreground text-xs">Amount</span>
-							<span className="text-foreground text-sm font-semibold">
+							<span className="text-xs text-muted-foreground">Amount</span>
+							<span className="text-sm font-semibold text-foreground">
 								{formatCurrency(expense.amount)}
 							</span>
 						</div>
 						<div className="grid gap-1">
-							<span className="text-muted-foreground text-xs">Date</span>
-							<span className="text-foreground text-sm">
+							<span className="text-xs text-muted-foreground">Date</span>
+							<span className="text-sm text-foreground">
 								{formatDate(expense.expenseTime)}
 							</span>
 						</div>
 					</div>
 					<div className="grid grid-cols-2 gap-3">
 						<div className="grid gap-1">
-							<span className="text-muted-foreground text-xs">Paid by</span>
-							<span className="text-foreground text-sm">
+							<span className="text-xs text-muted-foreground">Paid by</span>
+							<span className="text-sm text-foreground">
 								{expense.paidByUsername}
 							</span>
 						</div>
 						<div className="grid gap-1">
-							<span className="text-muted-foreground text-xs">Split mode</span>
-							<span className="text-foreground text-sm capitalize">
+							<span className="text-xs text-muted-foreground">Split mode</span>
+							<span className="text-sm text-foreground capitalize">
 								{expense.splitMode}
 							</span>
 						</div>
 					</div>
 					<div className="grid gap-2">
-						<span className="text-muted-foreground text-xs">Contributors</span>
+						<span className="text-xs text-muted-foreground">Contributors</span>
 						<div className="grid gap-2 border p-2">
 							{expense.contributors.length === 0 && (
-								<span className="text-muted-foreground text-sm">
+								<span className="text-sm text-muted-foreground">
 									No contributors listed.
 								</span>
 							)}
@@ -96,7 +96,7 @@ export default function ViewExpenseDialog({ expense, children }: Props) {
 									className="flex items-center justify-between text-sm"
 								>
 									<span className="truncate">{contributor.username}</span>
-									<span className="text-foreground font-medium">
+									<span className="font-medium text-foreground">
 										{formatCurrency(contributor.amount)}
 									</span>
 								</div>
@@ -105,8 +105,8 @@ export default function ViewExpenseDialog({ expense, children }: Props) {
 					</div>
 					{expense.description && (
 						<div className="grid gap-1">
-							<span className="text-muted-foreground text-xs">Description</span>
-							<p className="text-foreground text-sm whitespace-pre-wrap">
+							<span className="text-xs text-muted-foreground">Description</span>
+							<p className="text-sm whitespace-pre-wrap text-foreground">
 								{expense.description}
 							</p>
 						</div>

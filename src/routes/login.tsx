@@ -21,12 +21,12 @@ function RouteComponent() {
 	return (
 		<main className="relative flex min-h-screen overflow-hidden">
 			<div className="pointer-events-none absolute inset-0 lg:hidden">
-				<div className="bg-chart-2/20 absolute -top-32 -left-32 h-64 w-64 blur-3xl" />
-				<div className="bg-chart-4/20 absolute top-1/3 -right-20 h-48 w-48 blur-3xl" />
-				<div className="bg-chart-1/15 absolute bottom-20 -left-10 h-40 w-40 blur-3xl" />
+				<div className="absolute -top-32 -left-32 h-64 w-64 bg-chart-2/20 blur-3xl" />
+				<div className="absolute top-1/3 -right-20 h-48 w-48 bg-chart-4/20 blur-3xl" />
+				<div className="absolute bottom-20 -left-10 h-40 w-40 bg-chart-1/15 blur-3xl" />
 			</div>
 
-			<div className="bg-foreground text-background hidden flex-col justify-between p-12 lg:flex lg:w-1/2">
+			<div className="hidden flex-col justify-between bg-foreground p-12 text-background lg:flex lg:w-1/2">
 				<div>
 					<span className="font-serif text-2xl">bytally</span>
 				</div>
@@ -36,12 +36,12 @@ function RouteComponent() {
 						<br />
 						made simple.
 					</h1>
-					<p className="text-background/60 text-sm">
+					<p className="text-sm text-background/60">
 						Track shared costs, split bills fairly, and settle up with
 						friends—effortlessly.
 					</p>
 				</div>
-				<p className="text-background/40 text-xs">
+				<p className="text-xs text-background/40">
 					Splitting bills made simple
 				</p>
 			</div>
@@ -49,17 +49,17 @@ function RouteComponent() {
 			<div className="relative z-10 flex flex-1 items-center justify-center p-6">
 				<div className="w-full max-w-xs">
 					<div className="mb-8 lg:hidden">
-						<span className="text-foreground font-serif text-xl">bytally</span>
-						<p className="text-muted-foreground mt-1 text-sm">
+						<span className="font-serif text-xl text-foreground">bytally</span>
+						<p className="mt-1 text-sm text-muted-foreground">
 							Shared expenses, made simple.
 						</p>
 					</div>
 
 					<div className="mb-6">
-						<h2 className="text-foreground mb-1 font-serif text-2xl">
+						<h2 className="mb-1 font-serif text-2xl text-foreground">
 							Welcome back
 						</h2>
-						<p className="text-muted-foreground text-sm">
+						<p className="text-sm text-muted-foreground">
 							Sign in to manage your group expenses
 						</p>
 					</div>
@@ -67,7 +67,7 @@ function RouteComponent() {
 					<Button
 						onClick={handleLogin}
 						disabled={isLoading}
-						className="hover:bg-primary/90 w-full gap-2.5 transition-colors duration-200"
+						className="w-full gap-2.5 transition-colors duration-200 hover:bg-primary/90"
 						size="lg"
 					>
 						{isLoading ? (
@@ -78,7 +78,7 @@ function RouteComponent() {
 						Continue with Google
 					</Button>
 
-					<p className="text-muted-foreground/50 mt-8 text-center text-xs lg:hidden">
+					<p className="mt-8 text-center text-xs text-muted-foreground/50 lg:hidden">
 						Splitting bills made simple
 					</p>
 				</div>

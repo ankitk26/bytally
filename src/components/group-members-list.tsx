@@ -65,7 +65,7 @@ export default function GroupMembersList({ members, hasExpenses }: Props) {
 	}, [simplifiedDebts, auth.authUserId]);
 
 	return (
-		<div className="divide-border border-border divide-y border-y">
+		<div className="divide-y divide-border border-y border-border">
 			{sortedMembers.map((member) => (
 				<MemberItem
 					key={member.memberId}

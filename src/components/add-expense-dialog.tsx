@@ -168,7 +168,7 @@ export default function AddExpenseDialog({ members }: Props) {
 					<div className="grid gap-3">
 						<Label htmlFor="description">
 							Description{" "}
-							<span className="text-muted-foreground font-normal">
+							<span className="font-normal text-muted-foreground">
 								(optional)
 							</span>
 						</Label>

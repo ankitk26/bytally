@@ -9,7 +9,7 @@ export const getAppTheme = createServerFn().handler((): AppTheme => {
 });
 
 export const setAppTheme = createServerFn()
-	.inputValidator((data: AppTheme) => data)
+	.validator((data: AppTheme) => data)
 	.handler(({ data }) => {
 		setCookie(appThemeKey, data);
 	});

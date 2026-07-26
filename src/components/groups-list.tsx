@@ -10,7 +10,7 @@ export default function GroupsList() {
 
 	if (isPending) {
 		return (
-			<div className="divide-border border-border divide-y border-y">
+			<div className="divide-y divide-border border-y border-border">
 				{[1, 2, 3].map((i) => (
 					<div key={i} className="py-4">
 						<div className="flex items-center gap-3">
@@ -28,11 +28,11 @@ export default function GroupsList() {
 
 	if (data?.length === 0) {
 		return (
-			<div className="border-border border border-dashed py-12 text-center">
-				<p className="text-muted-foreground mb-1 text-xs tracking-wider uppercase">
+			<div className="border border-dashed border-border py-12 text-center">
+				<p className="mb-1 text-xs tracking-wider text-muted-foreground uppercase">
 					No groups yet
 				</p>
-				<p className="text-foreground font-serif text-lg">
+				<p className="font-serif text-lg text-foreground">
 					Create your first group
 				</p>
 			</div>
@@ -40,7 +40,7 @@ export default function GroupsList() {
 	}
 
 	return (
-		<div className="divide-border border-border divide-y border-y">
+		<div className="divide-y divide-border border-y border-border">
 			{data?.map((group) => (
 				<Link
 					key={group._id}
@@ -55,16 +55,16 @@ export default function GroupsList() {
 							className="h-8 w-8 object-cover"
 						/>
 					) : (
-						<div className="bg-muted flex h-8 w-8 items-center justify-center">
+						<div className="flex h-8 w-8 items-center justify-center bg-muted">
 							<ReceiptIcon />
 						</div>
 					)}
 					<div className="min-w-0 flex-1">
-						<h3 className="text-foreground truncate text-sm font-medium underline-offset-2 group-hover:underline">
+						<h3 className="truncate text-sm font-medium text-foreground underline-offset-2 group-hover:underline">
 							{group.name}
 						</h3>
 						{group.description && (
-							<p className="text-muted-foreground mt-0.5 line-clamp-1 text-xs">
+							<p className="mt-0.5 line-clamp-1 text-xs text-muted-foreground">
 								{group.description}
 							</p>
 						)}

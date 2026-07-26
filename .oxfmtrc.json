@@ -3,13 +3,17 @@
 	"useTabs": true,
 	"tabWidth": 2,
 	"printWidth": 80,
-	"experimentalSortImports": {
+	"sortImports": {
 		"newlinesBetween": false
+	},
+	"sortTailwindcss": {
+		"stylesheet": "./src/styles.css",
+		"functions": ["clsx", "cn"],
+		"preserveWhitespace": true
 	},
 	"ignorePatterns": [
 		"**/src/routeTree.gen.ts",
 		"**/convex/_generated/**",
 		"**/bun.lock"
-	],
-	"experimentalTailwindcss": {}
+	]
 }

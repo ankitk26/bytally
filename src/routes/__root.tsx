@@ -85,7 +85,7 @@ function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
 			<head>
 				<HeadContent />
 			</head>
-			<body className="bg-background text-foreground min-h-screen antialiased">
+			<body className="min-h-screen bg-background text-foreground antialiased">
 				<TooltipProvider>{children}</TooltipProvider>
 				<Scripts />
 			</body>

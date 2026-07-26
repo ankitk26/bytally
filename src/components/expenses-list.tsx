@@ -10,7 +10,7 @@ type Props = {
 
 export default function ExpensesList({ expenses, members }: Props) {
 	return (
-		<div className="divide-border border-border divide-y border-y">
+		<div className="divide-y divide-border border-y border-border">
 			{expenses.map((expense) => (
 				<ExpenseItem key={expense._id} expense={expense} members={members} />
 			))}

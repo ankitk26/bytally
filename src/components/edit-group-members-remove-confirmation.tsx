@@ -146,13 +146,13 @@ export default function EditGroupMembersRemoveConfirmation({
 				{pendingCheck && (
 					<div className="space-y-4 text-xs">
 						{hasBlockedExpenses && (
-							<div className="bg-muted space-y-2 rounded-none p-3">
+							<div className="space-y-2 rounded-none bg-muted p-3">
 								<p className="font-medium">Cannot remove this member yet</p>
 								<p className="text-muted-foreground">
 									They are the only person who still owes money on these
 									expenses, so their debt cannot be shared with anyone else:
 								</p>
-								<ul className="text-muted-foreground list-disc space-y-1 pl-4">
+								<ul className="list-disc space-y-1 pl-4 text-muted-foreground">
 									{pendingCheck.blockedExpenses.map((expense) => (
 										<li key={expense.expenseId}>
 											{expense.title} — ${expense.amount.toFixed(2)}
@@ -177,7 +177,7 @@ export default function EditGroupMembersRemoveConfirmation({
 									onChange={(e) =>
 										onNewPayerChange(e.target.value as Id<"users">)
 									}
-									className="bg-background border-border w-full rounded-none border px-2 py-1.5"
+									className="w-full rounded-none border border-border bg-background px-2 py-1.5"
 								>
 									<option value="" disabled>
 										Select new payer
@@ -198,7 +198,7 @@ export default function EditGroupMembersRemoveConfirmation({
 								<ul className="space-y-2">
 									{affectedExpenses.map((expense) => (
 										<li key={expense.expenseId} className="space-y-0.5">
-											<p className="text-foreground font-medium">
+											<p className="font-medium text-foreground">
 												{expense.title}
 											</p>
 											{expense.isPayer && (

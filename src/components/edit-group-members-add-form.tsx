@@ -38,7 +38,7 @@ export default function EditGroupMembersAddForm({ groupId }: Props) {
 
 	return (
 		<form onSubmit={handleSubmit} className="space-y-3">
-			<Label htmlFor="invite-emails" className="text-muted-foreground text-xs">
+			<Label htmlFor="invite-emails" className="text-xs text-muted-foreground">
 				Add members by email
 			</Label>
 			<Input

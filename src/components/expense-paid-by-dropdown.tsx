@@ -28,7 +28,7 @@ export default function ExpensePaidByDropdown({
 						<Button variant="outline" className="w-full justify-start">
 							{paidByMember ? (
 								<>
-									<div className="bg-muted mr-2 flex h-4 w-4 items-center justify-center text-[10px] font-medium">
+									<div className="mr-2 flex h-4 w-4 items-center justify-center bg-muted text-[10px] font-medium">
 										{paidByMember.username.charAt(0).toUpperCase()}
 									</div>
 									<span className="truncate">{paidByMember.username}</span>
@@ -45,7 +45,7 @@ export default function ExpensePaidByDropdown({
 							key={member.memberId}
 							onClick={() => onPaidByMemberChange(member)}
 						>
-							<div className="bg-muted mr-2 flex h-4 w-4 items-center justify-center text-[10px] font-medium">
+							<div className="mr-2 flex h-4 w-4 items-center justify-center bg-muted text-[10px] font-medium">
 								{member.username.charAt(0).toUpperCase()}
 							</div>
 							<span className="truncate">{member.username}</span>
