@@ -121,7 +121,7 @@ export default function GroupsForm({ showBorder = true }: Props) {
 						type="text"
 						value={name}
 						onChange={(e) => setName(e.target.value)}
-						placeholder="Marketing Team"
+						placeholder="Flatmates"
 						required
 					/>
 				</div>
