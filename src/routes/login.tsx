@@ -1,5 +1,6 @@
-import { GoogleLogo } from "@phosphor-icons/react";
+import { GoogleLogo, SpinnerIcon } from "@phosphor-icons/react";
 import { createFileRoute } from "@tanstack/react-router";
+import { useState } from "react";
 import { Button } from "~/components/ui/button";
 import { authClient } from "~/lib/auth-client";
 
@@ -8,7 +9,10 @@ export const Route = createFileRoute("/login")({
 });
 
 function RouteComponent() {
+	const [isLoading, setIsLoading] = useState(false);
+
 	const handleLogin = async () => {
+		setIsLoading(true);
 		await authClient.signIn.social({
 			provider: "google",
 		});
@@ -62,10 +66,15 @@ function RouteComponent() {
 
 					<Button
 						onClick={handleLogin}
+						disabled={isLoading}
 						className="hover:bg-primary/90 w-full gap-2.5 transition-colors duration-200"
 						size="lg"
 					>
-						<GoogleLogo className="h-4 w-4" weight="bold" />
+						{isLoading ? (
+							<SpinnerIcon className="h-4 w-4 animate-spin" />
+						) : (
+							<GoogleLogo className="h-4 w-4" weight="bold" />
+						)}
 						Continue with Google
 					</Button>
 
