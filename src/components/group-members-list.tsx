@@ -33,10 +33,6 @@ export default function GroupMembersList({ members, hasExpenses }: Props) {
 		}),
 	);
 
-	// TEMP DEBUG
-	console.log("[debug] authUserId:", auth.authUserId);
-	console.log("[debug] simplifiedDebts:", simplifiedDebts);
-
 	const simplifiedAmounts = useMemo(() => {
 		if (!simplifiedDebts) return {};
 
@@ -57,9 +53,6 @@ export default function GroupMembersList({ members, hasExpenses }: Props) {
 				delete amounts[memberId as Id<"users">];
 			}
 		}
-
-		// TEMP DEBUG
-		console.log("[debug] simplifiedAmounts:", amounts);
 
 		return amounts;
 	}, [simplifiedDebts, auth.authUserId]);
