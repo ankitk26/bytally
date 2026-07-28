@@ -35,45 +35,44 @@ export default function ExpenseItem({ expense, members }: Props) {
 		.filter((c) => c.contributorId !== expense.paidBy)
 		.reduce((sum, c) => sum + c.amount, 0);
 
-	const titleElement = (
-		<h3 className="cursor-pointer truncate text-sm font-medium text-foreground hover:underline">
-			{expense.title}
-		</h3>
-	);
-
-	return (
-		<article className="flex items-center justify-between gap-3 py-3">
-			<div className="min-w-0 flex-1">
-				<div className="flex flex-col gap-0.5 sm:flex-row sm:items-center sm:gap-2">
-					{expense.canEdit ? (
-						<EditExpenseDialog expense={expense} members={members}>
-							{titleElement}
-						</EditExpenseDialog>
-					) : (
-						<ViewExpenseDialog expense={expense}>
-							{titleElement}
-						</ViewExpenseDialog>
-					)}
-					<span className="hidden text-xs text-muted-foreground sm:inline">
+	// the entire row is the dialog trigger — a comfortable touch target on mobile
+	const trigger = (
+		<article className="group flex cursor-pointer flex-col gap-3 py-3.5 pr-1 transition-colors outline-none focus-visible:ring-2 focus-visible:ring-ring/40 active:bg-muted/60">
+			<div className="flex items-center gap-3">
+				<div className="flex h-9 w-9 shrink-0 items-center justify-center border border-border bg-muted font-serif text-sm text-muted-foreground sm:h-10 sm:w-10">
+					{expense.paidByUsername.charAt(0).toUpperCase()}
+				</div>
+				<div className="min-w-0 flex-1">
+					<div className="flex items-baseline justify-between gap-3">
+						<h3 className="min-w-0 truncate text-sm font-medium text-foreground group-hover:underline">
+							{expense.title}
+						</h3>
+						<span className="shrink-0 text-sm font-semibold text-foreground tabular-nums sm:text-base">
+							{formatCurrency(expense.amount)}
+						</span>
+					</div>
+					<span className="mt-0.5 block text-xs text-muted-foreground/70">
 						{formatDate(expense.expenseTime)}
 					</span>
 				</div>
-				<div className="mt-1 flex items-center gap-1.5">
-					<div className="flex h-4 w-4 items-center justify-center bg-muted text-[10px] leading-none font-medium">
-						{expense.paidByUsername.charAt(0).toUpperCase()}
-					</div>
-					<span className="text-xs text-muted-foreground">
-						{expense.paidByUsername}
-						{lentAmount > 0.01 && ` lent ${formatCurrency(lentAmount)}`}
-					</span>
-					<span className="text-xs text-muted-foreground sm:hidden">
-						· {formatDate(expense.expenseTime)}
-					</span>
-				</div>
 			</div>
-			<span className="text-sm font-semibold text-foreground">
-				{formatCurrency(expense.amount)}
-			</span>
+			{lentAmount > 0.01 && (
+				<p className="text-xs break-words text-muted-foreground">
+					<span className="break-all">{expense.paidByUsername}</span>
+					&nbsp;lent{" "}
+					<span className="font-medium text-foreground">
+						{formatCurrency(lentAmount)}
+					</span>
+				</p>
+			)}
 		</article>
+	);
+
+	return expense.canEdit ? (
+		<EditExpenseDialog expense={expense} members={members}>
+			{trigger}
+		</EditExpenseDialog>
+	) : (
+		<ViewExpenseDialog expense={expense}>{trigger}</ViewExpenseDialog>
 	);
 }

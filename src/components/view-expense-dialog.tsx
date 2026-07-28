@@ -55,13 +55,13 @@ export default function ViewExpenseDialog({ expense, children }: Props) {
 						</span>
 					</div>
 					<div className="grid grid-cols-2 gap-3">
-						<div className="grid gap-1">
+						<div className="grid min-w-0 gap-1">
 							<span className="text-xs text-muted-foreground">Amount</span>
 							<span className="text-sm font-semibold text-foreground">
 								{formatCurrency(expense.amount)}
 							</span>
 						</div>
-						<div className="grid gap-1">
+						<div className="grid min-w-0 gap-1">
 							<span className="text-xs text-muted-foreground">Date</span>
 							<span className="text-sm text-foreground">
 								{formatDate(expense.expenseTime)}
@@ -69,13 +69,13 @@ export default function ViewExpenseDialog({ expense, children }: Props) {
 						</div>
 					</div>
 					<div className="grid grid-cols-2 gap-3">
-						<div className="grid gap-1">
+						<div className="grid min-w-0 gap-1">
 							<span className="text-xs text-muted-foreground">Paid by</span>
-							<span className="text-sm text-foreground">
+							<span className="text-sm break-all text-foreground">
 								{expense.paidByUsername}
 							</span>
 						</div>
-						<div className="grid gap-1">
+						<div className="grid min-w-0 gap-1">
 							<span className="text-xs text-muted-foreground">Split mode</span>
 							<span className="text-sm text-foreground capitalize">
 								{expense.splitMode}
@@ -95,8 +95,10 @@ export default function ViewExpenseDialog({ expense, children }: Props) {
 									key={contributor.contributorId}
 									className="flex items-center justify-between text-sm"
 								>
-									<span className="truncate">{contributor.username}</span>
-									<span className="font-medium text-foreground">
+									<span className="min-w-0 truncate">
+										{contributor.username}
+									</span>
+									<span className="shrink-0 font-medium text-foreground">
 										{formatCurrency(contributor.amount)}
 									</span>
 								</div>
