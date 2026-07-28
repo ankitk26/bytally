@@ -1,3 +1,4 @@
+import { useRouteContext } from "@tanstack/react-router";
 import type { Id } from "convex/_generated/dataModel";
 import EditExpenseDialog from "~/components/edit-expense-dialog";
 import ViewExpenseDialog from "~/components/view-expense-dialog";
@@ -30,6 +31,13 @@ type Props = {
 };
 
 export default function ExpenseItem({ expense, members }: Props) {
+	const { auth } = useRouteContext({ from: "/_protected" });
+
+	// only show amounts to the payer or contributors of this expense
+	const isInvolved =
+		expense.paidBy === auth.authUserId ||
+		expense.contributors.some((c) => c.contributorId === auth.authUserId);
+
 	// amount the payer covered for others (total minus their own share)
 	const lentAmount = expense.contributors
 		.filter((c) => c.contributorId !== expense.paidBy)
@@ -47,22 +55,30 @@ export default function ExpenseItem({ expense, members }: Props) {
 						<h3 className="min-w-0 truncate text-sm font-medium text-foreground group-hover:underline">
 							{expense.title}
 						</h3>
-						<span className="shrink-0 text-sm font-semibold text-foreground tabular-nums sm:text-base">
-							{formatCurrency(expense.amount)}
-						</span>
+						{isInvolved && (
+							<span className="shrink-0 text-sm font-semibold text-foreground tabular-nums sm:text-base">
+								{formatCurrency(expense.amount)}
+							</span>
+						)}
 					</div>
 					<span className="mt-0.5 block text-xs text-muted-foreground/70">
 						{formatDate(expense.expenseTime)}
 					</span>
 				</div>
 			</div>
-			{lentAmount > 0.01 && (
-				<p className="text-xs break-words text-muted-foreground">
-					<span className="break-all">{expense.paidByUsername}</span>
-					&nbsp;lent{" "}
-					<span className="font-medium text-foreground">
-						{formatCurrency(lentAmount)}
-					</span>
+			{isInvolved ? (
+				lentAmount > 0.01 && (
+					<p className="text-xs break-words text-muted-foreground">
+						<span className="break-all">{expense.paidByUsername}</span>
+						&nbsp;lent{" "}
+						<span className="font-medium text-foreground">
+							{formatCurrency(lentAmount)}
+						</span>
+					</p>
+				)
+			) : (
+				<p className="text-xs text-muted-foreground italic">
+					You are not involved
 				</p>
 			)}
 		</article>
