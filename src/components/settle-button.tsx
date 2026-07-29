@@ -1,5 +1,4 @@
 import { useConvexMutation } from "@convex-dev/react-query";
-import { CheckIcon } from "@phosphor-icons/react";
 import { useMutation } from "@tanstack/react-query";
 import { useRouteContext } from "@tanstack/react-router";
 import { api } from "convex/_generated/api";
@@ -29,7 +28,7 @@ export default function SettleButton({ groupId, memberId, amountOwed }: Props) {
 	return (
 		<Button
 			variant="outline"
-			size="icon-xs"
+			size="xs"
 			onClick={() =>
 				settleMutation.mutate({
 					groupId,
@@ -39,7 +38,7 @@ export default function SettleButton({ groupId, memberId, amountOwed }: Props) {
 			}
 			disabled={settleMutation.isPending}
 		>
-			<CheckIcon />
+			Settle
 		</Button>
 	);
 }
