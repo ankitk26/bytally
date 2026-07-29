@@ -40,19 +40,21 @@ export default function EditGroupMembersList({
 								className="flex items-center justify-between gap-2 py-2"
 							>
 								<div className="min-w-0 flex-1">
-									<p className="truncate text-sm font-medium text-foreground">
-										{member.username}
+									<div className="flex min-w-0 items-baseline gap-2">
+										<p className="min-w-0 truncate text-sm font-medium text-foreground">
+											{member.username}
+										</p>
 										{member.isAdmin && (
-											<span className="ml-2 text-xs text-muted-foreground">
+											<span className="shrink-0 text-xs text-muted-foreground">
 												Admin
 											</span>
 										)}
 										{member.isPlaceholder && (
-											<span className="ml-2 text-xs text-muted-foreground">
+											<span className="shrink-0 text-xs text-muted-foreground">
 												Pending
 											</span>
 										)}
-									</p>
+									</div>
 									<p className="truncate text-xs text-muted-foreground">
 										{member.email}
 									</p>

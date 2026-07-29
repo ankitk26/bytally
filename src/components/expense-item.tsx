@@ -77,7 +77,7 @@ export default function ExpenseItem({ expense, members }: Props) {
 					</p>
 				)
 			) : (
-				<p className="text-xs text-muted-foreground italic">
+				<p className="font-serif text-xs text-muted-foreground">
 					You are not involved
 				</p>
 			)}
