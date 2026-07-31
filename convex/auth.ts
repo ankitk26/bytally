@@ -96,6 +96,7 @@ export const getCurrentUser = query({
 		return {
 			email: authUser.email,
 			username: user?.username,
+			upiId: user?.upiId,
 			authUserId: user?._id,
 		};
 	},

@@ -21,6 +21,7 @@ function ProfilePage() {
 	const { auth, queryClient } = useRouteContext({ from: "/_protected" });
 
 	const [username, setUsername] = useState(auth.username || "");
+	const [upiId, setUpiId] = useState(auth.upiId || "");
 	const [isSaved, setIsSaved] = useState(false);
 	const router = useRouter();
 
@@ -40,7 +41,7 @@ function ProfilePage() {
 		const trimmedUsername = username?.trim();
 		if (!trimmedUsername) return;
 
-		mutate({ username: trimmedUsername });
+		mutate({ username: trimmedUsername, upiId: upiId.trim() });
 	};
 
 	return (
@@ -78,10 +79,36 @@ function ProfilePage() {
 									id="username"
 									type="text"
 									value={username}
-									onChange={(e) => setUsername(e.target.value)}
+									onChange={(e) => {
+										setUsername(e.target.value);
+										setIsSaved(false);
+									}}
 									placeholder="Enter your username"
 									required
 								/>
+							</div>
+
+							<div className="space-y-1.5">
+								<Label
+									htmlFor="upi-id"
+									className="text-xs text-muted-foreground"
+								>
+									UPI ID
+								</Label>
+								<Input
+									id="upi-id"
+									type="text"
+									value={upiId}
+									onChange={(e) => {
+										setUpiId(e.target.value);
+										setIsSaved(false);
+									}}
+									placeholder="yourname@bank"
+									autoComplete="off"
+								/>
+								<p className="text-xs text-muted-foreground">
+									Used when someone needs to pay you back.
+								</p>
 							</div>
 
 							<div className="space-y-1.5">
@@ -97,7 +124,10 @@ function ProfilePage() {
 							<Button
 								type="submit"
 								disabled={
-									isPending || !username?.trim() || username === auth.username
+									isPending ||
+									!username?.trim() ||
+									(username === auth.username &&
+										upiId.trim() === (auth.upiId || ""))
 								}
 								className="w-full"
 							>

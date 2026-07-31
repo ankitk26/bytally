@@ -6,6 +6,7 @@ export default defineSchema({
 		email: v.string(),
 		authId: v.string(),
 		username: v.string(),
+		upiId: v.optional(v.string()),
 		updatedTime: v.number(),
 		isPlaceholder: v.optional(v.boolean()),
 	})
