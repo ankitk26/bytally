@@ -3,7 +3,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useRouteContext } from "@tanstack/react-router";
 import { api } from "convex/_generated/api";
 import type { Id } from "convex/_generated/dataModel";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
 	AlertDialog,
 	AlertDialogAction,
@@ -32,13 +32,15 @@ export default function SettleButton({
 }: Props) {
 	const { auth } = useRouteContext({ from: "/_protected" });
 	const [isSettlementDialogOpen, setIsSettlementDialogOpen] = useState(false);
-	const [settlementMode, setSettlementMode] = useState<"upi" | "later" | null>(
-		null,
-	);
+	const [settlementMode, setSettlementMode] = useState<
+		"upi" | "later" | "confirm" | null
+	>(null);
+	const [isAwaitingPaymentReturn, setIsAwaitingPaymentReturn] = useState(false);
+	const hasGoneHiddenRef = useRef(false);
 
 	const checkUpiMutation = useMutation({
 		mutationFn: useConvexMutation(
-			api.expenseContributors.checkSettlementUpiAvailability,
+			api.expenseContributors.getSettlementPaymentUrl,
 		),
 	});
 
@@ -57,11 +59,7 @@ export default function SettleButton({
 				toUserId: memberId,
 			},
 			{
-				onSuccess: (result) => {
-					if (result?.upiPaymentUrl) {
-						window.location.assign(result.upiPaymentUrl);
-					}
-				},
+				onSuccess: () => undefined,
 			},
 		);
 	};
@@ -74,17 +72,40 @@ export default function SettleButton({
 				toUserId: memberId,
 			},
 			{
-				onSuccess: (hasUpiId) => {
-					if (hasUpiId) {
-						setSettlementMode("upi");
+				onSuccess: (upiPaymentUrl) => {
+					if (upiPaymentUrl) {
+						setIsAwaitingPaymentReturn(true);
+						hasGoneHiddenRef.current = false;
+						window.location.assign(upiPaymentUrl);
 					} else {
 						setSettlementMode("later");
+						setIsSettlementDialogOpen(true);
 					}
-					setIsSettlementDialogOpen(true);
 				},
 			},
 		);
 	};
+
+	useEffect(() => {
+		if (!isAwaitingPaymentReturn) return;
+
+		const handleVisibilityChange = () => {
+			if (document.visibilityState === "hidden") {
+				hasGoneHiddenRef.current = true;
+				return;
+			}
+
+			if (hasGoneHiddenRef.current) {
+				setIsAwaitingPaymentReturn(false);
+				setSettlementMode("confirm");
+				setIsSettlementDialogOpen(true);
+			}
+		};
+
+		document.addEventListener("visibilitychange", handleVisibilityChange);
+		return () =>
+			document.removeEventListener("visibilitychange", handleVisibilityChange);
+	}, [isAwaitingPaymentReturn]);
 
 	if (!currentUserId || !iOweThem) {
 		return null;
@@ -113,12 +134,16 @@ export default function SettleButton({
 						<AlertDialogTitle>
 							{settlementMode === "upi"
 								? "Open your UPI app?"
-								: "UPI ID unavailable"}
+								: settlementMode === "confirm"
+									? "Did you complete the payment?"
+									: "UPI ID unavailable"}
 						</AlertDialogTitle>
 						<AlertDialogDescription>
 							{settlementMode === "upi"
 								? `Pay ${receiverName} ${formatCurrency(Math.abs(amountOwed))} using your preferred UPI app.`
-								: `${receiverName} has not added a UPI ID. You can pay them later and record this amount as settled now.`}
+								: settlementMode === "confirm"
+									? "Only mark this as settled if the payment was completed successfully."
+									: `${receiverName} has not added a UPI ID. You can pay them later and record this amount as settled now.`}
 						</AlertDialogDescription>
 					</AlertDialogHeader>
 					<AlertDialogFooter>
@@ -131,8 +156,10 @@ export default function SettleButton({
 							}}
 						>
 							{settlementMode === "upi"
-								? "Open UPI & settle"
-								: "Record as settled"}
+								? "Open UPI"
+								: settlementMode === "confirm"
+									? "Yes, mark as settled"
+									: "Record as settled"}
 						</AlertDialogAction>
 					</AlertDialogFooter>
 				</AlertDialogContent>
