@@ -58,6 +58,7 @@ export default function MemberItem({
 					groupId={groupId}
 					memberId={member.memberId}
 					amountOwed={amountOwed}
+					receiverName={member.username}
 				/>
 			)}
 		</div>

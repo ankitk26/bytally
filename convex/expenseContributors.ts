@@ -38,6 +38,40 @@ export const getSimplifiedDebts = query({
 	},
 });
 
+export const checkSettlementUpiAvailability = mutation({
+	args: {
+		groupId: v.id("groups"),
+		fromUserId: v.id("users"),
+		toUserId: v.id("users"),
+	},
+	handler: async (ctx, args) => {
+		const authUser = await getAuthUserIdOrThrow(ctx);
+
+		if (authUser._id !== args.fromUserId && authUser._id !== args.toUserId) {
+			throw new Error("invalid_request");
+		}
+
+		const group = await ctx.db.get(args.groupId);
+		if (!group || args.fromUserId === args.toUserId) {
+			throw new Error("invalid_request");
+		}
+
+		const receiverMembership = await ctx.db
+			.query("groupMembers")
+			.withIndex("by_group_and_member", (q) =>
+				q.eq("groupId", args.groupId).eq("memberId", args.toUserId),
+			)
+			.first();
+
+		if (!receiverMembership) {
+			throw new Error("invalid_request");
+		}
+
+		const receiver = await ctx.db.get(args.toUserId);
+		return Boolean(receiver?.upiId?.trim());
+	},
+});
+
 export const settleSimplifiedDebt = mutation({
 	args: {
 		groupId: v.id("groups"),
@@ -92,7 +126,7 @@ export const settleSimplifiedDebt = mutation({
 
 		// Debt no longer exists (already settled) — idempotent no-op
 		if (!transaction) {
-			return;
+			return { upiPaymentUrl: null };
 		}
 
 		// Record the money moved as an offset against the expense ledger.
@@ -107,6 +141,16 @@ export const settleSimplifiedDebt = mutation({
 			createdTime: Date.now(),
 			type: "simplified",
 		});
+
+		const receiver = await ctx.db.get(args.toUserId);
+		const upiId = receiver?.upiId?.trim();
+		if (!receiver || !upiId) {
+			return { upiPaymentUrl: null };
+		}
+
+		return {
+			upiPaymentUrl: `upi://pay?pa=${encodeURIComponent(upiId)}&pn=${encodeURIComponent(receiver.username)}&am=${transaction.amount.toFixed(2)}&cu=INR&tn=${encodeURIComponent(`Settlement with ${receiver.username}`)}`,
+		};
 	},
 });
 
